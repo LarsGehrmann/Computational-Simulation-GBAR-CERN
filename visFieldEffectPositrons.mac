@@ -1,0 +1,3 @@
+/vis/filtering/trajectories/create/particleFilter positronFilter
+/vis/filtering/trajectories/positronFilter/add e+
+#/run/beamOn 10000

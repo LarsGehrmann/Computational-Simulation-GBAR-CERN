@@ -1,0 +1,13 @@
+/gui/addMenu showPositrons "Show Positrons"
+/gui/addButton showPositrons "Show 10" "/control/execute visPositrons10.mac"
+/gui/addButton showPositrons "Show 100" "/control/execute visPositrons100.mac"
+/gui/addButton showPositrons "Show 1000" "/control/execute visPositrons1000.mac"
+/gui/addButton showPositrons "Show 10000" "/control/execute visPositrons10000.mac"
+/gui/addButton showPositrons "Show 100000" "/control/execute visPositrons100000.mac"
+/gui/addButton showPositrons "Show 1000000" "/control/execute visPositrons1000000.mac"
+
+
+/gui/addMenu FieldEffect "Field Effect"
+/gui/addButton FieldEffect "Show e+" "/control/execute visFieldEffectPositrons.mac"
+/gui/addButton FieldEffect "Shoe e-" "/control/execute visFieldEffectElectrons.mac"
+/gui/addButton FieldEffect "Shoe gamma" "/control/execute visFieldEffectGammas.mac"
