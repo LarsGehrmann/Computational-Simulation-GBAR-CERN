@@ -17,8 +17,8 @@ MyDetectorConstruction::MyDetectorConstruction()        // default construtor
     dModerator = 0.15 * mm; 
     dModeratorEnd = 0.05 * mm;
 
-    dModerator = 150 * mm; // 
-    dModeratorEnd = 50 * mm; //
+    //dModerator = 150 * mm; // 
+    //dModeratorEnd = 50 * mm; //
 
     moderatorMaterialMessenger = "Tungsten";
 
@@ -115,7 +115,7 @@ void MyDetectorConstruction::SetMaterials()
 G4VPhysicalVolume *MyDetectorConstruction::Construct()
 {
 
-    G4double distTargetOrigin = 40 * cm;
+    distTargetOrigin = 30 * cm;
 
     MyDetectorConstruction::SetMaterials();
 
@@ -165,7 +165,7 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
 	logicWorld = new G4LogicalVolume(solidWorld, worldMat, "logicVWorld");  // contains all information of volume except position
 
     //physicalTarget = new G4PVPlacement(RotationTarget, G4ThreeVector(distGunTar + dTargetOut / 2, 0., 0.), logicTarget, "physicalTarget", logicWorld, false, 1, true);         
-    physicalTarget = new G4PVPlacement(RotationTarget, G4ThreeVector(distTargetOrigin, 0., 0.), logicTarget, "physicalTarget", logicWorld, false, 1, true);
+    physicalTarget = new G4PVPlacement(RotationTarget, G4ThreeVector(distTargetOrigin + dTargetOut / 2, 0., 0.), logicTarget, "physicalTarget", logicWorld, false, 1, true);
 
 
     physicalWorld = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicWorld, "physicalWorld", 0, false, 0, true);
@@ -222,11 +222,36 @@ void MyDetectorConstruction::ConstructSDandField() {
     logicModeratorEnd->SetSensitiveDetector(sensDetModeratorEnd);
     */
 
+
+    globalField* globField = new globalField();
+
+
+    G4double point[4];
+    G4double field[6];
+    point[0] = 70 * cm;
+    point[1] = 0;
+    point[2] = 0;
+    point[3] = 0;
+    globField->GetFieldValue(point, field);
+    G4cout << "HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << G4endl;
+    G4cout << "Point: " << point[0] << ", " << point[1] << ", " << point[2] << "; Magnetic Field: " << field[0] << ", " << field[1] << ", " << field[2] << G4endl;
+    G4cout << "Point: " << point[0] << ", " << point[1] << ", " << point[2] << "; Electric Field: " << field[3] << ", " << field[4] << ", " << field[5] << G4endl;
+
+
+    G4FieldManager* fieldMgr = G4TransportationManager::GetTransportationManager()->GetFieldManager();
+    fieldMgr->SetDetectorField(globField);
+    G4ChordFinder* chordFinder = globField->getChordFinder();
+    fieldMgr->SetChordFinder(chordFinder);
+
+
+    /*
     if (!fFieldSetUp.Get()) {
         globalField* field = globalField::GetObject(this);
         G4AutoDelete::Register(field);  // Kernel will delete the F04GlobalField
         fFieldSetUp.Put(field);
     }
+    */
+
 
     /*
     elField = new MyElectricField();

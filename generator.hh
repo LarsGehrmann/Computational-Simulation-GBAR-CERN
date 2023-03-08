@@ -7,6 +7,9 @@
 #include "G4ParticleTable.hh"
 #include "G4GenericMessenger.hh"
 
+extern G4double distTargetOrigin;
+extern G4double avgE;
+
 class MyPrimaryGenerator : public G4VUserPrimaryGeneratorAction
 {
 	public:

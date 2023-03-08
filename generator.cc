@@ -2,8 +2,7 @@
 #include "Randomize.hh"
 
 
-extern G4double sigmaPos;
-extern G4double avgE;
+
 
 MyPrimaryGenerator::MyPrimaryGenerator()
 {	
@@ -28,20 +27,18 @@ MyPrimaryGenerator::~MyPrimaryGenerator()
 void MyPrimaryGenerator::GeneratePrimaries(G4Event *anEvent)
 {
 
-	G4double radiusCircle = 2.5 * mm;
-	G4double sigmaEnergy = 0.2 * MeV;
-	G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-	G4String particleName = "e-";
-	G4ParticleDefinition* particle = particleTable->FindParticle("e-");
+	//G4double sigmaEnergy = 0.2 * MeV;
+	G4double sigmaEnergy = 0.0 * MeV;//
 
+	G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+	G4ParticleDefinition* particle = particleTable->FindParticle("e-"); //
 
 	
-	G4ThreeVector pos(55 * cm, 0., 0.);
+	//G4ThreeVector pos(0.55 * m, 0.03 * m,  - 0.05 * m);
+	G4ThreeVector pos(distTargetOrigin + 1 * cm + 1 * cm, 0, 0);
 	G4ThreeVector mom(-1., 0., 0);
-	G4double randPos;	// to test whether beam hits the thin target
 	G4double energy;
 	energy = CLHEP::RandGaussQ::shoot(avgE, sigmaEnergy);
-
 
 	fParticleGun->SetParticlePosition(pos);
 	fParticleGun->SetParticleMomentumDirection(mom);

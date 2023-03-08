@@ -28,8 +28,9 @@
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
 
-#include "magneticField.hh"
-#include "electricField.hh"
+//#include "magneticField.hh"
+//#include "electricField.hh"
+#include "globalField.hh"
 
 #include "G4AnalysisManager.hh"
 
@@ -42,6 +43,7 @@
 extern G4double dModerator;
 extern G4double dModeratorEnd;
 extern G4double distTarMod;
+extern G4double distTargetOrigin;
 
 class globalField;
 

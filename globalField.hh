@@ -28,8 +28,8 @@
 /// \brief Definition of the globalField class
 //
 
-#ifndef globalField_h
-#define globalField_h 1
+#ifndef globalField_hh
+#define globalField_hh
 
 #include <vector>
 
@@ -47,7 +47,6 @@
 #include "G4EqMagElectricField.hh"
 #include "G4EqEMFieldWithSpin.hh"
 
-//#include "F04FieldMessenger.hh"
 #include "elementField.hh"
 
 #include "construction.hh"
@@ -69,7 +68,8 @@ class globalField : public G4ElectroMagneticField {
 
 private:
 
-  globalField(MyDetectorConstruction* const);
+  //globalField(MyDetectorConstruction* const);
+
   globalField(const globalField&);
 
   globalField& operator=(const globalField&);
@@ -77,12 +77,16 @@ private:
   void SetupArray();
 
 public:
-
+	globalField();
   virtual ~globalField();
+
+
+
+  G4ChordFinder* getChordFinder();
 
   /// GetObject() returns the single globalField object.
   /// It is constructed, if necessary.
-  static globalField* GetObject(MyDetectorConstruction* const);
+  //static globalField* GetObject(MyDetectorConstruction* const);
   static globalField* GetObject();
 
   /// GetFieldValue() returns the field value at a given point[].
@@ -157,7 +161,7 @@ private:
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // code to use field from TAB file
 	// The dimensions of the table
-	G4int nx = 101, ny = 101, nz = 101;
+	G4int nx = 201, ny = 201, nz = 201;
 	// The physical limits of the defined region
 	double minx, maxx, miny, maxy, minz, maxz;
 	// The physical extent of the defined region
@@ -207,7 +211,7 @@ private:
 
   // INVARIANTS during tracking: Auxiliary class & information - used for setup
   //F04FieldMessenger*       fFieldMessenger;
-  MyDetectorConstruction* fDetectorConstruction= nullptr;
+  //MyDetectorConstruction* fDetectorConstruction= nullptr;
 };
 
 #endif

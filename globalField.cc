@@ -42,23 +42,22 @@
 #include "G4SystemOfUnits.hh"
 
 #include "globalField.hh"
-//#include "F04SimpleSolenoid.hh"
-//#include "F04FocusSolenoid.hh"
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 G4ThreadLocal globalField* globalField::fObject = 0;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-globalField::globalField(MyDetectorConstruction* det) : G4ElectroMagneticField(),   //  old  : G4MagneticField(),
-    fMinStep(0.01*mm), fDeltaChord(3.0*mm),
+/**/
+globalField::globalField() : G4ElectroMagneticField(),   //  old  : G4MagneticField(),
+    fMinStep(0.01*mm), fDeltaChord(0.5*mm),
     fDeltaOneStep(0.01*mm), fDeltaIntersection(0.1*mm),
     fEpsMin(2.5e-7), fEpsMax(0.001),  // These are pure numbers -- relative values
     fEquation(0), fFieldManager(0),
-    fFieldPropagator(0), fStepper(0), fChordFinder(0),
+    fFieldPropagator(0), fStepper(0), fChordFinder(0)
     
-    fDetectorConstruction(det)
+    //fDetectorConstruction(det)
 {
   //fFieldMessenger = new F04FieldMessenger(this,det);
 
@@ -75,14 +74,16 @@ globalField::globalField(MyDetectorConstruction* det) : G4ElectroMagneticField()
   fNfp = 0;
   fFp = NULL;
 
-  ConstructField();
+
 
   G4String fieldType;
-
   fieldType = "mag";
   readField(fieldType);
   fieldType = "el";
   readField(fieldType);
+
+  ConstructField();
+
 
 }
 
@@ -125,34 +126,33 @@ void globalField::readField(G4String fieldType) {
 			for (iy = 0; iy < ny; iy++) {
 				for (iz = 0; iz < nz; iz++) {
 					file >> xval >> yval >> zval >> bx >> by >> bz;
-					//G4cout << "xval: " << xval << ", yval: " << yval << ", zval: " << zval << G4endl;
-
+					// scale to get from meter to millimeter
 					xval *= 1000;
 					yval *= 1000;
 					zval *= 1000;
-					//exit(0);
 					/*
-					if (isnan(xval))
-					{
-						xval = 0.0;
-					}
-					if (isnan(yval))
-					{
-						yval = 0.0;
-					}
-					if (isnan(zval))
-					{
-						zval = 0.0;
+					if (xval == 0) {
+						G4cout << "Point: " << xval << ",  " << yval << ",  " << zval << "; Magnetic field: " << bx << ", " << by << ", " << bz << G4endl;
 					}
 					*/
+
 					if (ix == 0 && iy == 0 && iz == 0) {
 						minx = xval * lenUnit;
 						miny = yval * lenUnit;
 						minz = zval * lenUnit;
 					}
-					BxField[ix][iy][iz] = bx * fieldUnit;
-					ByField[ix][iy][iz] = by * fieldUnit;
-					BzField[ix][iy][iz] = bz * fieldUnit;
+					// yeah I have no idea, why I have to scale ????
+					BxField[ix][iy][iz] = bx * tesla; // *1000;
+					ByField[ix][iy][iz] = by * tesla; // *1000;
+					BzField[ix][iy][iz] = bz * tesla; // *1000;
+					/*
+					if (xval == 0 && zval == 500) {
+						G4cout << "Point: " << xval << ",  " << yval << ",  " << zval << "; Magnetic field: " << bx << ", " << by << ", " << bz << G4endl;
+						G4cout << "Point: " << xval << ",  " << yval << ",  " << zval << "; Magnetic field: " << BxField[ix][iy][iz] << ", " << ByField[ix][iy][iz] << ", " << BzField[ix][iy][iz] << G4endl;
+
+					}
+					*/
+					
 				}
 			}
 		}
@@ -222,33 +222,27 @@ void globalField::readField(G4String fieldType) {
 				for (iz = 0; iz < nz; iz++) {
 					file >> xval >> yval >> zval >> ex >> ey >> ez;
 					//G4cout << "xval: " << xval << ", yval: " << yval << ", zval: " << zval << G4endl;
-
 					xval *= 1000;
 					yval *= 1000;
 					zval *= 1000;
-					//exit(0);
-					/*
-					if (isnan(xval))
-					{
-						xval = 0.0;
-					}
-					if (isnan(yval))
-					{
-						yval = 0.0;
-					}
-					if (isnan(zval))
-					{
-						zval = 0.0;
-					}
-					*/
 					if (ix == 0 && iy == 0 && iz == 0) {
 						minx = xval * lenUnit;
 						miny = yval * lenUnit;
 						minz = zval * lenUnit;
 					}
-					ExField[ix][iy][iz] = ex * fieldUnit;
-					EyField[ix][iy][iz] = ey * fieldUnit;
-					EzField[ix][iy][iz] = ez * fieldUnit;
+					// see BxField[ix]... = 
+					ExField[ix][iy][iz] = ex * fieldUnit;// *1000000000;
+					EyField[ix][iy][iz] = ey * fieldUnit; // *1000000000;
+					EzField[ix][iy][iz] = ez * fieldUnit; // *1000000000;
+					
+					/*
+					if (xval == 0) {
+						G4cout << "Point: " << xval << ",  " << yval << ",  " << zval << "; Electric field: " << ex << ", " << ey << ", " << ez << G4endl;
+						G4cout << "Point: " << xval << ",  " << yval << ",  " << zval << "; Electric field: " << ExField[ix][iy][iz] << ", " << EyField[ix][iy][iz] << ", " << EzField[ix][iy][iz] << G4endl;
+
+					}
+					*/
+					
 				}
 			}
 		}
@@ -308,6 +302,13 @@ globalField::~globalField()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
+
+G4ChordFinder* globalField::getChordFinder() {
+	return this->fChordFinder;
+}
+
+
+
 void globalField::ConstructField()
 {
   Clear();
@@ -365,32 +366,6 @@ void globalField::ConstructField()
   fFieldManager->SetChordFinder(fChordFinder);
 
   G4double l = 0.0;
-  //G4double B1 = fDetectorConstruction->GetCaptureMgntB1();
-  //G4double B2 = fDetectorConstruction->GetCaptureMgntB2();
-
-  //G4LogicalVolume* logicCaptureMgnt = fDetectorConstruction->GetCaptureMgnt();
-  //G4ThreeVector captureMgntCenter =               fDetectorConstruction->GetCaptureMgntCenter();
-
-  //F04FocusSolenoid* focusSolenoid =
-   //        new F04FocusSolenoid(B1, B2, l, logicCaptureMgnt,captureMgntCenter);
-  //focusSolenoid -> SetHalf(true);
-
-  //G4double B = fDetectorConstruction->GetTransferMgntB();
-
-  //G4LogicalVolume* logicTransferMgnt =
-    //                                  fDetectorConstruction->GetTransferMgnt();
-  //G4ThreeVector transferMgntCenter =
-    //                            fDetectorConstruction->GetTransferMgntCenter();
-
-  /*
-  F04SimpleSolenoid* simpleSolenoid =
-             new F04SimpleSolenoid(B, l, logicTransferMgnt,transferMgntCenter);
-
-  simpleSolenoid->SetColor("1,0,1");
-  simpleSolenoid->SetColor("0,1,1");
-  simpleSolenoid->SetMaxStep(1.5*mm);
-  simpleSolenoid->SetMaxStep(2.5*mm);
-  */
 
   if (fFields) {
      if (fFields->size()>0) {
@@ -404,20 +379,20 @@ void globalField::ConstructField()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-globalField* globalField::GetObject(MyDetectorConstruction* det)
+globalField* globalField::GetObject()
 {
-  if (!fObject) new globalField(det);
+  if (!fObject) new globalField();
   return fObject;
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
+/*
 globalField* globalField::GetObject()
 {
   if (fObject) return fObject;
   return NULL;
 }
-
+*/
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void globalField::SetStepper()
@@ -470,10 +445,11 @@ G4FieldManager* globalField::GetGlobalFieldManager()
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-void globalField::GetFieldValue(const G4double* point, G4double* field) const
+void globalField::GetFieldValue(const G4double* point, G4double* field) const /////////////////////////////////////////////////////////////////////////////////////
 {
+	//G4cout << "In getFieldValue!!!" << G4endl;
 
-	/////////////////////////////////////////////////////////////////////////////////////
+	
 	double x = point[0];
 	double y = point[1];
 	double z = point[2];
@@ -555,6 +531,7 @@ void globalField::GetFieldValue(const G4double* point, G4double* field) const
 			BzField[xindex + 1][yindex][zindex + 1] * xlocal * (1 - ylocal) * zlocal +
 			BzField[xindex + 1][yindex + 1][zindex] * xlocal * ylocal * (1 - zlocal) +
 			BzField[xindex + 1][yindex + 1][zindex + 1] * xlocal * ylocal * zlocal;
+
 		//////////////////////////
 		field[3] =
 			ExField[xindex][yindex][zindex] * (1 - xlocal) * (1 - ylocal) * (1 - zlocal) +
@@ -583,67 +560,13 @@ void globalField::GetFieldValue(const G4double* point, G4double* field) const
 			EzField[xindex + 1][yindex][zindex + 1] * xlocal * (1 - ylocal) * zlocal +
 			EzField[xindex + 1][yindex + 1][zindex] * xlocal * ylocal * (1 - zlocal) +
 			EzField[xindex + 1][yindex + 1][zindex + 1] * xlocal * ylocal * zlocal;
-
 	}
 
-	//G4cout << "x: " << x << ", y: " << y << ", z: " << z << G4endl;
-	//G4cout << "Bx: " << Bfield[0] << ", By: " << Bfield[1] << ", Bz: " << Bfield[2] <<  G4endl;
-	/*
-	if (Bfield[0] != 0) {
-		G4cout << "Bx: " << Bfield[0] << G4endl;
-	}
-
-	if (Bfield[1] != 0) {
-		G4cout << "By: " << Bfield[1] << G4endl;
-	}
-
-	if (Bfield[2] != 0) {
-		G4cout << "Bz: " << Bfield[2] << G4endl;
-	}
-	*/
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   // NOTE: this routine dominates the CPU time for tracking.
   // Using the simple array fFp[] instead of fields[] 
   // directly sped it up
-
-
-
-
-
-
-
-
-
 
     /*
   field[0] = field[1] = field[2] = field[3] = field[4] = field[5] = 0.0;
@@ -661,6 +584,42 @@ void globalField::GetFieldValue(const G4double* point, G4double* field) const
       }
   }
   */
+	/*
+	// scale B-field
+	G4double scaleB = 1;
+	for (int i = 0; i < 3; i++) {
+		field[i] *= scaleB;
+	}
+	// scale E-field
+	G4double scaleE = 1;
+	for (int i = 3; i < 6; i++) {
+		field[i] *= scaleE;
+	}
+	
+			*/
+	
+	/*
+	G4double normB = 0;
+	for (int i = 0; i < 3; ++i) {
+		normB += field[i] * field[i];
+	}
+	normB = sqrt(normB);
+
+	if (point[1] == 0 && point[2] == 0) {
+		G4cout << "Point: " << point[0] << ", " << point[1] << ", " << point[2] << "; Magnetic Field: " << field[0] <<", " << field[1] << ", " << field[2] << ";    Norm of magnetic field : " << normB << G4endl;
+	}
+
+
+	G4double normE = 0;
+	for (int i = 3; i < 6; ++i) {
+		normE += field[i] * field[i];
+	}
+	normE = sqrt(normE);
+	if (point[1] == 0 && point[2] == 0) {
+		G4cout << "Point: " << point[0] << ", " << point[1] << ", " << point[2] << "; Electric Field: " << field[3] << ", " << field[4] << ", " << field[5] << ";    Norm of electric field : " << normE << G4endl;
+	}
+	*/
+
 
 }
 
@@ -691,3 +650,20 @@ void globalField::SetupArray()
   fFp = new const elementField* [fNfp+1]; // add 1 so it's never 0
   for (int i=0; i<fNfp; ++i) fFp[i] = (*fFields)[i];
 }
+
+
+//exit(0);
+/*
+if (isnan(xval))
+{
+	xval = 0.0;
+}
+if (isnan(yval))
+{
+	yval = 0.0;
+}
+if (isnan(zval))
+{
+	zval = 0.0;
+}
+*/
