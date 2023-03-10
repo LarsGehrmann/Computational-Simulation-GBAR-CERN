@@ -122,36 +122,33 @@ void globalField::readField(G4String fieldType) {
 		G4double bx = 0.;
 		G4double by = 0.;
 		G4double bz = 0.;
-		for (ix = 0; ix < nx; ix++) {
+		for (iz = 0; iz < nz; iz++) {
 			for (iy = 0; iy < ny; iy++) {
-				for (iz = 0; iz < nz; iz++) {
+				for (ix = 0; ix < nx; ix++) {
 					file >> xval >> yval >> zval >> bx >> by >> bz;
 					// scale to get from meter to millimeter
 					xval *= 1000;
 					yval *= 1000;
 					zval *= 1000;
 					/*
-					if (xval == 0) {
+					if (iy == 30) {
 						G4cout << "Point: " << xval << ",  " << yval << ",  " << zval << "; Magnetic field: " << bx << ", " << by << ", " << bz << G4endl;
 					}
 					*/
+					
 
 					if (ix == 0 && iy == 0 && iz == 0) {
 						minx = xval * lenUnit;
 						miny = yval * lenUnit;
 						minz = zval * lenUnit;
 					}
+
 					// yeah I have no idea, why I have to scale ????
 					BxField[ix][iy][iz] = bx * tesla; // *1000;
 					ByField[ix][iy][iz] = by * tesla; // *1000;
 					BzField[ix][iy][iz] = bz * tesla; // *1000;
-					/*
-					if (xval == 0 && zval == 500) {
-						G4cout << "Point: " << xval << ",  " << yval << ",  " << zval << "; Magnetic field: " << bx << ", " << by << ", " << bz << G4endl;
-						G4cout << "Point: " << xval << ",  " << yval << ",  " << zval << "; Magnetic field: " << BxField[ix][iy][iz] << ", " << ByField[ix][iy][iz] << ", " << BzField[ix][iy][iz] << G4endl;
 
-					}
-					*/
+					
 					
 				}
 			}
@@ -160,6 +157,7 @@ void globalField::readField(G4String fieldType) {
 		maxx = xval * lenUnit;
 		maxy = yval * lenUnit;
 		maxz = zval * lenUnit;
+
 		//
 		G4cout << "\n ---> ... done reading " << G4endl;
 
@@ -184,7 +182,7 @@ void globalField::readField(G4String fieldType) {
 		dy = maxy - miny;
 		dz = maxz - minz;
 		G4cout << "\n ---> Dif values x,y,z (range): "
-			<< dx / m << " " << dy / m << " " << dz / m << " m in z "
+			<< dx / mm << " " << dy / mm << " " << dz / mm << " mm in z "
 			<< "\n-----------------------------------------------------------" << G4endl;
 	}
 	else if (fieldType == "el") {	/////////////////////////////////////////////////////////
@@ -217,9 +215,9 @@ void globalField::readField(G4String fieldType) {
 		G4double ex = 0.;
 		G4double ey = 0.;
 		G4double ez = 0.;
-		for (ix = 0; ix < nx; ix++) {
+		for (iz = 0; iz < nz; iz++) {
 			for (iy = 0; iy < ny; iy++) {
-				for (iz = 0; iz < nz; iz++) {
+				for (ix = 0; ix < nx; ix++) {
 					file >> xval >> yval >> zval >> ex >> ey >> ez;
 					//G4cout << "xval: " << xval << ", yval: " << yval << ", zval: " << zval << G4endl;
 					xval *= 1000;
@@ -274,7 +272,7 @@ void globalField::readField(G4String fieldType) {
 		dy = maxy - miny;
 		dz = maxz - minz;
 		G4cout << "\n ---> Dif values x,y,z (range): "
-			<< dx / m << " " << dy / m << " " << dz / m << " m in z "
+			<< dx / mm << " " << dy / mm << " " << dz / mm << " mm in z "
 			<< "\n-----------------------------------------------------------" << G4endl;
 	}
 	else {
@@ -502,6 +500,18 @@ void globalField::GetFieldValue(const G4double* point, G4double* field) const //
 		valx0z1 = table[xindex][0][zindex + 1]; mulx0z1 = (1 - xlocal) * zlocal;
 		valx1z1 = table[xindex + 1][0][zindex + 1]; mulx1z1 = xlocal * zlocal;
 #endif
+		/*
+		xindex = 15;
+		yindex = 10;
+		zindex = 10;
+		
+		G4cout << "---------------------------------------------------------------------" << G4endl;
+		G4cout << "x,y,z: " << point[0] << ", " << point[1] << ", " << point[2] << G4endl;
+		G4cout << "idx:: " << xindex << ",  " << yindex << ",  " << zindex << G4endl;
+		G4cout << "Magnetic field: " << BxField[xindex][yindex][zindex] << ", " << 
+			ByField[xindex][yindex][zindex] << ", " << BzField[xindex][yindex][zindex] << G4endl;
+		exit(1);
+		*/
 
 		// Full 3(->6)-dimensional version
 		field[0] =

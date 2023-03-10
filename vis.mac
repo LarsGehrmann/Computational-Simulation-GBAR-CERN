@@ -1,12 +1,14 @@
 /vis/open OGL 600x600 -0+0
 #/vis/open RayTracerX
 /vis/drawVolume
-#/vis/scene/add/axes 0 0 0 1000 mm black
+/vis/scene/add/axes 0 0 0 1000 mm black
 /vis/scene/add/eventID
 /vis/scene/add/date
 /vis/scene/add/trajectories rich
 /vis/geometry/set/visibility logicVWorld 0 false
 /vis/viewer/set/viewpointVector 0.5 0.5 0.5
+#/vis/viewer/set/viewpointVector 0 0 1
+
 #/vis/modeling/trajectories/create/drawByCharge
 #/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
 #/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
@@ -28,13 +30,19 @@
 /vis/geometry/set/forceSolid logicCoils 1 1
 /vis/geometry/set/forceSolid logicElectrode 1 1
 /vis/geometry/set/forceSolid logicSolenoid 1 1
+/vis/geometry/set/forceSolid logicTar 1 1
+/vis/geometry/set/forceSolid logicMod 1 1
+
 
 #/vis/scene/add/scale 1 cm x 1 0 0 manual 1.5 9.5 0 cm
 #/vis/scene/add/scale 9.5 cm z 1 0 0 manual 1 0 4.75 cm
 
+
+#/vis/scene/add/scale 50 cm x 1 0 0 manual 25 0 0 cm
+#/vis/scene/add/scale 45.3333 cm x 0 1 0 manual 22.6667 0 0 cm
+
 #/vis/scene/add/scale 19 mm y 0 0 1 manual 20.2 0 9.5 mm
 #/vis/scene/add/scale 19 mm z 0 0 1 manual 20.2 9.5 0. mm
-
-#/vis/scene/add/magneticField 10
-#/vis/scene/removeModel/electricField
+/run/beamOn 50
+#/vis/scene/add/electricField 10
 #/vis/scene/add/magneticField 10

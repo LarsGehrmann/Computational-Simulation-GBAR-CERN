@@ -32,7 +32,10 @@ G4int noPairProductionMod;
 G4int noAnnihilationModEnd;
 G4int noPairProductionModEnd;
 
-G4double distTargetOrigin;
+G4double distTargetOrigin = 50.5 * cm;
+G4int choiceGeometry = 1;
+G4int choiceParticle = 4;
+
 
 int main(int argc, char** argv)
 {

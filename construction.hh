@@ -44,6 +44,7 @@ extern G4double dModerator;
 extern G4double dModeratorEnd;
 extern G4double distTarMod;
 extern G4double distTargetOrigin;
+extern G4int choiceGeometry;
 
 class globalField;
 
@@ -71,7 +72,7 @@ private:
     G4Box* solidWorld, * solidModerator, * solidModeratorEnd;
     G4Tubs* solidTargetOut, * solidTargetIn;
     G4SubtractionSolid *solidTarget;
-    G4VSolid* coilsSolid, *electrodeSolid, *solenoidSolid;
+    G4VSolid* coilsSolid, *electrodeSolid, *solenoidSolid, *tarSolid,  *modSolid;
 
     G4RotationMatrix * RotationTarget, * RotationModerator;
     G4ThreeVector zTrans;
@@ -81,9 +82,9 @@ private:
     G4Element * elNe, * elH, * elW;
     G4Material  * Ne, * H2, * W;
     // logical volumes
-    G4LogicalVolume *logicTarget, *logicModerator, *logicModeratorEnd, *logicWorld, *logicCoils, *logicElectrode, *logicSolenoid;
+    G4LogicalVolume *logicTarget, *logicModerator, *logicModeratorEnd, *logicWorld, *logicCoils, *logicElectrode, *logicSolenoid, *logicTar, *logicMod;
     // physical volumes
-    G4VPhysicalVolume *physicalTarget, *physicalModerator, *physicalModeratorEnd, *physicalWorld, *physicalCoils, *physicalElectrode, *physicalSolenoid;
+    G4VPhysicalVolume *physicalTarget, *physicalModerator, *physicalModeratorEnd, *physicalWorld, *physicalCoils, *physicalElectrode, *physicalSolenoid, *physicalTar, *physicalMod;
     // sensitive detector
     MySensitiveDetector* sensDetModerator;
     MySensitiveDetector* sensDetModeratorEnd;
@@ -96,11 +97,10 @@ private:
 
     G4Cache<globalField*> fFieldSetUp;
 
-
-
-
     G4bool placeBehind;
     G4double angleToAxis;
     G4double angleOfModerator;
+
+
 };
 #endif

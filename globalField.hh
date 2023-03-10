@@ -161,7 +161,7 @@ private:
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // code to use field from TAB file
 	// The dimensions of the table
-	G4int nx = 201, ny = 201, nz = 201;
+	G4int nx = 21, ny = 21, nz = 21;
 	// The physical limits of the defined region
 	double minx, maxx, miny, maxy, minz, maxz;
 	// The physical extent of the defined region
