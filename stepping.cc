@@ -65,7 +65,7 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 		}
 	}
 
-	// 
+	// Pair production and annihlation processes
 	if (aStep->GetPostStepPoint()->GetProcessDefinedStep()) {
 		const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
 		if (procName == "conv") {
@@ -98,5 +98,8 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 			}
 		}
 	}
+
+
+
 
 }

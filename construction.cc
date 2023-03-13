@@ -14,13 +14,15 @@ MyDetectorConstruction::MyDetectorConstruction()        // default construtor
     distTarMod = 2 * mm;
     distTarMod = 200 * mm; //
 
+    /*
     dModerator = 0.15 * mm; 
     dModeratorEnd = 0.05 * mm;
+    */
 
     //dModerator = 150 * mm; // 
     //dModeratorEnd = 50 * mm; //
 
-    moderatorMaterialMessenger = "Tungsten";
+   // moderatorMaterialMessenger = "Tungsten";
 
     placeBehind = true;
     placeBehind = false; //
@@ -114,12 +116,7 @@ void MyDetectorConstruction::SetMaterials()
 
 G4VPhysicalVolume *MyDetectorConstruction::Construct()
 {
-    // choiceGeometry determines geometric setup:
-    // 0 custom geometry
-    // 1 COMSOL geometry
-    G4int choice = 0;
     MyDetectorConstruction::SetMaterials();
-
 
     worldVertices = 1000 * mm; // world length
     heightWorld = worldVertices;
@@ -152,8 +149,9 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
 
 
     switch (choiceGeometry) {
-    case 0:        lengthModerator = 19 * mm;
+    case 0:        
         widthModerator = 19 * mm;
+        widthModerator = 200 * mm;//
         // define two cylinders outer and inner and take boolean geometry, subtraction solid
         rTargetOut = 95 * mm; // radius of target (outer)
         dTargetOut = 10 * mm;
@@ -171,24 +169,24 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
         zTrans.setX(0.);
         zTrans.setY(0.);
         zTrans.setZ(dEffectiveTarget / 2);
-        G4cout << "HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << G4endl;
         solidTargetOut = new G4Tubs("solidTargetOut", 0., rTargetOut, dTargetOut / 2, 0, 360);
-        G4cout << "HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << G4endl;
-
         solidTargetIn = new G4Tubs("solidTargetIn", 0., rTargetIn, dTargetIn / 2, 0, 360);
-        G4cout << "HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << G4endl;
-
         solidTarget = new G4SubtractionSolid("solidTarget", solidTargetOut, solidTargetIn, 0, zTrans);
-
         logicTarget = new G4LogicalVolume(solidTarget, targetMaterial, "logicVTarget");
         physicalTarget = new G4PVPlacement(RotationTarget, G4ThreeVector(distTargetOrigin + dTargetOut / 2, 0., 0.), logicTarget, "physicalTarget", logicWorld, false, 1, true);
-
-        solidModerator = new G4Box("solidModerator", dModerator / 2, lengthModerator / 2, widthModerator / 2);
-        solidModeratorEnd = new G4Box("solidModeratorEnd", dModeratorEnd / 2, lengthModerator / 2, widthModerator / 2);
+        
+       // solidModerator = new G4Box("solidModerator", widthModerator / 2, dModerator / 2, widthModerator / 2);
+       //solidModeratorEnd = new G4Box("solidModeratorEnd", widthModerator / 2, dModeratorEnd / 2, widthModerator / 2);
+        solidModerator = new G4Box("solidModerator", dModerator / 2, widthModerator / 2, widthModerator / 2);
+        solidModeratorEnd = new G4Box("solidModeratorEnd", dModeratorEnd / 2, widthModerator / 2, widthModerator / 2);
+        
         logicModerator = new G4LogicalVolume(solidModerator, moderatorMaterial, "logicVModerator");
         logicModeratorEnd = new G4LogicalVolume(solidModeratorEnd, moderatorEndMaterial, "logicVModeratorEnd");
-        physicalModerator = new G4PVPlacement(0, G4ThreeVector(0, 60 * cm + dModerator / 2, 0), logicModerator, "physicalModerator", logicWorld, false, 2, true);
-        physicalModeratorEnd = new G4PVPlacement(0, G4ThreeVector(0, 60 * cm + dModerator + dModeratorEnd/2, 0), logicModeratorEnd, "physicalModeratorEnd", logicWorld, false, 3, true);
+
+        //physicalModerator = new G4PVPlacement(0, G4ThreeVector(0, 60 * cm + dModerator / 2, 0), logicModerator, "physicalModerator", logicWorld, false, 2, true);
+        //physicalModeratorEnd = new G4PVPlacement(0, G4ThreeVector(0, 60 * cm + dModerator + dModeratorEnd / 2, 0), logicModeratorEnd, "physicalModeratorEnd", logicWorld, false, 3, true);
+        physicalModerator = new G4PVPlacement(0, G4ThreeVector(distTargetOrigin - dTargetOut - 2*mm - dModerator/2, 0., 0.), logicModerator, "physicalModerator", logicWorld, false, 2, true);
+        physicalModeratorEnd = new G4PVPlacement(0, G4ThreeVector(distTargetOrigin - dTargetOut - 2 * mm - dModerator - dModeratorEnd / 2, 0., 0.), logicModeratorEnd, "physicalModeratorEnd", logicWorld, false, 3, true);
 
         break;
     case 1:

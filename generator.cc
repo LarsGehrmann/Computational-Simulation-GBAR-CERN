@@ -27,13 +27,6 @@ void MyPrimaryGenerator::GeneratePrimaries(G4Event *anEvent)
 {
 
 	G4double eps = 0.01 * cm; // offset actual particle start to avoid interaction in "starting material"
-
-	// choice determines type of particles:
-	// 0 fast e- from actual target
-	// 1 slow e+ from actual moderator
-	// 2 fast e- from COMSOL target
-	// 3 fast e+ from COMSOL target
-	// 4 slow e+ from COMSOL moderator
 	G4double energy = 0;
 	G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
 	G4double x, y, z, r, theta;

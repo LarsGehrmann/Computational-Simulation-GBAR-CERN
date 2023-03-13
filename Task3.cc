@@ -15,11 +15,11 @@
 #include "detector.hh"
 
 
-G4double dModerator;
-G4double dModeratorEnd;
+G4double dModerator = 0.15 * mm;
+G4double dModeratorEnd = 0.05 * mm;
 G4double distTarMod;
 G4double sigmaPos;
-G4double avgE;
+G4double avgE = 9*MeV;
 
 G4double eDepMod;
 G4double eDepModGamma;
@@ -33,8 +33,20 @@ G4int noAnnihilationModEnd;
 G4int noPairProductionModEnd;
 
 G4double distTargetOrigin = 50.5 * cm;
-G4int choiceGeometry = 1;
-G4int choiceParticle = 4;
+G4int choiceGeometry = 0;
+G4int choiceParticle = 0;
+
+
+// choiceGeometry determines geometric setup:
+// 0 custom geometry
+// 1 COMSOL geometry
+/*--------------------------------------------*/
+// choiceParticle determines type of particles:
+// 0 fast e- from actual target
+// 1 slow e+ from actual moderator
+// 2 fast e- from COMSOL target
+// 3 fast e+ from COMSOL target
+// 4 slow e+ from COMSOL moderator
 
 
 int main(int argc, char** argv)

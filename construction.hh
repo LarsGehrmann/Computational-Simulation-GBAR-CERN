@@ -62,7 +62,7 @@ private:
     G4GenericMessenger* fMessenger;
     void DefineMaterials();
     void SetMaterials();
-    G4String moderatorMaterialMessenger;
+    G4String moderatorMaterialMessenger = "Tungsten";
     G4String outputNameParameters;
     //parameters to change
     G4double distGunTar; // are global now lol , distTarMod, dModerator;
