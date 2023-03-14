@@ -33,13 +33,14 @@ G4int noAnnihilationModEnd;
 G4int noPairProductionModEnd;
 
 G4double distTargetOrigin = 50.5 * cm;
-G4int choiceGeometry = 0;
+G4int choiceGeometry = 2;
 G4int choiceParticle = 0;
 
 
 // choiceGeometry determines geometric setup:
 // 0 custom geometry
 // 1 COMSOL geometry
+// 2 sample e+ geometry
 /*--------------------------------------------*/
 // choiceParticle determines type of particles:
 // 0 fast e- from actual target

@@ -100,6 +100,42 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 	}
 
 
+	if (choiceGeometry == 2) {
+		G4double x, y, z, px, py, pz, E;
+		if (aStep->GetPreStepPoint()->GetProcessDefinedStep()) {
+			const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
+			const G4String& particleName = aStep->GetTrack()->GetDefinition()->GetParticleName();
+			G4String volumeName = aStep->GetTrack()->GetVolume()->GetName();
+			if (particleName == "e+" && volumeName == "physicalSampleWall") {
+				man = G4AnalysisManager::Instance();
+				man->SetVerboseLevel(0);
+				x = aStep->GetPreStepPoint()->GetPosition().getX();
+				y = aStep->GetPreStepPoint()->GetPosition().getY();
+				z = aStep->GetPreStepPoint()->GetPosition().getZ();
+				G4cout << "x,y,z: " << x << ", " << y << ", " << z << G4endl;
+				px = aStep->GetPreStepPoint()->GetMomentumDirection().getX();
+				py = aStep->GetPreStepPoint()->GetMomentumDirection().getY();
+				pz = aStep->GetPreStepPoint()->GetMomentumDirection().getZ();
+				G4cout << "px,py,pz: " << px << ", " << py << ", " << pz << G4endl;
+				E = aStep->GetPreStepPoint()->GetKineticEnergy();
+				G4cout << "E: " << E << G4endl;
+				man->FillNtupleDColumn(3, 0, x);
+				man->FillNtupleDColumn(3, 1, y);
+				man->FillNtupleDColumn(3, 2, z);
+				man->FillNtupleDColumn(3, 3, px);
+				man->FillNtupleDColumn(3, 4, py);
+				man->FillNtupleDColumn(3, 5, pz);
+				man->FillNtupleDColumn(3, 6, E);
+
+				man->AddNtupleRow(3);
+				aStep->GetTrack()->SetTrackStatus(fKillTrackAndSecondaries);
+
+			}
+		}
+
+	}
+
+
 
 
 }

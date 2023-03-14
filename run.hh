@@ -41,6 +41,7 @@ private:
 	G4String outputNameValues;
 	G4String outputNameParameters;
 	G4String outputNameHisto;
+	G4String outputNameSample;
 };
 
 #endif

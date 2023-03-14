@@ -8,16 +8,15 @@
 
 MyDetectorConstruction::MyDetectorConstruction()        // default construtor
 {
-
     outputNameParameters = "OutputParameters";
     distGunTar = 10 * mm;
     distTarMod = 2 * mm;
     distTarMod = 200 * mm; //
 
-    /*
+    
     dModerator = 0.15 * mm; 
     dModeratorEnd = 0.05 * mm;
-    */
+    
 
     //dModerator = 150 * mm; // 
     //dModeratorEnd = 50 * mm; //
@@ -127,6 +126,9 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
     physicalWorld = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicWorld, "physicalWorld", 0, false, 0, true);
 
 
+    G4double widthSampleWall = 20 * cm;
+    G4double thicknessSampleWall = 0.001 * mm;
+
 
 
     auto meshCoils = CADMesh::TessellatedMesh::FromSTL("coils.stl");
@@ -149,7 +151,7 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
 
 
     switch (choiceGeometry) {
-    case 0:        
+    case 0: {
         widthModerator = 19 * mm;
         widthModerator = 200 * mm;//
         // define two cylinders outer and inner and take boolean geometry, subtraction solid
@@ -174,22 +176,23 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
         solidTarget = new G4SubtractionSolid("solidTarget", solidTargetOut, solidTargetIn, 0, zTrans);
         logicTarget = new G4LogicalVolume(solidTarget, targetMaterial, "logicVTarget");
         physicalTarget = new G4PVPlacement(RotationTarget, G4ThreeVector(distTargetOrigin + dTargetOut / 2, 0., 0.), logicTarget, "physicalTarget", logicWorld, false, 1, true);
-        
-       // solidModerator = new G4Box("solidModerator", widthModerator / 2, dModerator / 2, widthModerator / 2);
-       //solidModeratorEnd = new G4Box("solidModeratorEnd", widthModerator / 2, dModeratorEnd / 2, widthModerator / 2);
-        solidModerator = new G4Box("solidModerator", dModerator / 2, widthModerator / 2, widthModerator / 2);
-        solidModeratorEnd = new G4Box("solidModeratorEnd", dModeratorEnd / 2, widthModerator / 2, widthModerator / 2);
-        
+
+        solidModerator = new G4Box("solidModerator", widthModerator / 2, dModerator / 2, widthModerator / 2);
+        solidModeratorEnd = new G4Box("solidModeratorEnd", widthModerator / 2, dModeratorEnd / 2, widthModerator / 2);
+        //solidModerator = new G4Box("solidModerator", dModerator / 2, widthModerator / 2, widthModerator / 2);
+        //solidModeratorEnd = new G4Box("solidModeratorEnd", dModeratorEnd / 2, widthModerator / 2, widthModerator / 2);
+
         logicModerator = new G4LogicalVolume(solidModerator, moderatorMaterial, "logicVModerator");
         logicModeratorEnd = new G4LogicalVolume(solidModeratorEnd, moderatorEndMaterial, "logicVModeratorEnd");
 
-        //physicalModerator = new G4PVPlacement(0, G4ThreeVector(0, 60 * cm + dModerator / 2, 0), logicModerator, "physicalModerator", logicWorld, false, 2, true);
-        //physicalModeratorEnd = new G4PVPlacement(0, G4ThreeVector(0, 60 * cm + dModerator + dModeratorEnd / 2, 0), logicModeratorEnd, "physicalModeratorEnd", logicWorld, false, 3, true);
-        physicalModerator = new G4PVPlacement(0, G4ThreeVector(distTargetOrigin - dTargetOut - 2*mm - dModerator/2, 0., 0.), logicModerator, "physicalModerator", logicWorld, false, 2, true);
-        physicalModeratorEnd = new G4PVPlacement(0, G4ThreeVector(distTargetOrigin - dTargetOut - 2 * mm - dModerator - dModeratorEnd / 2, 0., 0.), logicModeratorEnd, "physicalModeratorEnd", logicWorld, false, 3, true);
+        physicalModerator = new G4PVPlacement(0, G4ThreeVector(0, 60 * cm + dModerator / 2, 0), logicModerator, "physicalModerator", logicWorld, false, 2, true);
+        physicalModeratorEnd = new G4PVPlacement(0, G4ThreeVector(0, 60 * cm + dModerator + dModeratorEnd / 2, 0), logicModeratorEnd, "physicalModeratorEnd", logicWorld, false, 3, true);
+        //physicalModerator = new G4PVPlacement(0, G4ThreeVector(distTargetOrigin - dTargetOut - 2*mm - dModerator/2, 0., 0.), logicModerator, "physicalModerator", logicWorld, false, 2, true);
+        //physicalModeratorEnd = new G4PVPlacement(0, G4ThreeVector(distTargetOrigin - dTargetOut - 2 * mm - dModerator - dModeratorEnd / 2, 0., 0.), logicModeratorEnd, "physicalModeratorEnd", logicWorld, false, 3, true);
 
         break;
-    case 1:
+    }
+    case 1: {
         auto meshMod = CADMesh::TessellatedMesh::FromSTL("mod.stl");
         meshMod->SetScale(1000.0);
         modSolid = meshMod->GetSolid();
@@ -204,6 +207,41 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
 
         break;
     }
+    case 2: {
+        // define two cylinders outer and inner and take boolean geometry, subtraction solid
+        rTargetOut = 95 * mm; // radius of target (outer)
+        dTargetOut = 10 * mm;
+        dTargetIn = dTargetOut - dEffectiveTarget;
+
+        rTargetIn = 2.5 * mm; // radius of target (inner)
+        dEffectiveTarget = 1 * mm; // thickness of leftover target after cutting
+        // Create a RotationTarget, matrix that rotates the Target
+        RotationTarget = new G4RotationMatrix();
+        RotationTarget->rotateX(0 * deg);
+        RotationTarget->rotateY(90 * deg);
+        RotationTarget->rotateZ(0 * deg);
+
+        // translate inner cylinder of target
+        zTrans.setX(0.);
+        zTrans.setY(0.);
+        zTrans.setZ(dEffectiveTarget / 2);
+        solidTargetOut = new G4Tubs("solidTargetOut", 0., rTargetOut, dTargetOut / 2, 0, 360);
+        solidTargetIn = new G4Tubs("solidTargetIn", 0., rTargetIn, dTargetIn / 2, 0, 360);
+        solidTarget = new G4SubtractionSolid("solidTarget", solidTargetOut, solidTargetIn, 0, zTrans);
+        logicTarget = new G4LogicalVolume(solidTarget, targetMaterial, "logicVTarget");
+        physicalTarget = new G4PVPlacement(RotationTarget, G4ThreeVector(distTargetOrigin + dTargetOut / 2, 0., 0.), logicTarget, "physicalTarget", logicWorld, false, 1, true);
+
+        sampleWallSolid = new G4Box("solidSampleWall", thicknessSampleWall / 2, widthSampleWall / 2, widthSampleWall / 2);
+        logicSampleWall = new G4LogicalVolume(sampleWallSolid, targetMaterial, "logicVSampleWall");
+        physicalSampleWall = new G4PVPlacement(0, G4ThreeVector(distTargetOrigin - 2 * cm, 0, 0), logicSampleWall, "physicalSampleWall", logicWorld, false, 10, true);
+
+        break;
+
+    }
+
+    }
+
+
 	return physicalWorld;
 }
 
@@ -214,6 +252,10 @@ void MyDetectorConstruction::ConstructSDandField() {
         sensDetModeratorEnd = new MySensitiveDetector("dModeratorEndSensDet");
         logicModerator->SetSensitiveDetector(sensDetModerator);
         logicModeratorEnd->SetSensitiveDetector(sensDetModeratorEnd);
+    }
+    else if (choiceGeometry == 2) {
+        sensDetSampleWall = new MySensitiveDetector("sampleWallSensDet");
+        logicSampleWall->SetSensitiveDetector(sensDetSampleWall);
     }
     globalField* globField = new globalField();
     G4FieldManager* fieldMgr = G4TransportationManager::GetTransportationManager()->GetFieldManager();
@@ -272,4 +314,48 @@ globField->GetFieldValue(point, field);
 G4cout << "HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << G4endl;
 G4cout << "Point: " << point[0] << ", " << point[1] << ", " << point[2] << "; Magnetic Field: " << field[0] << ", " << field[1] << ", " << field[2] << G4endl;
 G4cout << "Point: " << point[0] << ", " << point[1] << ", " << point[2] << "; Electric Field: " << field[3] << ", " << field[4] << ", " << field[5] << G4endl;
+*/
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+    case 2:
+        // define two cylinders outer and inner and take boolean geometry, subtraction solid
+        rTargetOut = 95 * mm; // radius of target (outer)
+        dTargetOut = 10 * mm;
+        dTargetIn = dTargetOut - dEffectiveTarget;
+
+        rTargetIn = 2.5 * mm; // radius of target (inner)
+        dEffectiveTarget = 1 * mm; // thickness of leftover target after cutting
+        // Create a RotationTarget, matrix that rotates the Target
+        RotationTarget = new G4RotationMatrix();
+        RotationTarget->rotateX(0 * deg);
+        RotationTarget->rotateY(90 * deg);
+        RotationTarget->rotateZ(0 * deg);
+
+        // translate inner cylinder of target
+        zTrans.setX(0.);
+        zTrans.setY(0.);
+        zTrans.setZ(dEffectiveTarget / 2);
+        solidTargetOut = new G4Tubs("solidTargetOut", 0., rTargetOut, dTargetOut / 2, 0, 360);
+        solidTargetIn = new G4Tubs("solidTargetIn", 0., rTargetIn, dTargetIn / 2, 0, 360);
+        solidTarget = new G4SubtractionSolid("solidTarget", solidTargetOut, solidTargetIn, 0, zTrans);
+        logicTarget = new G4LogicalVolume(solidTarget, targetMaterial, "logicVTarget");
+        physicalTarget = new G4PVPlacement(RotationTarget, G4ThreeVector(distTargetOrigin + dTargetOut / 2, 0., 0.), logicTarget, "physicalTarget", logicWorld, false, 1, true);
+
+        sampleWallSolid = new G4Box("solidSampleWall", thicknessSampleWall / 2, widthSampleWall / 2, widthSampleWall / 2);
+        logicSampleWall = new G4LogicalVolume(sampleWallSolid, targetMaterial, "logicVSampleWall");
+        physicalSampleWall = new G4PVPlacement(0, G4ThreeVector(distTargetOrigin - 2 * cm, 0, 0), logicSampleWall, "physicalSampleWall", logicWorld, false, 10, true);
+
+        break;
+
 */

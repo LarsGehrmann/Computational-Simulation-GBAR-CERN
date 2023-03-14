@@ -90,6 +90,13 @@ globalField::globalField() : G4ElectroMagneticField(),   //  old  : G4MagneticFi
 
 void globalField::readField(G4String fieldType) {
 
+
+
+	G4double scaleB = 1;
+
+
+
+
 	double lenUnit = millimeter;
 	double fieldUnit;
 	G4String fileName;
@@ -144,9 +151,9 @@ void globalField::readField(G4String fieldType) {
 					}
 
 					// yeah I have no idea, why I have to scale ????
-					BxField[ix][iy][iz] = bx * tesla; // *1000;
-					ByField[ix][iy][iz] = by * tesla; // *1000;
-					BzField[ix][iy][iz] = bz * tesla; // *1000;
+					BxField[ix][iy][iz] = bx * tesla * scaleB;
+					ByField[ix][iy][iz] = by * tesla * scaleB;
+					BzField[ix][iy][iz] = bz * tesla * scaleB;
 
 					
 					
@@ -594,19 +601,20 @@ void globalField::GetFieldValue(const G4double* point, G4double* field) const //
       }
   }
   */
-	/*
+  /*
 	// scale B-field
 	G4double scaleB = 1;
 	for (int i = 0; i < 3; i++) {
 		field[i] *= scaleB;
 	}
+
 	// scale E-field
 	G4double scaleE = 1;
 	for (int i = 3; i < 6; i++) {
 		field[i] *= scaleE;
 	}
-	
-			*/
+	*/
+
 	
 	/*
 	G4double normB = 0;

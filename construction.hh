@@ -72,7 +72,7 @@ private:
     G4Box* solidWorld, * solidModerator, * solidModeratorEnd;
     G4Tubs* solidTargetOut, * solidTargetIn;
     G4SubtractionSolid *solidTarget;
-    G4VSolid* coilsSolid, *electrodeSolid, *solenoidSolid, *tarSolid,  *modSolid;
+    G4VSolid *coilsSolid, *electrodeSolid, *solenoidSolid, *tarSolid,  *modSolid, *sampleWallSolid;
 
     G4RotationMatrix * RotationTarget, * RotationModerator;
     G4ThreeVector zTrans;
@@ -82,12 +82,11 @@ private:
     G4Element * elNe, * elH, * elW;
     G4Material  * Ne, * H2, * W;
     // logical volumes
-    G4LogicalVolume *logicTarget, *logicModerator, *logicModeratorEnd, *logicWorld, *logicCoils, *logicElectrode, *logicSolenoid, *logicTar, *logicMod;
+    G4LogicalVolume *logicTarget, *logicModerator, *logicModeratorEnd, *logicWorld, *logicCoils, *logicElectrode, *logicSolenoid, *logicTar, *logicMod, *logicSampleWall;
     // physical volumes
-    G4VPhysicalVolume *physicalTarget, *physicalModerator, *physicalModeratorEnd, *physicalWorld, *physicalCoils, *physicalElectrode, *physicalSolenoid, *physicalTar, *physicalMod;
+    G4VPhysicalVolume *physicalTarget, *physicalModerator, *physicalModeratorEnd, *physicalWorld, *physicalCoils, *physicalElectrode, *physicalSolenoid, *physicalTar, *physicalMod, *physicalSampleWall;
     // sensitive detector
-    MySensitiveDetector* sensDetModerator;
-    MySensitiveDetector* sensDetModeratorEnd;
+    MySensitiveDetector *sensDetModerator, *sensDetModeratorEnd, *sensDetSampleWall;
 
     G4MagneticField* magField;
     G4FieldManager* magFieldMgr;

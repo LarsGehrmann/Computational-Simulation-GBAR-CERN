@@ -11,6 +11,7 @@ MyRunAction::MyRunAction()
 	outputNameValues = "OutputValues";
 	outputNameParameters = "OutputParameters";
 	outputNameHisto = "OutputHistogram";
+	outputNameSample = "OutputSample";
 	fMessenger = new G4GenericMessenger(this, "/output/", "Name of output file");
 
 	fMessenger->DeclareProperty("outputNameValues", outputNameValues, "Name of the output of the file with values");
@@ -23,26 +24,16 @@ MyRunAction::MyRunAction()
 
 	// Values
 	man->CreateNtuple("Title1", "Title2");
-
 	man->CreateNtupleDColumn("depositedEnergyModerator");
-
 	man->CreateNtupleDColumn("depositedEnergyGamma");
 	man->CreateNtupleDColumn("depositedEnergyElectron");
 	man->CreateNtupleDColumn("depositedEnergyPositron");
-
 	man->CreateNtupleDColumn("noAnnihilationTar");
 	man->CreateNtupleDColumn("noPairProductionTar");
-
 	man->CreateNtupleDColumn("noAnnihilationMod");
 	man->CreateNtupleDColumn("noPairProductionMod");
-
 	man->CreateNtupleDColumn("noAnnihilationModEnd");
 	man->CreateNtupleDColumn("noPairProductionModEnd");
-
-
-
-
-
 	man->FinishNtuple(0);
 
 	// Parameters
@@ -61,6 +52,17 @@ MyRunAction::MyRunAction()
 	man->CreateNtupleDColumn("Te-Mod");
 	man->FinishNtuple(2);
 
+	// Sample positrons
+	man->CreateNtuple("Title7", "Title8");
+	man->CreateNtupleDColumn("x");
+	man->CreateNtupleDColumn("y");
+	man->CreateNtupleDColumn("z");
+	man->CreateNtupleDColumn("px");
+	man->CreateNtupleDColumn("py");
+	man->CreateNtupleDColumn("pz");
+	man->CreateNtupleDColumn("E");
+	man->FinishNtuple(3);
+
 }
 
 MyRunAction::~MyRunAction()
@@ -77,8 +79,11 @@ void MyRunAction::BeginOfRunAction(const G4Run* run)
 	strRunID << runID;
 
 
-	G4String fileNameHisto = outputNameHisto + strRunID.str() + ".csv";
-	man->OpenFile(fileNameHisto);
+	//G4String fileNameHisto = outputNameHisto + strRunID.str() + ".csv";
+	//man->OpenFile(fileNameHisto);
+
+	G4String fileNameSample = outputNameSample + strRunID.str() + ".csv";
+	man->OpenFile(fileNameSample);
 
 
 
@@ -115,16 +120,12 @@ void MyRunAction::EndOfRunAction(const G4Run* run)
 	man->FillNtupleDColumn(0, 1, eDepModGamma);
 	man->FillNtupleDColumn(0, 2, eDepModElectron);
 	man->FillNtupleDColumn(0, 3, eDepModPositron);
-
 	man->FillNtupleDColumn(0, 4, noAnnihilationTar);
 	man->FillNtupleDColumn(0, 5, noPairProductionTar);
-
 	man->FillNtupleDColumn(0, 6, noAnnihilationMod);
 	man->FillNtupleDColumn(0, 7, noPairProductionMod);
-
 	man->FillNtupleDColumn(0, 8, noAnnihilationModEnd);
 	man->FillNtupleDColumn(0, 9, noPairProductionModEnd);
-
 	man->AddNtupleRow(0);
 	man->Write();
 	man->CloseFile();

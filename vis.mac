@@ -6,7 +6,7 @@
 /vis/scene/add/date
 /vis/scene/add/trajectories rich
 /vis/geometry/set/visibility logicVWorld 0 false
-/vis/viewer/set/viewpointVector 0 0 1
+/vis/viewer/set/viewpointVector 1 1 1
 #/vis/viewer/set/viewpointVector 0 0 1
 
 #/vis/modeling/trajectories/create/drawByCharge
@@ -43,7 +43,7 @@
 
 #/vis/scene/add/scale 19 mm y 0 0 1 manual 20.2 0 9.5 mm
 #/vis/scene/add/scale 19 mm z 0 0 1 manual 20.2 9.5 0. mm
-/run/beamOn 50
+#/run/beamOn 50
 
-/vis/scene/add/electricField 10
+#/vis/scene/add/electricField 10
 #/vis/scene/add/magneticField 10
