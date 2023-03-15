@@ -85,17 +85,16 @@ globalField::globalField() : G4ElectroMagneticField(),   //  old  : G4MagneticFi
   ConstructField();
 
 
+  fMessenger = new G4GenericMessenger(this, "/MagField/", "MagField Messenger");
+
+  fMessenger->DeclareProperty("scaleB", scaleB, "Average energy of the incident electrons");
+
 }
 
 
 void globalField::readField(G4String fieldType) {
-
-
-
-	G4double scaleB = 1;
-
-
-
+	//scaleB = 0.1;
+	G4cout << "Scaling of B-field: " << scaleB << G4endl;
 
 	double lenUnit = millimeter;
 	double fieldUnit;

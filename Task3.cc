@@ -33,7 +33,9 @@ G4int noAnnihilationModEnd;
 G4int noPairProductionModEnd;
 
 G4double distTargetOrigin = 50.5 * cm;
-G4int choiceGeometry = 2;
+G4double scaleB;
+
+G4int choiceGeometry = 0;
 G4int choiceParticle = 0;
 
 
@@ -52,12 +54,8 @@ G4int choiceParticle = 0;
 
 int main(int argc, char** argv)
 {
-
-
     G4UIExecutive* ui = 0;
-
     G4RunManager* runManager = new G4RunManager;
-
     /*
     #ifdef G4MULTITHREADED
      G4MTRunManager *runManager = new G4MTRunManager;
@@ -65,39 +63,45 @@ int main(int argc, char** argv)
      
     #endif
     */
-
       G4ScoringManager* scoringManager = G4ScoringManager::GetScoringManager();
       runManager->SetUserInitialization(new MyDetectorConstruction());
       runManager->SetUserInitialization(new MyPhysicsList());
       runManager->SetUserInitialization(new MyActionInitialization());
-
-     runManager->Initialize();
-
+      runManager->Initialize();
       if (argc == 1) {
           ui = new G4UIExecutive(argc, argv);
       }
-
-
-    G4VisManager *visManager = new G4VisExecutive();
-    visManager->Initialize();
-
-    G4UImanager *UImanager = G4UImanager::GetUIpointer();   
-    //UImanager->ApplyCommand("/cuts/setMaxCutEnergy 9 MeV");
-
-    if (ui) {
-        UImanager->ApplyCommand("/control/execute vis.mac");
+     G4VisManager *visManager = new G4VisExecutive();
+     visManager->Initialize();
+     G4UImanager *UImanager = G4UImanager::GetUIpointer();   
+     //UImanager->ApplyCommand("/cuts/setMaxCutEnergy 9 MeV");
+     if (ui) {
+     UImanager->ApplyCommand("/control/execute vis.mac");
         UImanager->ApplyCommand("/control/execute gui.mac");
         ui->SessionStart();
-    }
-    else
-    {
+     }
+     else
+     {
         G4String command = "/control/execute ";
         G4String fileName = argv[1];
         UImanager->ApplyCommand(command + fileName);
-    }
+     }
     delete runManager;
     return EXIT_SUCCESS;
 }
+
+/*
+UImanager->ApplyCommand("/output/outputNameValues scaleBValues");
+UImanager->ApplyCommand("/output/outputNameParameters scaleBParameters");
+for (int i = 0; i < 10; i++) {
+    scaleB = 0.5 + 0.1 * i;
+   // UImanager->ApplyCommand("/run/initialize");
+    UImanager->ApplyCommand("/run/reinitializeGeometry");
+    UImanager->ApplyCommand("/run/beamOn 10");
+}
+*/
+
+//////////////////////////////////////////////////////////////////////////////////
 
 /*
 G4double distGunTar = 1 * cm;

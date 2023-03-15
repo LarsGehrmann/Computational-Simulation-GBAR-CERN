@@ -240,8 +240,7 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
     }
 
     }
-
-
+    //ConstructSDandField();
 	return physicalWorld;
 }
 

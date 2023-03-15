@@ -26,6 +26,7 @@ extern G4int noPairProductionMod;
 extern G4int noAnnihilationModEnd;
 extern G4int noPairProductionModEnd;
 
+extern G4double scaleB;
 
 class MyRunAction : public G4UserRunAction
 {

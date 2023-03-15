@@ -42,6 +42,7 @@ MyRunAction::MyRunAction()
 	man->CreateNtupleDColumn("dModerator");
 	man->CreateNtupleDColumn("sigmaPos");
 	man->CreateNtupleDColumn("avgEnergy");
+	man->CreateNtupleDColumn("scaling of B-field");
 	man->FinishNtuple(1);
 
 	// Histogram
@@ -136,6 +137,7 @@ void MyRunAction::EndOfRunAction(const G4Run* run)
 	man->FillNtupleDColumn(1, 1, dModerator);
 	man->FillNtupleDColumn(1, 2, sigmaPos);
 	man->FillNtupleDColumn(1, 3, avgE);
+	man->FillNtupleDColumn(1, 4, scaleB);
 	man->AddNtupleRow(1);
 	man->Write();
 	man->CloseFile();

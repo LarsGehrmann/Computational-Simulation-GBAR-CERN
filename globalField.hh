@@ -44,6 +44,11 @@
 #include "G4Mag_EqRhs.hh"
 #include "G4Mag_SpinEqRhs.hh"
 
+
+#include "G4GenericMessenger.hh"
+
+
+
 #include "G4EqMagElectricField.hh"
 #include "G4EqEMFieldWithSpin.hh"
 
@@ -60,6 +65,8 @@
 //  objects can be added to the global field. Any element that
 //  represents an element with an EM field must add the appropriate
 //  ElementField to the global GlobalField object.
+
+extern 	G4double scaleB;
 
 typedef std::vector<elementField*> FieldList;
 
@@ -156,7 +163,7 @@ private:
   const elementField **fFp;
 
 private:
-
+	G4GenericMessenger* fMessenger;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // code to use field from TAB file
