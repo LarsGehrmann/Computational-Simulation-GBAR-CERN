@@ -185,6 +185,7 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
         logicModerator = new G4LogicalVolume(solidModerator, moderatorMaterial, "logicVModerator");
         logicModeratorEnd = new G4LogicalVolume(solidModeratorEnd, moderatorEndMaterial, "logicVModeratorEnd");
 
+        G4cout << "Distance between target and origin: " << distTargetOrigin << G4endl;
         physicalModerator = new G4PVPlacement(0, G4ThreeVector(0, 60 * cm + dModerator / 2, 0), logicModerator, "physicalModerator", logicWorld, false, 2, true);
         physicalModeratorEnd = new G4PVPlacement(0, G4ThreeVector(0, 60 * cm + dModerator + dModeratorEnd / 2, 0), logicModeratorEnd, "physicalModeratorEnd", logicWorld, false, 3, true);
         //physicalModerator = new G4PVPlacement(0, G4ThreeVector(distTargetOrigin - dTargetOut - 2*mm - dModerator/2, 0., 0.), logicModerator, "physicalModerator", logicWorld, false, 2, true);

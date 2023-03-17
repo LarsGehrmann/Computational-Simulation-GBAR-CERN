@@ -17,6 +17,7 @@ MySteppingAction::~MySteppingAction()
 
 void MySteppingAction::UserSteppingAction(const G4Step* aStep) 
 {
+	/*
 	// Histogram
 	if (saveHistograms) {
 		const std::vector<const G4Track*>* secondary = aStep->GetSecondaryInCurrentStep();
@@ -64,7 +65,9 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 			}
 		}
 	}
+	*/
 
+	/*
 	// Pair production and annihlation processes
 	if (aStep->GetPostStepPoint()->GetProcessDefinedStep()) {
 		const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
@@ -98,7 +101,7 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 			}
 		}
 	}
-
+	*/
 
 	if (choiceGeometry == 2) {
 		G4double x, y, z, px, py, pz, E;
@@ -112,13 +115,13 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 				x = aStep->GetPreStepPoint()->GetPosition().getX();
 				y = aStep->GetPreStepPoint()->GetPosition().getY();
 				z = aStep->GetPreStepPoint()->GetPosition().getZ();
-				G4cout << "x,y,z: " << x << ", " << y << ", " << z << G4endl;
+				//G4cout << "x,y,z: " << x << ", " << y << ", " << z << G4endl;
 				px = aStep->GetPreStepPoint()->GetMomentumDirection().getX();
 				py = aStep->GetPreStepPoint()->GetMomentumDirection().getY();
 				pz = aStep->GetPreStepPoint()->GetMomentumDirection().getZ();
-				G4cout << "px,py,pz: " << px << ", " << py << ", " << pz << G4endl;
+				//G4cout << "px,py,pz: " << px << ", " << py << ", " << pz << G4endl;
 				E = aStep->GetPreStepPoint()->GetKineticEnergy();
-				G4cout << "E: " << E << G4endl;
+				//G4cout << "E: " << E << G4endl;
 				man->FillNtupleDColumn(3, 0, x);
 				man->FillNtupleDColumn(3, 1, y);
 				man->FillNtupleDColumn(3, 2, z);

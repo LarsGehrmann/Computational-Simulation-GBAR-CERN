@@ -35,7 +35,7 @@ G4int noPairProductionModEnd;
 G4double distTargetOrigin = 50.5 * cm;
 G4double scaleB;
 
-G4int choiceGeometry = 0;
+G4int choiceGeometry = 2;
 G4int choiceParticle = 0;
 
 
@@ -51,6 +51,9 @@ G4int choiceParticle = 0;
 // 3 fast e+ from COMSOL target
 // 4 slow e+ from COMSOL moderator
 
+
+
+/// Comment of sensitive detecor
 
 int main(int argc, char** argv)
 {
@@ -68,17 +71,54 @@ int main(int argc, char** argv)
       runManager->SetUserInitialization(new MyPhysicsList());
       runManager->SetUserInitialization(new MyActionInitialization());
       runManager->Initialize();
+
       if (argc == 1) {
           ui = new G4UIExecutive(argc, argv);
       }
      G4VisManager *visManager = new G4VisExecutive();
      visManager->Initialize();
      G4UImanager *UImanager = G4UImanager::GetUIpointer();   
+     scaleB = 1;
+     UImanager->ApplyCommand("/run/initialize");
+     UImanager->ApplyCommand("/run/reinitializeGeometry");
+     //UImanager->ApplyCommand("/run/beamOn 100000000");
+
+
+     int curRun = 0;
+     int maxRun = 10;
+     UImanager->ApplyCommand("/run/initialize");
+     for (int curRun = 0; curRun < maxRun; curRun++) {
+         G4cout << "Run number: " << curRun+1 << "/" << maxRun << G4endl;
+         //UImanager->ApplyCommand("/run/initialize");
+         //UImanager->ApplyCommand("/run/reinitializeGeometry");
+         UImanager->ApplyCommand("/run/beamOn 10000000");
+     }
+
+     /*
+     UImanager->ApplyCommand("/output/outputNameValues distTargetOriginValues");
+     UImanager->ApplyCommand("/output/outputNameParameters distTargetOriginParameters");
+     */
+
+     /*
+     for (int i = 0; i < 10; i++) {
+        // scaleB = 0.5 + 0.1 * i;
+         distTargetOrigin = 25 * cm + i * 5 * cm;
+         UImanager->ApplyCommand("/run/initialize");
+         UImanager->ApplyCommand("/run/reinitializeGeometry");
+         UImanager->ApplyCommand("/run/beamOn 1000000");
+        // UImanager->ApplyCommand("/run/beamOn 100");
+     }
+     */
+
+
      //UImanager->ApplyCommand("/cuts/setMaxCutEnergy 9 MeV");
      if (ui) {
-     UImanager->ApplyCommand("/control/execute vis.mac");
+        UImanager->ApplyCommand("/control/execute vis.mac");
         UImanager->ApplyCommand("/control/execute gui.mac");
         ui->SessionStart();
+
+
+
      }
      else
      {
@@ -91,14 +131,7 @@ int main(int argc, char** argv)
 }
 
 /*
-UImanager->ApplyCommand("/output/outputNameValues scaleBValues");
-UImanager->ApplyCommand("/output/outputNameParameters scaleBParameters");
-for (int i = 0; i < 10; i++) {
-    scaleB = 0.5 + 0.1 * i;
-   // UImanager->ApplyCommand("/run/initialize");
-    UImanager->ApplyCommand("/run/reinitializeGeometry");
-    UImanager->ApplyCommand("/run/beamOn 10");
-}
+
 */
 
 //////////////////////////////////////////////////////////////////////////////////
