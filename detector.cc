@@ -21,6 +21,7 @@ G4double MySensitiveDetector::getDepositedEnergy()
 */
 G4bool MySensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* ROhist)
 {
+	/*
 	eDepMod += aStep->GetTotalEnergyDeposit();
 
 
@@ -43,7 +44,7 @@ G4bool MySensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory* ROhis
 	else {
 		G4cout << "Pointer can not be dereferenced!" << G4endl;
 	}
-
+	*/
 
 
 	/*

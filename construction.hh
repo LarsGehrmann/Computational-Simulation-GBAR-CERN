@@ -40,11 +40,7 @@
 
 #include "CADMesh-master/CADMesh.hh"
 
-extern G4double dModerator;
-extern G4double dModeratorEnd;
-extern G4double distTarMod;
-extern G4double distTargetOrigin;
-extern G4int choiceGeometry;
+
 
 class globalField;
 
@@ -52,12 +48,17 @@ class globalField;
 class MyDetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
-     MyDetectorConstruction();
+     MyDetectorConstruction(G4double argdModerator, G4double argdModeratorFront, G4double argDistTarMod, G4double argDistTargetOrigin, 
+         G4int argChoiceGeometry, G4double argWidthModeratorPart, G4double argModeratorHeight, G4double argScaleB);
 	//MyDetectorConstruction(G4double distGunTar, G4double distTarMod, G4double dModerator);  // constructor with parameters
 	~MyDetectorConstruction();
     virtual G4VPhysicalVolume* Construct();
     virtual void ConstructSDandField() override;
 private:
+    G4int choiceGeometry;
+    G4double dModerator, dModeratorEnd, dModeratorFront, distTarMod, distTargetOrigin, moderatorHeight;
+    G4double scaleB;
+
     G4AnalysisManager* man;
     G4GenericMessenger* fMessenger;
     void DefineMaterials();
@@ -67,9 +68,9 @@ private:
     //parameters to change
     G4double distGunTar; // are global now lol , distTarMod, dModerator;
     // static parameters
-    G4double rTargetOut, dTargetOut, rTargetIn, dEffectiveTarget, dTargetIn, lengthModerator, widthModerator, worldVertices,
+    G4double rTargetOut, dTargetOut, rTargetIn, dEffectiveTarget, dTargetIn, lengthModerator, widthModerator, widthModeratorPart, worldVertices,
         heightWorld, lengthWorld, widthWorld;      
-    G4Box* solidWorld, * solidModerator, * solidModeratorEnd;
+    G4Box* solidWorld, * solidModerator, * solidModeratorEnd, *solidModeratorFront;
     G4Tubs* solidTargetOut, * solidTargetIn;
     G4SubtractionSolid *solidTarget;
     G4VSolid *coilsSolid, *electrodeSolid, *solenoidSolid, *tarSolid,  *modSolid, *sampleWallSolid;
@@ -82,11 +83,11 @@ private:
     G4Element * elNe, * elH, * elW;
     G4Material  * Ne, * H2, * W;
     // logical volumes
-    G4LogicalVolume *logicTarget, *logicModerator, *logicModeratorEnd, *logicWorld, *logicCoils, *logicElectrode, *logicSolenoid, *logicTar, *logicMod, *logicSampleWall;
+    G4LogicalVolume *logicTarget, *logicModerator, *logicModeratorEnd, *logicModeratorFront, *logicWorld, *logicCoils, *logicElectrode, *logicSolenoid, *logicTar, *logicMod, *logicSampleWall;
     // physical volumes
-    G4VPhysicalVolume *physicalTarget, *physicalModerator, *physicalModeratorEnd, *physicalWorld, *physicalCoils, *physicalElectrode, *physicalSolenoid, *physicalTar, *physicalMod, *physicalSampleWall;
+    G4VPhysicalVolume *physicalTarget, *physicalModerator, *physicalModeratorEnd, *physicalModeratorFront, *physicalWorld, *physicalCoils, *physicalElectrode, *physicalSolenoid, *physicalTar, *physicalMod, *physicalSampleWall;
     // sensitive detector
-    MySensitiveDetector *sensDetModerator, *sensDetModeratorEnd, *sensDetSampleWall;
+    //MySensitiveDetector *sensDetModerator, *sensDetModeratorEnd, *sensDetSampleWall;
 
     G4MagneticField* magField;
     G4FieldManager* magFieldMgr;

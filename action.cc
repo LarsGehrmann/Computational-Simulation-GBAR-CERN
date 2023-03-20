@@ -2,29 +2,43 @@
 #include "event.hh"
 #include "stepping.hh"
 
-MyActionInitialization::MyActionInitialization()
-{}
+MyActionInitialization::MyActionInitialization(G4int argChoiceParticle, G4double argDistTargetOrigin, G4double argAvgE, 
+	G4int argChoiceGeometry, G4double argdModerator, G4double argDistTarMod, G4double argScaleB)
+{
+	choiceParticle = argChoiceParticle;
+	distTargetOrigin = argDistTargetOrigin;
+	avgE = argAvgE;
+	choiceGeometry = argChoiceGeometry;
+	dModerator = argdModerator;
+	distTarMod = argDistTarMod;
+	scaleB = argScaleB;
+}
 
 MyActionInitialization::~MyActionInitialization()
 {}
 
-void MyActionInitialization::Build() const
+void MyActionInitialization::customBuild()
 {
-	MyPrimaryGenerator* generator = new MyPrimaryGenerator();
+	MyPrimaryGenerator* generator = new MyPrimaryGenerator(choiceParticle, distTargetOrigin, avgE);
 	SetUserAction(generator);
 
-	MyRunAction* runAction = new MyRunAction();
+	MyRunAction* runAction = new MyRunAction(dModerator, avgE, distTargetOrigin, distTarMod, scaleB, &eDepModTotal, &eDepModGammaTotal,
+		&eDepModElectronTotal, &eDepModPositronTotal, &noAnnihilationTar, &noPairProductionTar,
+		&noAnnihilationMod, &noPairProductionMod, &noAnnihilationModEnd, &noPairProductionModEnd,
+		annihiMod, eDepModGamma, eDepModElectron, eDepModPositron);
 	SetUserAction(runAction);
 
 	MyEventAction* eventAction = new MyEventAction(runAction);
 	SetUserAction(eventAction);
-	MySteppingAction* steppingAction = new MySteppingAction(eventAction);
+
+	MySteppingAction* steppingAction = new MySteppingAction(eventAction, choiceGeometry, &eDepModTotal, &eDepModGammaTotal,
+		&eDepModElectronTotal, &eDepModPositronTotal, &noAnnihilationTar, &noPairProductionTar,
+		&noAnnihilationMod, &noPairProductionMod, &noAnnihilationModEnd, &noPairProductionModEnd,
+		annihiMod, eDepModGamma, eDepModElectron, eDepModPositron);
 	SetUserAction(steppingAction);
 }
-/*
-void MyActionInitialization::BuildForMaster() const
-{
-	MyRunAction* runAction = new MyRunAction();
-	SetUserAction(runAction);
+
+void MyActionInitialization::Build()const{
+	G4cout << "Yeah, if this print you messed up really hard! Good luck debugging! :)" << G4endl;
+
 }
-*/

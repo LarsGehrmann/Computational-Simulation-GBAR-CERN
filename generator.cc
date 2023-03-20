@@ -4,17 +4,56 @@
 
 
 
-MyPrimaryGenerator::MyPrimaryGenerator()
+MyPrimaryGenerator::MyPrimaryGenerator(G4int argChoiceParticle, G4double argDistTargetOrigin, G4double argAvgE)
 {	
+	choiceParticle = argChoiceParticle;
+	distTargetOrigin = argDistTargetOrigin;
+	avgE = argAvgE;
+
 	CLHEP::HepRandom::setTheEngine(new CLHEP::MTwistEngine);
 	CLHEP::HepRandom::setTheSeed(time(NULL));
 	//CLHEP::HepRandom::setTheSeed((unsigned)clock());
-
 	fMessenger = new G4GenericMessenger(this, "/generator/", "Generator Messenger");
-
 	fMessenger->DeclareProperty("avgE", avgE, "Average energy of the incident electrons");
-	//fMessenger->DeclareProperty("sigmaPos", sigmaPos, "Standard deviation to decide whether e- will hit the target");
 
+	std::string fileName = "posTable.txt";
+	std::fstream file(fileName);
+	posTable = new double * [posNumber];
+	for (int i = 0; i < posNumber; i++) {
+		posTable[i] = new double[7];
+	}
+
+	double input;
+	int modCount = 0;
+	posCounter = 0;
+	
+	if (choiceParticle == 1) {
+	while (file >> input)
+	{	
+		/*
+		G4cout << "input: " << input << G4endl;
+		G4cout << "modCount: " << modCount << G4endl;
+		G4cout << "posCounter: " << posCounter << G4endl;
+		*/
+		posTable[posCounter][modCount] = input;
+
+		modCount++;
+		modCount = modCount % 7;
+		if (modCount == 0) {
+			posCounter++;
+		}
+	}
+	file.close();
+	/*
+	for (int i = 0; i < 5; ++i) {
+		for (int j = 0; j < 7; ++j) {
+			G4cout << posTable[i][j] << ", ";
+		}
+		G4cout << G4endl;
+	}
+	*/
+	posCounter = 0;
+	}
 	fParticleGun = new G4ParticleGun(1);
 }
 
@@ -46,7 +85,15 @@ void MyPrimaryGenerator::GeneratePrimaries(G4Event *anEvent)
 		break;
 		
 	case 1:
-		// todo
+		energy = posTable[posCounter][6];
+		particle = particleTable->FindParticle("e+");
+		pos.setX(posTable[posCounter][0]);
+		pos.setY(posTable[posCounter][1]);
+		pos.setZ(posTable[posCounter][2]);
+		mom.setX(posTable[posCounter][3]);
+		mom.setY(posTable[posCounter][4]);
+		mom.setZ(posTable[posCounter][5]);
+		posCounter++;
 		break;
 	case 2:
 		energy = 9.0 * MeV;
@@ -88,6 +135,8 @@ void MyPrimaryGenerator::GeneratePrimaries(G4Event *anEvent)
 		mom.setX(0.);
 		mom.setY(-1.);
 		mom.setZ(0.);
+		break;
+	case 5:
 		break;
 	default:
 		G4cerr << "No correct choice of particles chosen!" << G4endl;

@@ -1,15 +1,29 @@
 #include "stepping.hh"
 
-MySteppingAction::MySteppingAction(MyEventAction* eventAction)
+MySteppingAction::MySteppingAction(MyEventAction* eventAction, G4int argChoiceGeometry, G4double* argEDepModTotal, G4double* argEDepModGammaTotal,
+	G4double* argEDepModElectronTotal, G4double* argEDepModPositronTotal, G4int* argNoAnnihilationTar, G4int* argNoPairProductionTar,
+	G4int* argNoAnnihilationMod, G4int* argNoPairProductionMod, G4int* argNoAnnihilationModEnd, G4int* argNoPairProductionModEnd,
+	double** argAnnihiMod, double** argEDepModGamma, double** argEDepModElectron, double** argEDepModPositron)
 {
-
 	saveHistograms = false;
-
 	fMessenger = new G4GenericMessenger(this, "/SaveData/", "Save Histograms");
-
 	fMessenger->DeclareProperty("saveHistograms", saveHistograms, "Boolean whether histograms of kinetic energy shall be saved");
+	choiceGeometry = argChoiceGeometry;
 
-
+	eDepModTotal = argEDepModTotal;
+	eDepModGammaTotal = argEDepModGammaTotal;
+	eDepModElectronTotal = argEDepModElectronTotal;
+	eDepModPositronTotal = argEDepModPositronTotal;
+	noAnnihilationTar = argNoAnnihilationTar;
+	noPairProductionTar = argNoPairProductionTar;
+	noAnnihilationMod = argNoAnnihilationMod;
+	noPairProductionMod = argNoPairProductionMod;
+	noAnnihilationModEnd = argNoAnnihilationModEnd;
+	noPairProductionModEnd = argNoPairProductionModEnd;
+	annihiMod = argAnnihiMod;
+	eDepModGamma = argEDepModGamma;
+	eDepModElectron = argEDepModElectron;
+	eDepModPositron = argEDepModPositron;
 }
 
 MySteppingAction::~MySteppingAction()

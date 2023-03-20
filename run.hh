@@ -7,38 +7,30 @@
 #include "G4LogicalVolume.hh"
 #include "G4GenericMessenger.hh"
 
-extern G4double distTarMod;
-extern G4double dModerator;
-extern G4double sigmaPos;
-extern G4double avgE;
-
-extern G4double eDepMod;
-extern G4double eDepModGamma;
-extern G4double eDepModElectron;
-extern G4double eDepModPositron;
-
-extern G4int noAnnihilationTar;
-extern G4int noPairProductionTar;
-
-extern G4int noAnnihilationMod;
-extern G4int noPairProductionMod;
-
-extern G4int noAnnihilationModEnd;
-extern G4int noPairProductionModEnd;
-
-extern G4double scaleB;
-extern G4double distTargetOrigin;
 
 class MyRunAction : public G4UserRunAction
 {
 public:
-	MyRunAction();
+	MyRunAction(G4double argdModerator, G4double argAvgE, G4double argDistTargetOrigin, G4double distTarMod, G4double argScaleB, 
+		G4double* argEDepModTotal, G4double* argEDepModGammaTotal, G4double* argEDepModElectronTotal, G4double* argEDepModPositronTotal, 
+		G4int* argNoAnnihilationTar, G4int* argNoPairProductionTar, G4int* argNoAnnihilationMod, G4int* argNoPairProductionMod, 
+		G4int* argNoAnnihilationModEnd, G4int* argNoPairProductionModEnd, double** argAnnihiMod, double** argEDepModGamma, 
+		double** argEDepModElectron, double** argEDepModPositron);
 	~MyRunAction();
 	G4AnalysisManager* man;
 	virtual void BeginOfRunAction(const G4Run* run);
 	virtual void EndOfRunAction(const G4Run*);
 
 private:
+	//G4double eDepMod, eDepModGamma, eDepModElectron, eDepModPositron;
+	//G4int noAnnihilationTar, noPairProductionTar, noAnnihilationMod, noPairProductionMod, noAnnihilationModEnd, noPairProductionModEnd;
+	G4double dModerator, avgE, distTargetOrigin, distTarMod, scaleB;
+
+
+	G4double* eDepModTotal; G4double* eDepModGammaTotal;  G4double* eDepModElectronTotal; G4double* eDepModPositronTotal; G4int* noAnnihilationTar;
+	G4int* noPairProductionTar; G4int* noAnnihilationMod; G4int* noPairProductionMod; G4int* noAnnihilationModEnd; G4int* noPairProductionModEnd;
+	double** annihiMod; double** eDepModGamma; double** eDepModElectron; double** eDepModPositron;
+
 	G4GenericMessenger* fMessenger;
 	G4String outputNameValues;
 	G4String outputNameParameters;
@@ -47,3 +39,4 @@ private:
 };
 
 #endif
+

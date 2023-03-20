@@ -5,8 +5,32 @@
 #include <iostream>
 #include <string>
 
-MyRunAction::MyRunAction()
+MyRunAction::MyRunAction(G4double argdModerator, G4double argAvgE, G4double argDistTargetOrigin, G4double argDistTarMod, G4double argScaleB, 
+	G4double* argEDepModTotal, G4double* argEDepModGammaTotal, G4double* argEDepModElectronTotal, G4double* argEDepModPositronTotal, 
+	G4int* argNoAnnihilationTar, G4int* argNoPairProductionTar, G4int* argNoAnnihilationMod, G4int* argNoPairProductionMod, 
+	G4int* argNoAnnihilationModEnd, G4int* argNoPairProductionModEnd, double** argAnnihiMod, double** argEDepModGamma, 
+	double** argEDepModElectron, double** argEDepModPositron)
 {
+	dModerator = argdModerator;
+	avgE = argAvgE;
+	distTargetOrigin = argDistTargetOrigin;
+	distTarMod = argDistTarMod;
+	scaleB = argScaleB;
+
+	eDepModTotal = argEDepModTotal;
+	eDepModGammaTotal = argEDepModGammaTotal;
+	eDepModElectronTotal = argEDepModElectronTotal;
+	eDepModPositronTotal = argEDepModPositronTotal;
+	noAnnihilationTar = argNoAnnihilationTar;
+	noPairProductionTar = argNoPairProductionTar;
+	noAnnihilationMod = argNoAnnihilationMod;
+	noPairProductionMod = argNoPairProductionMod;
+	noAnnihilationModEnd = argNoAnnihilationModEnd;
+	noPairProductionModEnd = argNoPairProductionModEnd;
+	annihiMod = argAnnihiMod;
+	eDepModGamma = argEDepModGamma;
+	eDepModElectron = argEDepModElectron;
+	eDepModPositron = argEDepModPositron;
 
 	outputNameValues = "OutputValues";
 	outputNameParameters = "OutputParameters";
@@ -40,10 +64,10 @@ MyRunAction::MyRunAction()
 	man->CreateNtuple("Title3", "Title4");
 	man->CreateNtupleDColumn("distTarMod ");
 	man->CreateNtupleDColumn("dModerator");
-	man->CreateNtupleDColumn("sigmaPos");
+	man->CreateNtupleDColumn("empty");
 	man->CreateNtupleDColumn("avgEnergy");
 	man->CreateNtupleDColumn("scaling of B-field");
-	man->CreateNtupleDColumn("distTargetOrigin (COMSOL geometry)");
+	man->CreateNtupleDColumn("distTargetOrigin (real geometry)");
 
 	man->FinishNtuple(1);
 
@@ -89,7 +113,28 @@ void MyRunAction::BeginOfRunAction(const G4Run* run)
 	man->OpenFile(fileNameSample);
 
 
+	/*
+	annihiMod = new double* [20];
+	eDepModGamma = new double* [20];
+	eDepModElectron = new double* [20];
+	eDepModPositron = new double* [20];
 
+	for (int i = 0; i < 20; ++i) {
+		annihiMod[i] = new double[20];
+		eDepModGamma[i] = new double[20];
+		eDepModElectron[i] = new double[20];
+		eDepModoPositron[i] = new double[20];
+
+	}
+	for (int i = 0; i < 20; ++i) {
+		for (int j = 0; j < 20; ++j) {
+			annihiMod[i][j] = 0;
+			eDepModGamma[i][j] = 0;
+			eDepModElectron[i][j] = 0;
+			eDepModPositron[i][j] = 0;
+		}
+	}
+	
 	eDepMod = 0;
 	eDepModGamma = 0;
 	eDepModElectron = 0;
@@ -100,6 +145,8 @@ void MyRunAction::BeginOfRunAction(const G4Run* run)
 	noPairProductionMod = 0;
 	noAnnihilationModEnd = 0;
 	noPairProductionModEnd = 0;
+	*/
+
 }
 
 
@@ -119,6 +166,7 @@ void MyRunAction::EndOfRunAction(const G4Run* run)
 
 	G4String fileNameValues = outputNameValues + strRunID.str() + ".csv";
 	man->OpenFile(fileNameValues);
+	/*
 	man->FillNtupleDColumn(0, 0, eDepMod);
 	man->FillNtupleDColumn(0, 1, eDepModGamma);
 	man->FillNtupleDColumn(0, 2, eDepModElectron);
@@ -131,22 +179,25 @@ void MyRunAction::EndOfRunAction(const G4Run* run)
 	man->FillNtupleDColumn(0, 9, noPairProductionModEnd);
 	man->AddNtupleRow(0);
 	man->Write();
+	*/
 	man->CloseFile();
 
 	G4String fileNameParameters = outputNameParameters + strRunID.str() + ".csv";
 	man->OpenFile(fileNameParameters);
+	/*
 	man->FillNtupleDColumn(1, 0, distTarMod);
 	man->FillNtupleDColumn(1, 1, dModerator);
-	man->FillNtupleDColumn(1, 2, sigmaPos);
+	man->FillNtupleDColumn(1, 2, 0.);
 	man->FillNtupleDColumn(1, 3, avgE);
 	man->FillNtupleDColumn(1, 4, scaleB);
-	man->FillNtupleDColumn(1, 4, distTargetOrigin);
-
+	man->FillNtupleDColumn(1, 5, distTargetOrigin);
+	*/
 	man->AddNtupleRow(1);
 	man->Write();
 	man->CloseFile();
 
 	G4cout << "------------------------------------------------------------------------" << G4endl;
+	/*
 	//G4cout << "Total e+ production : " << noPairProductionStep << G4endl;
 	//G4cout << "e+ production in moderator: " << noPairProductionMod << G4endl;
 	G4cout << "Target: " << G4endl;
@@ -167,7 +218,7 @@ void MyRunAction::EndOfRunAction(const G4Run* run)
 	G4cout << "Energy deposited by positrons: " << eDepModPositron << "MeV" << G4endl;
 	G4cout << "--------------------------------------------------------------------------------" << G4endl;
 	G4cout << "--------------------------------------------------------------------------------" << G4endl;
-
+	*/
 
 }
 
