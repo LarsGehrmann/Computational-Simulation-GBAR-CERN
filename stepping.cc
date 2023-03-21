@@ -1,15 +1,27 @@
 #include "stepping.hh"
 
-MySteppingAction::MySteppingAction(MyEventAction* eventAction)
+MySteppingAction::MySteppingAction(MyEventAction* eventAction, G4int argChoiceGeometry)
 {
-
 	saveHistograms = false;
-
 	fMessenger = new G4GenericMessenger(this, "/SaveData/", "Save Histograms");
-
 	fMessenger->DeclareProperty("saveHistograms", saveHistograms, "Boolean whether histograms of kinetic energy shall be saved");
-
-
+	choiceGeometry = argChoiceGeometry;
+	/*
+	eDepModTotal = argEDepModTotal;
+	eDepModGammaTotal = argEDepModGammaTotal;
+	eDepModElectronTotal = argEDepModElectronTotal;
+	eDepModPositronTotal = argEDepModPositronTotal;
+	noAnnihilationTar = argNoAnnihilationTar;
+	noPairProductionTar = argNoPairProductionTar;
+	noAnnihilationMod = argNoAnnihilationMod;
+	noPairProductionMod = argNoPairProductionMod;
+	noAnnihilationModEnd = argNoAnnihilationModEnd;
+	noPairProductionModEnd = argNoPairProductionModEnd;
+	annihiMod = argAnnihiMod;
+	eDepModGamma = argEDepModGamma;
+	eDepModElectron = argEDepModElectron;
+	eDepModPositron = argEDepModPositron;
+	*/
 }
 
 MySteppingAction::~MySteppingAction()
@@ -66,6 +78,19 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 		}
 	}
 	*/
+	if (aStep->GetPreStepPoint()->GetProcessDefinedStep()) {
+		const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
+		if (procName == "annihil") {
+			int x = 5;
+			//G4cout << "Annihi" << G4endl;
+			man = G4AnalysisManager::Instance();
+			man->SetVerboseLevel(0);
+			man->FillNtupleDColumn(4, 0, aStep->GetPostStepPoint()->GetPhysicalVolume()->GetCopyNo());
+			//man->FillNtupleDColumn(4, 0, x);
+			man->AddNtupleRow(4);
+
+		}
+	}
 
 	/*
 	// Pair production and annihlation processes
@@ -102,7 +127,7 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 		}
 	}
 	*/
-
+	/*
 	if (choiceGeometry == 2) {
 		G4double x, y, z, px, py, pz, E;
 		if (aStep->GetPreStepPoint()->GetProcessDefinedStep()) {
@@ -137,7 +162,7 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 		}
 
 	}
-
+	*/
 
 
 

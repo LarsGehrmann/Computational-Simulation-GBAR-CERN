@@ -13,12 +13,7 @@
 #include "G4AnalysisManager.hh"
 #include "G4Run.hh"
 
-extern G4double eDepMod;
-extern G4double eDepModGamma;
-extern G4double eDepModElectron;
-extern G4double eDepModPositron;
-extern G4int noAnnihilationMod;
-extern G4int noPairProductionMod;
+
 
 class MySensitiveDetector : public G4VSensitiveDetector
 {
@@ -31,8 +26,6 @@ public:
 
 private:
 	virtual G4bool ProcessHits(G4Step*, G4TouchableHistory*);
-	G4int lastEPlusEvNo;
-
 	G4GenericMessenger* fMessenger;
 
 	

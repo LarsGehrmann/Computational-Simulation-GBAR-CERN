@@ -50,77 +50,90 @@ G4ThreadLocal globalField* globalField::fObject = 0;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 /**/
-globalField::globalField() : G4ElectroMagneticField(),   //  old  : G4MagneticField(),
+globalField::globalField(G4double argScaleBDipole) : G4ElectroMagneticField(),   //  old  : G4MagneticField(),
     fMinStep(0.01*mm), fDeltaChord(0.5*mm),
     fDeltaOneStep(0.01*mm), fDeltaIntersection(0.1*mm),
     fEpsMin(2.5e-7), fEpsMax(0.001),  // These are pure numbers -- relative values
     fEquation(0), fFieldManager(0),
     fFieldPropagator(0), fStepper(0), fChordFinder(0)
-    
     //fDetectorConstruction(det)
 {
+	scaleBDipole = argScaleBDipole;
+
+
+
   //fFieldMessenger = new F04FieldMessenger(this,det);
-
   fFields = new FieldList();
-
   fStepperType = 4 ;       // ClassicalRK4 is default stepper
-
   //  set object
-
-  
   fObject = this;
   fFirst = true;
-
   fNfp = 0;
   fFp = NULL;
+  // resize fields -------------------------------
+  G4cout << "  [ Number of values x,y,z: "
+	  << nx << " " << ny << " " << nz << " ] "
+	  << G4endl;
+  BxField.resize(nx);
+  ByField.resize(nx);
+  BzField.resize(nx);
+  int ix, iy, iz;
+  for (ix = 0; ix < nx; ix++) {
+	  BxField[ix].resize(ny);
+	  ByField[ix].resize(ny);
+	  BzField[ix].resize(ny);
+	  for (iy = 0; iy < ny; iy++) {
+		  BxField[ix][iy].resize(nz);
+		  ByField[ix][iy].resize(nz);
+		  BzField[ix][iy].resize(nz);
+	  }
+  }
+  ExField.resize(nx);
+  EyField.resize(nx);
+  EzField.resize(nx);
+  for (ix = 0; ix < nx; ix++) {
+	  ExField[ix].resize(ny);
+	  EyField[ix].resize(ny);
+	  EzField[ix].resize(ny);
+	  for (iy = 0; iy < ny; iy++) {
+		  ExField[ix][iy].resize(nz);
+		  EyField[ix][iy].resize(nz);
+		  EzField[ix][iy].resize(nz);
+	  }
+  }
+  // ------------------------------------
+  // Read different components of field
+	G4String fieldType;
+    G4String origin[4] = { "Dipole", "Neon", "Solenoid", "Target" };
+    fieldType = "magField";
+    for (int i = 0; i < 4; ++i) {
+    readField(fieldType, origin[i]);
+    }
+	readField(fieldType, origin[0]);
 
-
-
-  G4String fieldType;
-  fieldType = "mag";
-  readField(fieldType);
-  fieldType = "el";
-  readField(fieldType);
-
-  ConstructField();
+	ConstructField();
 
 
   fMessenger = new G4GenericMessenger(this, "/MagField/", "MagField Messenger");
 
-  fMessenger->DeclareProperty("scaleB", scaleB, "Average energy of the incident electrons");
 
 }
 
 
-void globalField::readField(G4String fieldType) {
+void globalField::readField(G4String fieldType, G4String origin) {
 	//scaleB = 0.1;
-	G4cout << "Scaling of B-field: " << scaleB << G4endl;
+	//G4cout << "Scaling of B-field: " << scaleB << G4endl;
 
 	double lenUnit = millimeter;
 	double fieldUnit;
 	G4String fileName;
-	if (fieldType == "mag") {	///////////////////////////////
+	int ix, iy, iz;
+	if (fieldType == "magField") {	///////////////////////////////
 		G4cout << "Reading magnetic field" << G4endl;
-		fileName = "magField.TAB";
+		//fileName = "magField.TAB";
+		fileName = fieldType + origin + ".txt";
 		fieldUnit = tesla;
 		std::ifstream file(fileName); // Open the file for reading.
-		G4cout << "  [ Number of values x,y,z: "
-			<< nx << " " << ny << " " << nz << " ] "
-			<< G4endl;
-		BxField.resize(nx);
-		ByField.resize(nx);
-		BzField.resize(nx);
-		int ix, iy, iz;
-		for (ix = 0; ix < nx; ix++) {
-			BxField[ix].resize(ny);
-			ByField[ix].resize(ny);
-			BzField[ix].resize(ny);
-			for (iy = 0; iy < ny; iy++) {
-				BxField[ix][iy].resize(nz);
-				ByField[ix][iy].resize(nz);
-				BzField[ix][iy].resize(nz);
-			}
-		}
 		// Read in the data
 		G4double xval = 0.;
 		G4double yval = 0.;
@@ -141,18 +154,14 @@ void globalField::readField(G4String fieldType) {
 						G4cout << "Point: " << xval << ",  " << yval << ",  " << zval << "; Magnetic field: " << bx << ", " << by << ", " << bz << G4endl;
 					}
 					*/
-					
-
 					if (ix == 0 && iy == 0 && iz == 0) {
 						minx = xval * lenUnit;
 						miny = yval * lenUnit;
 						minz = zval * lenUnit;
 					}
-
-					// yeah I have no idea, why I have to scale ????
-					BxField[ix][iy][iz] = bx * tesla * scaleB;
-					ByField[ix][iy][iz] = by * tesla * scaleB;
-					BzField[ix][iy][iz] = bz * tesla * scaleB;
+					BxField[ix][iy][iz] += bx * tesla;
+					ByField[ix][iy][iz] += by * tesla;
+					BzField[ix][iy][iz] += bz * tesla;
 
 					
 					
@@ -191,29 +200,14 @@ void globalField::readField(G4String fieldType) {
 			<< dx / mm << " " << dy / mm << " " << dz / mm << " mm in z "
 			<< "\n-----------------------------------------------------------" << G4endl;
 	}
-	else if (fieldType == "el") {	/////////////////////////////////////////////////////////
+	else if (fieldType == "elField") {	/////////////////////////////////////////////////////////
 		G4cout << "Reading electric field" << G4endl;
 		fileName = "elField.TAB";
+		fileName = fieldType + origin + ".txt";
 		fieldUnit = volt / meter;
 
 		std::ifstream file(fileName); // Open the file for reading.
-		G4cout << "  [ Number of values x,y,z: "
-			<< nx << " " << ny << " " << nz << " ] "
-			<< G4endl;
-		ExField.resize(nx);
-		EyField.resize(nx);
-		EzField.resize(nx);
-		int ix, iy, iz;
-		for (ix = 0; ix < nx; ix++) {
-			ExField[ix].resize(ny);
-			EyField[ix].resize(ny);
-			EzField[ix].resize(ny);
-			for (iy = 0; iy < ny; iy++) {
-				ExField[ix][iy].resize(nz);
-				EyField[ix][iy].resize(nz);
-				EzField[ix][iy].resize(nz);
-			}
-		}
+		
 		// Read in the data
 		G4double xval = 0.;
 		G4double yval = 0.;
@@ -235,9 +229,9 @@ void globalField::readField(G4String fieldType) {
 						minz = zval * lenUnit;
 					}
 					// see BxField[ix]... = 
-					ExField[ix][iy][iz] = ex * fieldUnit;// *1000000000;
-					EyField[ix][iy][iz] = ey * fieldUnit; // *1000000000;
-					EzField[ix][iy][iz] = ez * fieldUnit; // *1000000000;
+					ExField[ix][iy][iz] += ex * fieldUnit;// *1000000000;
+					EyField[ix][iy][iz] += ey * fieldUnit; // *1000000000;
+					EzField[ix][iy][iz] += ez * fieldUnit; // *1000000000;
 					
 					/*
 					if (xval == 0) {
@@ -285,6 +279,11 @@ void globalField::readField(G4String fieldType) {
 		G4cerr << "Unclear which field should be called!";
 		exit(1);
 	}
+
+
+
+
+
 }
 
 
@@ -385,9 +384,10 @@ void globalField::ConstructField()
 
 globalField* globalField::GetObject()
 {
-  if (!fObject) new globalField();
+ // if (!fObject) new globalField(scaleBDipole);
   return fObject;
 }
+
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 /*

@@ -66,8 +66,6 @@
 //  represents an element with an EM field must add the appropriate
 //  ElementField to the global GlobalField object.
 
-extern 	G4double scaleB;
-
 typedef std::vector<elementField*> FieldList;
 
 class globalField : public G4ElectroMagneticField {
@@ -84,7 +82,7 @@ private:
   void SetupArray();
 
 public:
-	globalField();
+	globalField(G4double argScaleBDipole);
   virtual ~globalField();
 
 
@@ -94,7 +92,7 @@ public:
   /// GetObject() returns the single globalField object.
   /// It is constructed, if necessary.
   //static globalField* GetObject(MyDetectorConstruction* const);
-  static globalField* GetObject();
+static globalField* GetObject();
 
   /// GetFieldValue() returns the field value at a given point[].
   /// field is really field[6]: Bx,By,Bz,Ex,Ey,Ez.
@@ -110,7 +108,7 @@ public:
   {
     if (fFields) fFields->push_back(f);
   }
-
+  
   /// Clear() removes all ElementField-s from the global object,
   /// and destroys them. Used before the geometry is completely
   /// re-created.
@@ -163,6 +161,12 @@ private:
   const elementField **fFp;
 
 private:
+	G4double scaleBDipole = 1;
+	G4double scaleBTarget = 1;
+	G4double scaleBNeon = 1;
+	G4double scaleBSolenoid = 1;
+	G4double scaleE;
+
 	G4GenericMessenger* fMessenger;
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -184,7 +188,7 @@ private:
 
 
 
-	void readField(G4String fieldType);
+	void readField(G4String fieldType, G4String origin);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 
 	// 
