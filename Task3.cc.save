@@ -39,23 +39,23 @@
 
 int main(int argc, char** argv)
 {
-    G4int choiceGeometry = 2;
     G4int choiceParticle = 1;
+    G4int choiceGeometry = 2;
 
     G4double distTargetOrigin = 50.5 * cm;
     G4double avgE = 9 * MeV;
     G4double dModerator = 0.15 * mm;
     G4double dModeratorEnd = 0.05 * mm;
-    G4double dModeratorFront = 0.05 * mm;
+qweewq    G4double dModeratorFront = 0.05 * mm;
     G4double distTarMod = 2*mm;
     G4double widthModeratorPart = 1 * cm;
     G4double moderatorHeight = 60 * cm;
 
-    G4double scaleBDipole = 1.;
-    G4double scaleBNeon = 1.;
-    G4double scaleBSolenoid = 1.;
-    G4double scaleBTarget = 1.;
-    G4double scaleE = 1.;
+    G4double scaleBDipole = 1;
+    G4double scaleBNeon = 1;
+    G4double scaleBSolenoid = 1;
+    G4double scaleBTarget = 1;
+    G4double scaleE = 1;
 
 
 
@@ -63,9 +63,11 @@ int main(int argc, char** argv)
     G4UIExecutive* ui = 0;
     G4RunManager* runManager = new G4RunManager;
     G4ScoringManager* scoringManager = G4ScoringManager::GetScoringManager();
-    runManager->SetUserInitialization(new MyDetectorConstruction(dModerator, dModeratorFront, distTarMod, distTargetOrigin, 
+   runManager->SetUserInitialization(new MyDetectorConstruction(dModerator, dModeratorFront, distTarMod, distTargetOrigin, 
         choiceGeometry, widthModeratorPart, moderatorHeight, scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE));
+
     runManager->SetUserInitialization(new MyPhysicsList());
+
     runManager->SetUserInitialization(new MyActionInitialization(choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator, 
         distTarMod, scaleE));
 
@@ -79,9 +81,8 @@ int main(int argc, char** argv)
     G4UImanager *UImanager = G4UImanager::GetUIpointer();   
 
     UImanager->ApplyCommand("/run/initialize");
-    //UImanager->ApplyCommand("/run/reinitializeGeometry");
-    UImanager->ApplyCommand("/run/beamOn 1000");
-    //UImanager->ApplyCommand("/run/beamOn 24380");
+    UImanager->ApplyCommand("/run/reinitializeGeometry");
+    UImanager->ApplyCommand("/run/beamOn 24380");
 
     /*
     int curRun = 0;

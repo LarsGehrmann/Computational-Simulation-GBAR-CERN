@@ -82,7 +82,7 @@ private:
   void SetupArray();
 
 public:
-	globalField(G4double argScaleBDipole);
+	globalField(G4double argScaleBDipole, G4double argScaleBNeon, G4double argScaleBSolenoid, G4double argScaleBTarget, G4double argScaleE);
   virtual ~globalField();
 
 
@@ -188,7 +188,7 @@ private:
 
 
 
-	void readField(G4String fieldType, G4String origin);
+	void readField(G4String fieldType, G4String origin, G4double scale);
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 
 	// 

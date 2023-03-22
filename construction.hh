@@ -74,9 +74,9 @@ private:
     G4Box* solidWorld, * solidModerator, * solidModeratorEnd, *solidModeratorFront;
     G4Tubs* solidTargetOut, * solidTargetIn;
     G4SubtractionSolid *solidTarget;
-    G4VSolid *coilsSolid, *electrodeSolid, *solenoidSolid, *tarSolid,  *modSolid, *sampleWallSolid;
+    G4VSolid *coilsSolid, *electrodeSolid, *solenoidSolid, *tarSolid,  *modSolid, *sampleWallSolid, * sampleWallSolid4;
 
-    G4RotationMatrix * RotationTarget, * RotationModerator;
+    G4RotationMatrix * RotationTarget, * RotationModerator, * RotationSampleWall2, * RotationSampleWall3, * RotationSampleWall4;
     G4ThreeVector zTrans;
     // materials
     G4Material* worldMat, * targetMaterial, * moderatorMaterial, * moderatorEndMaterial, * coilsMaterial;
@@ -85,10 +85,10 @@ private:
     G4Material  * Ne, * H2, * W;
     // logical volumes
     G4LogicalVolume *logicTarget, *logicModerator, *logicModeratorEnd, *logicModeratorFront, *logicWorld, *logicCoils, *logicElectrode, *logicSolenoid, *logicTar, 
-        *logicMod, *logicSampleWall;
+        *logicMod, *logicSampleWall, * logicSampleWall1, * logicSampleWall2, * logicSampleWall3, * logicSampleWall4;
     // physical volumes
     G4VPhysicalVolume *physicalTarget, *physicalModerator, *physicalModeratorEnd, *physicalModeratorFront, *physicalWorld, *physicalCoils, *physicalElectrode, 
-        *physicalSolenoid, *physicalTar, *physicalMod, *physicalSampleWall;
+        *physicalSolenoid, *physicalTar, *physicalMod, *physicalSampleWall, * physicalSampleWall1, * physicalSampleWall2, * physicalSampleWall3, * physicalSampleWall4;
     // sensitive detector
     //MySensitiveDetector *sensDetModerator, *sensDetModeratorEnd, *sensDetSampleWall;
 

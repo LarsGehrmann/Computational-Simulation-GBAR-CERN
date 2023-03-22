@@ -10,6 +10,7 @@
 #include "G4AnalysisManager.hh"
 
 #include "construction.hh"
+#include "G4RunManager.hh"
 
 #include "G4GenericMessenger.hh"
 
@@ -43,6 +44,7 @@ private:
 	bool saveHistograms;
 
 	G4String volumeName;
+	G4int lastEventID[4];		// for every wall store separate lastEventID
 };
 
 #endif

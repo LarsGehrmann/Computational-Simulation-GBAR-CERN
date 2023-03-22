@@ -33,6 +33,7 @@ private:
 	G4String outputNameHisto;
 	G4String outputNameSample;
 	G4String outputNameAnnihis;
+	G4String outputNameSampleWalls;
 };
 
 #endif

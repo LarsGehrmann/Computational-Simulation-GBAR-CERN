@@ -35,6 +35,8 @@ MyRunAction::MyRunAction(G4double argdModerator, G4double argAvgE, G4double argD
 	outputNameHisto = "OutputHistogram";
 	outputNameSample = "OutputSample";
 	outputNameAnnihis = "OutputAnnihis";
+	outputNameSampleWalls = "SampleWalls";
+
 	fMessenger = new G4GenericMessenger(this, "/output/", "Name of output file");
 
 	fMessenger->DeclareProperty("outputNameValues", outputNameValues, "Name of the output of the file with values");
@@ -94,6 +96,14 @@ MyRunAction::MyRunAction(G4double argdModerator, G4double argAvgE, G4double argD
 	man->CreateNtupleDColumn("Number of volume in which annihilation happened");
 	man->FinishNtuple(4);
 
+	// Sample walls
+	man->CreateNtuple("Title11", "Title12");
+	man->CreateNtupleDColumn("Wall number");
+	man->CreateNtupleDColumn("x");
+	man->CreateNtupleDColumn("y");
+	man->CreateNtupleDColumn("z");
+	man->FinishNtuple(5);
+
 
 }
 
@@ -117,8 +127,11 @@ void MyRunAction::BeginOfRunAction(const G4Run* run)
 	//G4String fileNameSample = outputNameSample + strRunID.str() + ".csv";
 	//man->OpenFile(fileNameSample);
 
-	G4String fileNameAnnihis = outputNameAnnihis + strRunID.str() + ".csv";
-	man->OpenFile(fileNameAnnihis);
+	//G4String fileNameAnnihis = outputNameAnnihis + strRunID.str() + ".csv";
+	//man->OpenFile(fileNameAnnihis);
+
+	G4String fileNameSampleWalls = outputNameSampleWalls + strRunID.str() + ".csv";
+	man->OpenFile(fileNameSampleWalls);
 
 	/*
 	annihiMod = new double* [20];
