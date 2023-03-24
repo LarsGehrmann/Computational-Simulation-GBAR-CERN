@@ -10,10 +10,15 @@
 #include "QGSP_BERT.hh"
 #include "G4ScoringManager.hh"
 #include "G4LogicalVolume.hh"
+#include "G4SystemOfUnits.hh"
+
 
 #include "construction.hh"
 #include "physics.hh"
 #include "action.hh"
+#include "ConstructionParameters.hh"
+
+#include "constructionTest.hh"
 
 //#include "detector.hh"
 //
@@ -58,7 +63,10 @@ int main(int argc, char** argv)
     G4double scaleE = 1.;
 
 
-
+    ConstructionParameters constructionParameters(choiceGeometry, dModerator, dModeratorFront, 
+        widthModeratorPart, distTargetOrigin, moderatorHeight, scaleBDipole, scaleBNeon, scaleBSolenoid, 
+        scaleBTarget, scaleE);
+    G4cout << constructionParameters.GetDModerator() << G4endl;
 
     G4UIExecutive* ui = 0;
     G4RunManager* runManager = new G4RunManager;
@@ -78,10 +86,21 @@ int main(int argc, char** argv)
     visManager->Initialize();
     G4UImanager *UImanager = G4UImanager::GetUIpointer();   
 
-    UImanager->ApplyCommand("/run/initialize");
-    //UImanager->ApplyCommand("/run/reinitializeGeometry");
-    UImanager->ApplyCommand("/run/beamOn 1000");
-    //UImanager->ApplyCommand("/run/beamOn 24380");
+    int curRun = 0;
+    int maxRun = 1;
+    //UImanager->ApplyCommand("/run/initialize");
+    for (int i = 0; i < 3; i++) {
+        // scaleB = 0.5 + 0.1 * i;
+        distTargetOrigin = 25.5 * cm + i * 25 * cm;
+        //runManager->SetUserInitialization(new MyDetectorConstruction(dModerator, dModeratorFront, distTarMod, distTargetOrigin,
+        //   choiceGeometry, widthModeratorPart, moderatorHeight, scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE));
+        //runManager->SetUserInitialization(new MyActionInitialization(choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
+         //   distTarMod, scaleE));
+        UImanager->ApplyCommand("/run/initialize");
+        UImanager->ApplyCommand("/run/reinitializeGeometry");
+        UImanager->ApplyCommand("/run/beamOn 100");
+        // UImanager->ApplyCommand("/run/beamOn 100");
+    }
 
     /*
     int curRun = 0;
@@ -114,6 +133,7 @@ int main(int argc, char** argv)
 
 
      //UImanager->ApplyCommand("/cuts/setMaxCutEnergy 9 MeV");
+    /*
      if (ui) {
         UImanager->ApplyCommand("/control/execute vis.mac");
         UImanager->ApplyCommand("/control/execute gui.mac");
@@ -128,6 +148,7 @@ int main(int argc, char** argv)
         G4String fileName = argv[1];
         UImanager->ApplyCommand(command + fileName);
      }
+     */
     delete runManager;
     return EXIT_SUCCESS;
 }

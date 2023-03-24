@@ -7,7 +7,8 @@ MySteppingAction::MySteppingAction(MyEventAction* eventAction, G4int argChoiceGe
 	fMessenger->DeclareProperty("saveHistograms", saveHistograms, "Boolean whether histograms of kinetic energy shall be saved");
 	choiceGeometry = argChoiceGeometry;
 
-	for (int i = 0; i < 4; ++i) {
+	lastEventID = new G4int[noSampleWalls];
+	for (int i = 0; i < noSampleWalls; ++i) {
 		lastEventID[i] = -1;
 	}
 	/*
@@ -175,8 +176,22 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 		if (particleName == "e+") {
 			G4double x, y, z;
 			G4String volumeName = aStep->GetTrack()->GetVolume()->GetName();
-			if (volumeName == "physicalSampleWall1"  && lastEventID[0] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
+			if (volumeName == "physicalSampleWall0" && lastEventID[0] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
 				lastEventID[0] = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
+				const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
+				man = G4AnalysisManager::Instance();
+				man->SetVerboseLevel(0);
+				man->FillNtupleDColumn(5, 0, 0);
+				x = aStep->GetPreStepPoint()->GetPosition().getX();
+				y = aStep->GetPreStepPoint()->GetPosition().getY();
+				z = aStep->GetPreStepPoint()->GetPosition().getZ();
+				man->FillNtupleDColumn(5, 1, x);
+				man->FillNtupleDColumn(5, 2, y);
+				man->FillNtupleDColumn(5, 3, z);
+				man->AddNtupleRow(5);
+			}
+			else if (volumeName == "physicalSampleWall1"  && lastEventID[1] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
+				lastEventID[1] = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
 				const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
 				man = G4AnalysisManager::Instance();
 				man->SetVerboseLevel(0);
@@ -189,8 +204,8 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 				man->FillNtupleDColumn(5, 3, z);
 				man->AddNtupleRow(5);
 			}
-			else if (volumeName == "physicalSampleWall2" && lastEventID[1] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
-				lastEventID[1] = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
+			else if (volumeName == "physicalSampleWall2" && lastEventID[2] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
+				lastEventID[2] = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
 				const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
 				man = G4AnalysisManager::Instance();
 				man->SetVerboseLevel(0);
@@ -203,8 +218,8 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 				man->FillNtupleDColumn(5, 3, z);
 				man->AddNtupleRow(5);
 			}
-			else if (volumeName == "physicalSampleWall3" && lastEventID[2] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
-				lastEventID[2] = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
+			else if (volumeName == "physicalSampleWall3" && lastEventID[3] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
+				lastEventID[3] = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
 				const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
 				man = G4AnalysisManager::Instance();
 				man->SetVerboseLevel(0);
@@ -217,8 +232,8 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 				man->FillNtupleDColumn(5, 3, z);
 				man->AddNtupleRow(5);
 			}
-			else if (volumeName == "physicalSampleWall4" && lastEventID[3] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
-				lastEventID[3] = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
+			else if (volumeName == "physicalSampleWall4" && lastEventID[4] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
+				lastEventID[4] = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
 				const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
 				man = G4AnalysisManager::Instance();
 				man->SetVerboseLevel(0);

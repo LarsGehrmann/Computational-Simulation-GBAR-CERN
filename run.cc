@@ -35,7 +35,8 @@ MyRunAction::MyRunAction(G4double argdModerator, G4double argAvgE, G4double argD
 	outputNameHisto = "OutputHistogram";
 	outputNameSample = "OutputSample";
 	outputNameAnnihis = "OutputAnnihis";
-	outputNameSampleWalls = "SampleWalls";
+	//outputNameSampleWalls = "SampleWalls";
+	outputNameSampleWalls = "SampleWallsDistTargetOrigin";
 
 	fMessenger = new G4GenericMessenger(this, "/output/", "Name of output file");
 
@@ -67,8 +68,15 @@ MyRunAction::MyRunAction(G4double argdModerator, G4double argAvgE, G4double argD
 	man->CreateNtupleDColumn("dModerator");
 	man->CreateNtupleDColumn("empty");
 	man->CreateNtupleDColumn("avgEnergy");
-	man->CreateNtupleDColumn("scaling of B-field");
+
 	man->CreateNtupleDColumn("distTargetOrigin (real geometry)");
+	man->CreateNtupleDColumn("moderator height");
+
+	man->CreateNtupleDColumn("scaling of Dipole B-field");
+	man->CreateNtupleDColumn("scaling of Neon B-field");
+	man->CreateNtupleDColumn("scaling of Solenoid B-field");
+	man->CreateNtupleDColumn("scaling of Target B-field");
+	man->CreateNtupleDColumn("scaling of E-field");
 
 	man->FinishNtuple(1);
 
@@ -182,7 +190,6 @@ void MyRunAction::EndOfRunAction(const G4Run* run)
 	G4int runID = run->GetRunID();
 	std::stringstream strRunID;
 	strRunID << runID;
-
 
 	G4String fileNameValues = outputNameValues + strRunID.str() + ".csv";
 	man->OpenFile(fileNameValues);

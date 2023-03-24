@@ -15,7 +15,8 @@ MyActionInitialization::MyActionInitialization(G4int argChoiceParticle, G4double
 }
 
 MyActionInitialization::~MyActionInitialization()
-{}
+{
+}
 
 
 

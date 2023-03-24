@@ -44,7 +44,8 @@ private:
 	bool saveHistograms;
 
 	G4String volumeName;
-	G4int lastEventID[4];		// for every wall store separate lastEventID
+	G4int noSampleWalls = 5;
+	G4int * lastEventID;		// for every wall store separate lastEventID
 };
 
 #endif

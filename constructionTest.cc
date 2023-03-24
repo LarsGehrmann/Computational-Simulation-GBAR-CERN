@@ -4,47 +4,18 @@
 #include "globalField.hh"
 
 
-MyDetectorConstruction::MyDetectorConstruction(G4double argdModerator, G4double argdModeratorFront, G4double argDistTarMod, 
-    G4double argDistTargetOrigin, G4int argChoiceGeometry, G4double argWidthModeratorPart, G4double argModeratorHeight, G4double argScaleBDipole,
-    G4double argScaleBNeon, G4double argScaleBSolenoid, G4double argScaleBTarget, G4double argScaleE)        // default construtor
+MyDetectorConstructionTest::MyDetectorConstructionTest(ConstructionParameters constructionParameters)        // default construtor
 {
-    dModerator = argdModerator;
-    dModeratorFront = argdModeratorFront;
-    distTarMod = argDistTarMod;
-    distTargetOrigin = argDistTargetOrigin;
-    choiceGeometry = argChoiceGeometry;
-    widthModeratorPart = argWidthModeratorPart;
-    moderatorHeight = argModeratorHeight;
-
-    scaleBDipole = argScaleBDipole;
-    scaleBNeon = argScaleBNeon;
-    scaleBSolenoid = argScaleBSolenoid;
-    scaleBTarget = argScaleBTarget;
-    scaleE = argScaleE;
 
     outputNameParameters = "OutputParameters";
 
-   // moderatorMaterialMessenger = "Tungsten";
-
    fMessenger = new G4GenericMessenger(this, "/detector/", "Detector construction");
 
-
-    //fMessenger = new G4GenericMessenger(this, "/outputRun/", "Name of output file for RunAction");
-    fMessenger->DeclareProperty("outputNameParameters", outputNameParameters, "Name of the output file with parameters");
-    fMessenger->DeclareProperty("moderatorMaterialMessenger", moderatorMaterialMessenger, "Material of moderator");
-    fMessenger->DeclareProperty("distGunTar", distGunTar, "Distance between electron source and target");
-    fMessenger->DeclareProperty("distTarMod", distTarMod, "Distance between target and moderator");
-    fMessenger->DeclareProperty("dModerator", dModerator, "Thickness of moderator");
-    fMessenger->DeclareProperty("placeBehind", placeBehind, "Place moderator right behind the target as in the naive way");
-    fMessenger->DeclareProperty("angleToAxis", angleToAxis, "Angle to the x-axis to the normal of the moderator");
-    fMessenger->DeclareProperty("angleOfModerator", angleOfModerator, "Angle of the rotation of the moderator, 0 is naive approach");
-    fMessenger->DeclareProperty("dModeratorEnd", dModeratorEnd, "Thickness of end of moderator");
-
-    MyDetectorConstruction::DefineMaterials();
+    MyDetectorConstructionTest::DefineMaterials();
 
 }
 
-void MyDetectorConstruction::DefineMaterials()
+void MyDetectorConstructionTest::DefineMaterials()
 {
     G4NistManager* nist = G4NistManager::Instance();
 
@@ -70,51 +41,13 @@ void MyDetectorConstruction::DefineMaterials()
     W->AddElement(elW, 1);
 }
 
-void MyDetectorConstruction::StoreConstructionParameters()
-{
-    G4AnalysisManager* man = G4AnalysisManager::Instance();
-    man->SetVerboseLevel(0);
 
-
-    // Parameters
-    man->CreateNtuple("ConstructionParameters", "2nd Title ConstructionParameters");
-
-    man->CreateNtupleDColumn("dModerator");
-    man->CreateNtupleDColumn("dModeratorFront");
-
-    man->CreateNtupleDColumn("Distance target origin");
-    man->CreateNtupleDColumn("moderator height");
-    man->CreateNtupleDColumn("scaling of Dipole B-field");
-    man->CreateNtupleDColumn("scaling of Neon B-field");
-    man->CreateNtupleDColumn("scaling of Solenoid B-field");
-    man->CreateNtupleDColumn("scaling of Target B-field");
-    man->CreateNtupleDColumn("scaling of E-field");
-
-    man->FinishNtuple(6);
-
-    G4String fileNameParameters = "ConstructionParameters.csv";
-    man->OpenFile(fileNameParameters);
-
-    man->FillNtupleDColumn(6, 0, dModerator);
-    man->FillNtupleDColumn(6, 1, dModeratorFront);
-    man->FillNtupleDColumn(6, 2, distTargetOrigin);
-
-
-
-    man->AddNtupleRow(6);
-    man->Write();
-    man->CloseFile();
-
-}
-
-
-
-MyDetectorConstruction::~MyDetectorConstruction()   // destructor
+MyDetectorConstructionTest::~MyDetectorConstructionTest()   // destructor
 {
 }
 
 
-void MyDetectorConstruction::SetMaterials()
+void MyDetectorConstructionTest::SetMaterials()
 {
     G4NistManager* nist = G4NistManager::Instance();
     // Set target, moderator and world material
@@ -145,9 +78,9 @@ void MyDetectorConstruction::SetMaterials()
 }
 
 
-G4VPhysicalVolume *MyDetectorConstruction::Construct()
+G4VPhysicalVolume *MyDetectorConstructionTest::Construct()
 {
-    MyDetectorConstruction::SetMaterials();
+    MyDetectorConstructionTest::SetMaterials();
 
     worldVertices = 1000 * mm; // world length
     heightWorld = worldVertices;
@@ -318,7 +251,7 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
 	return physicalWorld;
 }
 
-void MyDetectorConstruction::ConstructSDandField() {
+void MyDetectorConstructionTest::ConstructSDandField() {
 
     /*
     if (choiceGeometry == 0) {

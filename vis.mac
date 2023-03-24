@@ -33,12 +33,13 @@
 /vis/geometry/set/forceSolid logicTar 1 1
 /vis/geometry/set/forceSolid logicMod 1 1
 
+/vis/geometry/set/colour logicVSampleWall0 16777216 0.10 0. 0. 1.
 /vis/geometry/set/colour logicVSampleWall1 16777216 0.10 0. 0. 1.
 /vis/geometry/set/colour logicVSampleWall2 16777216 0.10 0. 0. 1.
 /vis/geometry/set/colour logicVSampleWall3 16777216 0.10 0. 0. 1.
 /vis/geometry/set/colour logicVSampleWall4 16777216 0.10 0. 0. 1.
 
-
+/vis/geometry/set/forceSolid logicVSampleWall1 0 1
 /vis/geometry/set/forceSolid logicVSampleWall1 1 1
 /vis/geometry/set/forceSolid logicVSampleWall2 1 1
 /vis/geometry/set/forceSolid logicVSampleWall3 1 1
