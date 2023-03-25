@@ -64,38 +64,88 @@ G4String ConstructionParameters::GetModeratorMaterial() {
     return moderatorMaterial;
 }
 
-void ConstructionParameters::StoreParameters(G4int runNumber) {
+void ConstructionParameters::SetDModerator(G4double argDModerator) {
+    dModerator = argDModerator;
+}
+void ConstructionParameters::SetDModeratorFront(G4double argDModeratorFront) {
+    dModeratorFront = argDModeratorFront;
+}
+
+
+void ConstructionParameters::SetWidthModeratorPart(G4double argWidthModeratorPart) {
+    widthModeratorPart = argWidthModeratorPart;
+}
+void ConstructionParameters::SetDistTargetOrigin(G4double argDistTargetOrigin) {
+    distTargetOrigin = argDistTargetOrigin;
+}
+void ConstructionParameters::SetModeratorHeight(G4double argModeratorHeight) {
+    moderatorHeight = argModeratorHeight;
+}
+void ConstructionParameters::SetScaleBDipole(G4double argScaleBDipole) {
+    scaleBDipole = argScaleBDipole;
+}
+void ConstructionParameters::SetScaleBNeon(G4double argScaleBNeon) {
+    scaleBNeon = argScaleBNeon;
+}
+void ConstructionParameters::SetScaleBSolenoid(G4double argScaleBSolenoid) {
+    scaleBSolenoid = argScaleBSolenoid;
+}
+void ConstructionParameters::SetScaleBTarget(G4double argScaleBTarget) {
+    scaleBTarget = argScaleBTarget;
+}
+void ConstructionParameters::SetScaleE(G4double argScaleE) {
+    scaleE = argScaleE;
+}
+void ConstructionParameters::SetModeratorMaterial(G4String argModeratorMaterial) {
+    moderatorMaterial = argModeratorMaterial;
+}
+
+
+void ConstructionParameters::StoreParameters(int runNumber) {
 
     G4AnalysisManager* man = G4AnalysisManager::Instance();
-    man->SetVerboseLevel(0);
-
-    // Parameters
-    man->CreateNtuple("Title3", "Title4");
-    man->CreateNtupleDColumn("distTarMod ");
-    man->CreateNtupleDColumn("dModerator");
-    man->CreateNtupleDColumn("empty");
-    man->CreateNtupleDColumn("avgEnergy");
-
-    man->CreateNtupleDColumn("distTargetOrigin (real geometry)");
-    man->CreateNtupleDColumn("moderator height");
-
-    man->CreateNtupleDColumn("scaling of Dipole B-field");
-    man->CreateNtupleDColumn("scaling of Neon B-field");
-    man->CreateNtupleDColumn("scaling of Solenoid B-field");
-    man->CreateNtupleDColumn("scaling of Target B-field");
-    man->CreateNtupleDColumn("scaling of E-field");
-
-    man->FinishNtuple(1);
-
+    man->SetVerboseLevel(3);
 
     std::stringstream strRunID;
     strRunID << runNumber;
 
     G4String fileName = "ConstructionParameters" + strRunID.str() + ".csv";
-    man->OpenFile(fileNameParameters);
+    G4String tupleName = "Construction Parameters" + strRunID.str();
+    
 
-    man->AddNtupleRow(1);
+
+
+    man->OpenFile(fileName);
+
+    // Create tuples
+    man->CreateNtuple(tupleName,tupleName);
+    man->CreateNtupleDColumn(0,"choiceGeometry");
+    man->CreateNtupleDColumn(0, "dModerator");
+    man->CreateNtupleDColumn(0, "dModeratorFront");
+    man->CreateNtupleDColumn(0, "distTargetOrigin");
+    man->CreateNtupleDColumn(0, "moderatorHeight");
+    man->CreateNtupleDColumn(0, "scaling of Dipole B-field");
+    man->CreateNtupleDColumn(0, "scaling of Neon B-field");
+    man->CreateNtupleDColumn(0, "scaling of Solenoid B-field");
+    man->CreateNtupleDColumn(0, "scaling of Target B-field");
+    man->CreateNtupleDColumn(0, "scaling of E-field");
+    man->FinishNtuple(0);   
+
+
+    man->FillNtupleDColumn(0, 0, choiceGeometry);
+    man->FillNtupleDColumn(0, 1, dModerator);
+    man->FillNtupleDColumn(0, 2, dModeratorFront);
+    man->FillNtupleDColumn(0, 3, distTargetOrigin);
+    man->FillNtupleDColumn(0, 4, scaleBDipole);
+    man->FillNtupleDColumn(0, 5, scaleBNeon);
+    man->FillNtupleDColumn(0, 6, scaleBSolenoid);
+    man->FillNtupleDColumn(0, 7, scaleBTarget);
+    man->FillNtupleDColumn(0, 8, scaleE);
+    man->AddNtupleRow(0);
     man->Write();
     man->CloseFile();
+    G4cout << "Before deleting  " << G4endl;
+    //delete G4AnalysisManager::Instance();
+    G4cout << "After deleting  " << G4endl;
 
 }

@@ -76,9 +76,11 @@ globalField::globalField(G4double argScaleBDipole, G4double argScaleBNeon, G4dou
   fNfp = 0;
   fFp = NULL;
   // resize fields -------------------------------
+  /*
   G4cout << "  [ Number of values x,y,z: "
 	  << nx << " " << ny << " " << nz << " ] "
 	  << G4endl;
+	  */
   BxField.resize(nx);
   ByField.resize(nx);
   BzField.resize(nx);
@@ -154,11 +156,6 @@ void globalField::readField(G4String fieldType, G4String origin, G4double scale)
 					xval *= 1000;
 					yval *= 1000;
 					zval *= 1000;
-					/*
-					if (iy == 30) {
-						G4cout << "Point: " << xval << ",  " << yval << ",  " << zval << "; Magnetic field: " << bx << ", " << by << ", " << bz << G4endl;
-					}
-					*/
 					if (ix == 0 && iy == 0 && iz == 0) {
 						minx = xval * lenUnit;
 						miny = yval * lenUnit;
@@ -178,32 +175,13 @@ void globalField::readField(G4String fieldType, G4String origin, G4double scale)
 		maxy = yval * lenUnit;
 		maxz = zval * lenUnit;
 
-		//
-		G4cout << "\n ---> ... done reading " << G4endl;
-
-		// G4cout << " Read values of field from file " << filename << G4endl;
-		G4cout << " ---> assumed the order:  x, y, z, Bx, By, Bz "
-			<< "\n ---> Min values x,y,z: "
-			<< minx / mm << " " << miny / mm << " " << minz / mm << " mm "
-			<< "\n ---> Max values x,y,z: "
-			<< maxx / mm << " " << maxy / mm << " " << maxz / mm << " mm " << G4endl;
-
 		// Should really check that the limits are not the wrong way around.
 		//if (maxx < minx) { swap(maxx, minx); invertX = true; }
 		//if (maxy < miny) { swap(maxy, miny); invertY = true; }
 		//if (maxz < minz) { swap(maxz, minz); invertZ = true; }
-		G4cout << "\nAfter reordering if neccesary"
-			<< "\n ---> Min values x,y,z: "
-			<< minx / mm << " " << miny / mm << " " << minz / mm << " mm "
-			<< " \n ---> Max values x,y,z: "
-			<< maxx / mm << " " << maxy / mm << " " << maxz / mm << " mm ";
-
 		dx = maxx - minx;
 		dy = maxy - miny;
 		dz = maxz - minz;
-		G4cout << "\n ---> Dif values x,y,z (range): "
-			<< dx / mm << " " << dy / mm << " " << dz / mm << " mm in z "
-			<< "\n-----------------------------------------------------------" << G4endl;
 	}
 	else if (fieldType == "elField") {	/////////////////////////////////////////////////////////
 		G4cout << "Reading electric field" << G4endl;
@@ -224,7 +202,7 @@ void globalField::readField(G4String fieldType, G4String origin, G4double scale)
 			for (iy = 0; iy < ny; iy++) {
 				for (ix = 0; ix < nx; ix++) {
 					file >> xval >> yval >> zval >> ex >> ey >> ez;
-					//G4cout << "xval: " << xval << ", yval: " << yval << ", zval: " << zval << G4endl;
+					// scale from m -> mm
 					xval *= 1000;
 					yval *= 1000;
 					zval *= 1000;
@@ -233,19 +211,10 @@ void globalField::readField(G4String fieldType, G4String origin, G4double scale)
 						miny = yval * lenUnit;
 						minz = zval * lenUnit;
 					}
-					// see BxField[ix]... = 
 					ExField[ix][iy][iz] += ex * fieldUnit * scale;
 					EyField[ix][iy][iz] += ey * fieldUnit * scale;
 					EzField[ix][iy][iz] += ez * fieldUnit * scale;
-					
-					/*
-					if (xval == 0) {
-						G4cout << "Point: " << xval << ",  " << yval << ",  " << zval << "; Electric field: " << ex << ", " << ey << ", " << ez << G4endl;
-						G4cout << "Point: " << xval << ",  " << yval << ",  " << zval << "; Electric field: " << ExField[ix][iy][iz] << ", " << EyField[ix][iy][iz] << ", " << EzField[ix][iy][iz] << G4endl;
 
-					}
-					*/
-					
 				}
 			}
 		}
@@ -253,32 +222,11 @@ void globalField::readField(G4String fieldType, G4String origin, G4double scale)
 		maxx = xval * lenUnit;
 		maxy = yval * lenUnit;
 		maxz = zval * lenUnit;
-		//
-		G4cout << "\n ---> ... done reading " << G4endl;
-
-		// G4cout << " Read values of field from file " << filename << G4endl;
-		G4cout << " ---> assumed the order:  x, y, z, Bx, By, Bz "
-			<< "\n ---> Min values x,y,z: "
-			<< minx / mm << " " << miny / mm << " " << minz / mm << " mm "
-			<< "\n ---> Max values x,y,z: "
-			<< maxx / mm << " " << maxy / mm << " " << maxz / mm << " mm " << G4endl;
-
-		// Should really check that the limits are not the wrong way around.
-		//if (maxx < minx) { swap(maxx, minx); invertX = true; }
-		//if (maxy < miny) { swap(maxy, miny); invertY = true; }
-		//if (maxz < minz) { swap(maxz, minz); invertZ = true; }
-		G4cout << "\nAfter reordering if neccesary"
-			<< "\n ---> Min values x,y,z: "
-			<< minx / mm << " " << miny / mm << " " << minz / mm << " mm "
-			<< " \n ---> Max values x,y,z: "
-			<< maxx / mm << " " << maxy / mm << " " << maxz / mm << " mm ";
 
 		dx = maxx - minx;
 		dy = maxy - miny;
 		dz = maxz - minz;
-		G4cout << "\n ---> Dif values x,y,z (range): "
-			<< dx / mm << " " << dy / mm << " " << dz / mm << " mm in z "
-			<< "\n-----------------------------------------------------------" << G4endl;
+
 	}
 	else {
 		G4cerr << "Unclear which field should be called!";
@@ -361,7 +309,7 @@ void globalField::ConstructField()
 
   fFieldPropagator->SetMinimumEpsilonStep(fEpsMin);
   fFieldPropagator->SetMaximumEpsilonStep(fEpsMax);
-
+  /*
   G4cout << "Accuracy Parameters:" <<
             " MinStep=" << fMinStep <<
             " DeltaChord=" << fDeltaChord <<
@@ -370,7 +318,7 @@ void globalField::ConstructField()
             " DeltaIntersection=" << fDeltaIntersection <<
             " EpsMin=" << fEpsMin <<
             " EpsMax=" << fEpsMax <<  G4endl;
-
+*/
   fFieldManager->SetChordFinder(fChordFinder);
 
   G4double l = 0.0;

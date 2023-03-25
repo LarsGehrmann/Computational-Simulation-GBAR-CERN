@@ -12,13 +12,11 @@
 #include "G4LogicalVolume.hh"
 #include "G4SystemOfUnits.hh"
 
-
-#include "construction.hh"
 #include "physics.hh"
 #include "action.hh"
-#include "ConstructionParameters.hh"
 
-#include "constructionTest.hh"
+#include "ConstructionParameters.hh"
+#include "construction.hh"
 
 //#include "detector.hh"
 //
@@ -63,16 +61,15 @@ int main(int argc, char** argv)
     G4double scaleE = 1.;
 
 
-    ConstructionParameters constructionParameters(choiceGeometry, dModerator, dModeratorFront, 
-        widthModeratorPart, distTargetOrigin, moderatorHeight, scaleBDipole, scaleBNeon, scaleBSolenoid, 
-        scaleBTarget, scaleE);
-    G4cout << constructionParameters.GetDModerator() << G4endl;
-
     G4UIExecutive* ui = 0;
     G4RunManager* runManager = new G4RunManager;
-    G4ScoringManager* scoringManager = G4ScoringManager::GetScoringManager();
-    runManager->SetUserInitialization(new MyDetectorConstruction(dModerator, dModeratorFront, distTarMod, distTargetOrigin, 
-        choiceGeometry, widthModeratorPart, moderatorHeight, scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE));
+   
+
+    ConstructionParameters constructionParameters(choiceGeometry, dModerator, dModeratorFront,
+        widthModeratorPart, distTargetOrigin, moderatorHeight, scaleBDipole, scaleBNeon, scaleBSolenoid,
+        scaleBTarget, scaleE);
+    
+    runManager->SetUserInitialization(new DetectorConstruction(&constructionParameters));
     runManager->SetUserInitialization(new MyPhysicsList());
     runManager->SetUserInitialization(new MyActionInitialization(choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator, 
         distTarMod, scaleE));
@@ -85,55 +82,29 @@ int main(int argc, char** argv)
     G4VisManager *visManager = new G4VisExecutive();
     visManager->Initialize();
     G4UImanager *UImanager = G4UImanager::GetUIpointer();   
-
-    int curRun = 0;
-    int maxRun = 1;
-    //UImanager->ApplyCommand("/run/initialize");
-    for (int i = 0; i < 3; i++) {
-        // scaleB = 0.5 + 0.1 * i;
-        distTargetOrigin = 25.5 * cm + i * 25 * cm;
-        //runManager->SetUserInitialization(new MyDetectorConstruction(dModerator, dModeratorFront, distTarMod, distTargetOrigin,
-        //   choiceGeometry, widthModeratorPart, moderatorHeight, scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE));
-        //runManager->SetUserInitialization(new MyActionInitialization(choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
-         //   distTarMod, scaleE));
-        UImanager->ApplyCommand("/run/initialize");
-        UImanager->ApplyCommand("/run/reinitializeGeometry");
-        UImanager->ApplyCommand("/run/beamOn 100");
-        // UImanager->ApplyCommand("/run/beamOn 100");
-    }
-
-    /*
-    int curRun = 0;
-    int maxRun = 1;
     UImanager->ApplyCommand("/run/initialize");
-    for (int curRun = 0; curRun < maxRun; curRun++) {
-        std::chrono::steady_clock::time_point begin = std::chrono::steady_clock::now();
-        G4cout << "Run number: " << curRun+1 << "/" << maxRun << G4endl;
-        UImanager->ApplyCommand("/run/beamOn 10000");
-      //  UImanager->ApplyCommand("/run/beamOn 10000000");
-        std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
-        std::cout << "Time difference = " << std::chrono::duration_cast<std::chrono::minutes>(end - begin).count() << "[min]" << std::endl;
-    }
-    */
-     /*
-     UImanager->ApplyCommand("/output/outputNameValues distTargetOriginValues");
-     UImanager->ApplyCommand("/output/outputNameParameters distTargetOriginParameters");
-     */
 
-     /*
-     for (int i = 0; i < 10; i++) {
-        // scaleB = 0.5 + 0.1 * i;
-         distTargetOrigin = 25 * cm + i * 5 * cm;
-         UImanager->ApplyCommand("/run/initialize");
-         UImanager->ApplyCommand("/run/reinitializeGeometry");
-         UImanager->ApplyCommand("/run/beamOn 1000000");
-        // UImanager->ApplyCommand("/run/beamOn 100");
-     }
-     */
+
+    G4int curRun = 0;
+    G4int maxRun = 2;
+
+    for (curRun = 0; curRun < maxRun; ++curRun) {
+        distTargetOrigin = 25 * cm + curRun * 5 * cm;
+        constructionParameters.SetDistTargetOrigin(distTargetOrigin);
+        constructionParameters.StoreParameters(curRun);
+
+        runManager->SetUserInitialization(new DetectorConstruction(&constructionParameters));
+       runManager->SetUserInitialization(new MyActionInitialization(choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
+            distTarMod, scaleE));
+        UImanager->ApplyCommand("/run/initialize");
+        //UImanager->ApplyCommand("/run/reinitilizeGeometry");
+        UImanager->ApplyCommand("/run/beamOn 5");
+    }
+     
 
 
      //UImanager->ApplyCommand("/cuts/setMaxCutEnergy 9 MeV");
-    /*
+    
      if (ui) {
         UImanager->ApplyCommand("/control/execute vis.mac");
         UImanager->ApplyCommand("/control/execute gui.mac");
@@ -148,7 +119,7 @@ int main(int argc, char** argv)
         G4String fileName = argv[1];
         UImanager->ApplyCommand(command + fileName);
      }
-     */
+     
     delete runManager;
     return EXIT_SUCCESS;
 }
@@ -231,3 +202,5 @@ UImanager->ApplyCommand("/vis/scene/endOfEventAction accumulate");
         // UImanager->ApplyCommand("/vis/scene/add/scale");
 
 */
+
+

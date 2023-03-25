@@ -4,47 +4,13 @@
 #include "globalField.hh"
 
 
-MyDetectorConstruction::MyDetectorConstruction(G4double argdModerator, G4double argdModeratorFront, G4double argDistTarMod, 
-    G4double argDistTargetOrigin, G4int argChoiceGeometry, G4double argWidthModeratorPart, G4double argModeratorHeight, G4double argScaleBDipole,
-    G4double argScaleBNeon, G4double argScaleBSolenoid, G4double argScaleBTarget, G4double argScaleE)        // default construtor
+DetectorConstruction::DetectorConstruction(ConstructionParameters *argConstructionParameters)  // todo: * -> &
 {
-    dModerator = argdModerator;
-    dModeratorFront = argdModeratorFront;
-    distTarMod = argDistTarMod;
-    distTargetOrigin = argDistTargetOrigin;
-    choiceGeometry = argChoiceGeometry;
-    widthModeratorPart = argWidthModeratorPart;
-    moderatorHeight = argModeratorHeight;
-
-    scaleBDipole = argScaleBDipole;
-    scaleBNeon = argScaleBNeon;
-    scaleBSolenoid = argScaleBSolenoid;
-    scaleBTarget = argScaleBTarget;
-    scaleE = argScaleE;
-
-    outputNameParameters = "OutputParameters";
-
-   // moderatorMaterialMessenger = "Tungsten";
-
-   fMessenger = new G4GenericMessenger(this, "/detector/", "Detector construction");
-
-
-    //fMessenger = new G4GenericMessenger(this, "/outputRun/", "Name of output file for RunAction");
-    fMessenger->DeclareProperty("outputNameParameters", outputNameParameters, "Name of the output file with parameters");
-    fMessenger->DeclareProperty("moderatorMaterialMessenger", moderatorMaterialMessenger, "Material of moderator");
-    fMessenger->DeclareProperty("distGunTar", distGunTar, "Distance between electron source and target");
-    fMessenger->DeclareProperty("distTarMod", distTarMod, "Distance between target and moderator");
-    fMessenger->DeclareProperty("dModerator", dModerator, "Thickness of moderator");
-    fMessenger->DeclareProperty("placeBehind", placeBehind, "Place moderator right behind the target as in the naive way");
-    fMessenger->DeclareProperty("angleToAxis", angleToAxis, "Angle to the x-axis to the normal of the moderator");
-    fMessenger->DeclareProperty("angleOfModerator", angleOfModerator, "Angle of the rotation of the moderator, 0 is naive approach");
-    fMessenger->DeclareProperty("dModeratorEnd", dModeratorEnd, "Thickness of end of moderator");
-
-    MyDetectorConstruction::DefineMaterials();
-
+    constructionParameters = argConstructionParameters;
+    DetectorConstruction::DefineMaterials();
 }
 
-void MyDetectorConstruction::DefineMaterials()
+void DetectorConstruction::DefineMaterials()
 {
     G4NistManager* nist = G4NistManager::Instance();
 
@@ -70,51 +36,13 @@ void MyDetectorConstruction::DefineMaterials()
     W->AddElement(elW, 1);
 }
 
-void MyDetectorConstruction::StoreConstructionParameters()
-{
-    G4AnalysisManager* man = G4AnalysisManager::Instance();
-    man->SetVerboseLevel(0);
 
-
-    // Parameters
-    man->CreateNtuple("ConstructionParameters", "2nd Title ConstructionParameters");
-
-    man->CreateNtupleDColumn("dModerator");
-    man->CreateNtupleDColumn("dModeratorFront");
-
-    man->CreateNtupleDColumn("Distance target origin");
-    man->CreateNtupleDColumn("moderator height");
-    man->CreateNtupleDColumn("scaling of Dipole B-field");
-    man->CreateNtupleDColumn("scaling of Neon B-field");
-    man->CreateNtupleDColumn("scaling of Solenoid B-field");
-    man->CreateNtupleDColumn("scaling of Target B-field");
-    man->CreateNtupleDColumn("scaling of E-field");
-
-    man->FinishNtuple(6);
-
-    G4String fileNameParameters = "ConstructionParameters.csv";
-    man->OpenFile(fileNameParameters);
-
-    man->FillNtupleDColumn(6, 0, dModerator);
-    man->FillNtupleDColumn(6, 1, dModeratorFront);
-    man->FillNtupleDColumn(6, 2, distTargetOrigin);
-
-
-
-    man->AddNtupleRow(6);
-    man->Write();
-    man->CloseFile();
-
-}
-
-
-
-MyDetectorConstruction::~MyDetectorConstruction()   // destructor
+DetectorConstruction::~DetectorConstruction()   // destructor
 {
 }
 
 
-void MyDetectorConstruction::SetMaterials()
+void DetectorConstruction::SetMaterials()
 {
     G4NistManager* nist = G4NistManager::Instance();
     // Set target, moderator and world material
@@ -122,17 +50,17 @@ void MyDetectorConstruction::SetMaterials()
     worldMat = H2;
     coilsMaterial = nist->FindOrBuildMaterial("G4_Cu");
 
-    if (moderatorMaterialMessenger == "Neon") {
+    if (constructionParameters->GetModeratorMaterial() == "Neon") {
         G4cout << "Neon as material" << G4endl;
         moderatorMaterial = Ne;
         moderatorEndMaterial = Ne;
     }
-    else if (moderatorMaterialMessenger == "Tungsten") {
+    else if (constructionParameters->GetModeratorMaterial() == "Tungsten") {
         G4cout << "Tungsten as material" << G4endl;
         moderatorMaterial = W;
         moderatorEndMaterial = W;
     }
-    else if (moderatorMaterialMessenger == "Copper") {
+    else if (constructionParameters->GetModeratorMaterial() == "Copper") {
         moderatorMaterial = nist->FindOrBuildMaterial("G4_Cu");
         moderatorEndMaterial = nist->FindOrBuildMaterial("G4_Cu");
 
@@ -145,14 +73,19 @@ void MyDetectorConstruction::SetMaterials()
 }
 
 
-G4VPhysicalVolume *MyDetectorConstruction::Construct()
+G4VPhysicalVolume *DetectorConstruction::Construct()
 {
-    MyDetectorConstruction::SetMaterials();
+    DetectorConstruction::SetMaterials();
 
-    worldVertices = 1000 * mm; // world length
-    heightWorld = worldVertices;
-    lengthWorld = worldVertices;
-    widthWorld = worldVertices;
+    G4double rTargetOut, rTargetIn, dTargetOut, dTargetIn, dEffectiveTarget, widthModerator;
+
+
+
+    widthModerator = 0.15 * mm;
+    G4double worldVertices = 1000 * mm; // world length
+    G4double heightWorld = worldVertices;
+    G4double lengthWorld = worldVertices;
+    G4double widthWorld = worldVertices;
     solidWorld = new G4Box("soldidWorld", lengthWorld, heightWorld, widthWorld);
     logicWorld = new G4LogicalVolume(solidWorld, worldMat, "logicVWorld");
     physicalWorld = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicWorld, "physicalWorld", 0, false, 0, true);
@@ -179,7 +112,7 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
     physicalSolenoid = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicSolenoid, "physicalSolenoid", logicWorld, false, 7, true);
 
 
-    switch (choiceGeometry) {
+    switch (constructionParameters->GetChoiceGeometry()) {
     case 0: {
         widthModerator = 19 * mm;
         widthModerator = 200 * mm;//
@@ -204,22 +137,22 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
         solidTargetIn = new G4Tubs("solidTargetIn", 0., rTargetIn, dTargetIn / 2, 0, 360);
         solidTarget = new G4SubtractionSolid("solidTarget", solidTargetOut, solidTargetIn, 0, zTrans);
         logicTarget = new G4LogicalVolume(solidTarget, targetMaterial, "logicVTarget");
-        physicalTarget = new G4PVPlacement(RotationTarget, G4ThreeVector(distTargetOrigin + dTargetOut / 2, 0., 0.), logicTarget, "physicalTarget", logicWorld, false, 1, true);
+        physicalTarget = new G4PVPlacement(RotationTarget, G4ThreeVector(constructionParameters->GetDistTargetOrigin() + dTargetOut / 2, 0., 0.), 
+            logicTarget, "physicalTarget", logicWorld, false, 1, true);
 
-        solidModerator = new G4Box("solidModerator", widthModerator / 2, dModerator / 2, widthModerator / 2);
-        solidModeratorEnd = new G4Box("solidModeratorEnd", widthModerator / 2, dModeratorEnd / 2, widthModerator / 2);
-        //solidModerator = new G4Box("solidModerator", dModerator / 2, widthModerator / 2, widthModerator / 2);
-        //solidModeratorEnd = new G4Box("solidModeratorEnd", dModeratorEnd / 2, widthModerator / 2, widthModerator / 2);
-
+        solidModerator = new G4Box("solidModerator", widthModerator / 2, constructionParameters->GetDModerator() / 2, 
+            widthModerator / 2);
+        solidModeratorEnd = new G4Box("solidModeratorEnd", widthModerator / 2, constructionParameters->GetDModeratorFront() / 2, widthModerator / 2);
         logicModerator = new G4LogicalVolume(solidModerator, moderatorMaterial, "logicVModerator");
         logicModeratorEnd = new G4LogicalVolume(solidModeratorEnd, moderatorEndMaterial, "logicVModeratorEnd");
 
-        G4cout << "Distance between target and origin: " << distTargetOrigin << G4endl;
-        physicalModerator = new G4PVPlacement(0, G4ThreeVector(0, 60 * cm + dModerator / 2, 0), logicModerator, "physicalModerator", logicWorld, false, 2, true);
-        physicalModeratorEnd = new G4PVPlacement(0, G4ThreeVector(0, 60 * cm + dModerator + dModeratorEnd / 2, 0), logicModeratorEnd, "physicalModeratorEnd", logicWorld, false, 3, true);
-        //physicalModerator = new G4PVPlacement(0, G4ThreeVector(distTargetOrigin - dTargetOut - 2*mm - dModerator/2, 0., 0.), logicModerator, "physicalModerator", logicWorld, false, 2, true);
-        //physicalModeratorEnd = new G4PVPlacement(0, G4ThreeVector(distTargetOrigin - dTargetOut - 2 * mm - dModerator - dModeratorEnd / 2, 0., 0.), logicModeratorEnd, "physicalModeratorEnd", logicWorld, false, 3, true);
+        physicalModerator = new G4PVPlacement(0, G4ThreeVector(0, 60 * cm + constructionParameters->GetDModerator() / 2, 0), logicModerator, "physicalModerator",
+            logicWorld, false, 2, true);
 
+
+        physicalModeratorEnd = new G4PVPlacement(0, G4ThreeVector(0, 60 * cm + constructionParameters->GetDModerator() 
+            + constructionParameters->GetDModeratorFront() / 2, 0), logicModeratorFront, "physicalModeratorEnd",
+            logicWorld, false, 3, true);
         break;
     }
     case 1: {
@@ -241,9 +174,9 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
         // define two cylinders outer and inner and take boolean geometry, subtraction solid
         rTargetOut = 95 * mm; // radius of target (outer)
         dTargetOut = 10 * mm;
+        dEffectiveTarget = 1 * mm; // thickness of leftover target after cutting
         dTargetIn = dTargetOut - dEffectiveTarget;
         rTargetIn = 2.5 * mm; // radius of target (inner)
-        dEffectiveTarget = 1 * mm; // thickness of leftover target after cutting
         // Create a RotationTarget, matrix that rotates the Target
         RotationTarget = new G4RotationMatrix();
         RotationTarget->rotateX(0 * deg);
@@ -257,10 +190,13 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
         solidTargetIn = new G4Tubs("solidTargetIn", 0., rTargetIn, dTargetIn / 2, 0, 360);
         solidTarget = new G4SubtractionSolid("solidTarget", solidTargetOut, solidTargetIn, 0, zTrans);
         logicTarget = new G4LogicalVolume(solidTarget, targetMaterial, "logicVTarget");
-        physicalTarget = new G4PVPlacement(RotationTarget, G4ThreeVector(distTargetOrigin + dTargetOut / 2, 0., 0.), logicTarget, "physicalTarget", logicWorld, false, 1, true);
+        physicalTarget = new G4PVPlacement(RotationTarget, G4ThreeVector(constructionParameters->GetDistTargetOrigin() + dTargetOut / 2, 0., 0.), logicTarget,
+            "physicalTarget", logicWorld, false, 1, true);
 
-        solidModeratorFront = new G4Box("solidModerator", widthModeratorPart / 2, dModeratorFront / 2, widthModeratorPart / 2);
-        solidModerator = new G4Box("solidModeratorEnd", widthModeratorPart / 2, dModerator / 2, widthModeratorPart / 2);
+        solidModeratorFront = new G4Box("solidModerator", constructionParameters->GetWidthModeratorPart() / 2, 
+            constructionParameters->GetDModeratorFront() / 2, constructionParameters->GetWidthModeratorPart() / 2);
+        solidModerator = new G4Box("solidModeratorEnd", constructionParameters->GetWidthModeratorPart() / 2, 
+            constructionParameters->GetDModerator() / 2, constructionParameters->GetWidthModeratorPart() / 2);
         logicModeratorFront = new G4LogicalVolume(solidModeratorFront, moderatorMaterial, "logicVModeratorFront");
         logicModerator = new G4LogicalVolume(solidModerator, moderatorMaterial, "logicVModerator");
 
@@ -274,8 +210,12 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
 
         for (int i = 0; i < 20; ++i) {
             for (int j = 0; j < 20; ++j) {
-                physicalModeratorFront = new G4PVPlacement(0, G4ThreeVector(x, moderatorHeight + dModeratorFront / 2, z), logicModeratorFront, "physicalModeratorFront", logicWorld, false, 1000 + i * 20 + j, true);
-                physicalModerator = new G4PVPlacement(0, G4ThreeVector(x, moderatorHeight + dModeratorFront + dModerator/2, z), logicModerator, "physicalModerator", logicWorld, false, 2000 + i * 20 + j, true);
+                physicalModeratorFront = new G4PVPlacement(0, G4ThreeVector(x, constructionParameters->GetModeratorHeight() 
+                    + constructionParameters->GetDModeratorFront() / 2, z), logicModeratorFront, "physicalModeratorFront", logicWorld, false, 
+                    1000 + i * 20 + j, true);
+                physicalModerator = new G4PVPlacement(0, G4ThreeVector(x, constructionParameters->GetModeratorHeight()
+                    + constructionParameters->GetDModeratorFront() + constructionParameters->GetDModerator() / 2, z), logicModerator,
+                    "physicalModerator", logicWorld, false, 2000 + i * 20 + j, true);
                 z += dz;
             }
             z = zStart;
@@ -287,7 +227,7 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
     }
     sampleWallSolid = new G4Box("solidSampleWall", thicknessSampleWall / 2, widthSampleWall / 2, widthSampleWall / 2);
     logicSampleWall = new G4LogicalVolume(sampleWallSolid, worldMat, "logicVSampleWall");
-    physicalSampleWall = new G4PVPlacement(0, G4ThreeVector(distTargetOrigin - 2 * cm, 0, 0), logicSampleWall, "physicalSampleWall", logicWorld, false, 10, true);
+    physicalSampleWall = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2 * cm, 0, 0), logicSampleWall, "physicalSampleWall", logicWorld, false, 10, true);
 
     sampleWallSolid4 = new G4Box("solidSampleWall4", thicknessSampleWall / 2, 20 / 2 * cm, 20 / 2 * cm);
 
@@ -307,18 +247,19 @@ G4VPhysicalVolume *MyDetectorConstruction::Construct()
     RotationSampleWall3->rotateY(0 * deg);
     RotationSampleWall3->rotateZ(90 * deg);
 
-    physicalSampleWall0 = new G4PVPlacement(0, G4ThreeVector(distTargetOrigin - 2.0001 * cm, 0, 0), logicSampleWall1, "physicalSampleWall0", logicWorld, false, 11, true);
+    physicalSampleWall0 = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2.0001 * cm, 0, 0), logicSampleWall1, "physicalSampleWall0", logicWorld, false, 11, true);
     physicalSampleWall1 = new G4PVPlacement(0, G4ThreeVector(25 * cm, 0, 0), logicSampleWall1, "physicalSampleWall1", logicWorld, false, 12, true);
     physicalSampleWall2 = new G4PVPlacement(RotationSampleWall2, G4ThreeVector(0, 0, 0), logicSampleWall2, "physicalSampleWall2", logicWorld, false, 13, true);
     physicalSampleWall3 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, 30 * cm, 0), logicSampleWall3, "physicalSampleWall3", logicWorld, false, 14, true);
-    physicalSampleWall4 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, moderatorHeight - dModeratorFront / 2 - 0.00001 * cm, 0), logicSampleWall4, "physicalSampleWall4", logicWorld, false, 15, true);
+    physicalSampleWall4 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, constructionParameters->GetModeratorHeight() 
+        - constructionParameters->GetDModeratorFront() / 2 - 0.00001 * cm, 0), logicSampleWall4, "physicalSampleWall4", logicWorld, false, 15, true);
 
     //ConstructSDandField();
-    StoreConstructionParameters();
+    //StoreConstructionParameters();
 	return physicalWorld;
 }
 
-void MyDetectorConstruction::ConstructSDandField() {
+void DetectorConstruction::ConstructSDandField() {
 
     /*
     if (choiceGeometry == 0) {
@@ -334,7 +275,11 @@ void MyDetectorConstruction::ConstructSDandField() {
         logicSampleWall->SetSensitiveDetector(sensDetSampleWall);
     }
     */
-    globalField* globField = new globalField(scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE);
+
+   
+    globalField* globField = new globalField(constructionParameters->GetScaleBDipole(), constructionParameters->GetScaleBNeon(),
+        constructionParameters->GetScaleBSolenoid(), constructionParameters->GetScaleBTarget(), 
+        constructionParameters->GetScaleE());
     G4FieldManager* fieldMgr = G4TransportationManager::GetTransportationManager()->GetFieldManager();
     fieldMgr->SetDetectorField(globField);
     G4ChordFinder* chordFinder = globField->getChordFinder();

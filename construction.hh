@@ -1,5 +1,6 @@
-#ifndef CONSTRUCTION_HH
-#define CONSTRUCTION_HH
+
+#ifndef CONSTRUCTIONTEST_HH
+#define CONSTRUCTIONTEST_HH
 
 
 
@@ -11,12 +12,10 @@
 #include "G4PVPlacement.hh"
 #include "G4NistManager.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4GenericMessenger.hh"
 #include "G4OpticalSurface.hh"
 #include "G4LogicalBorderSurface.hh"
 #include "G4LogicalSkinSurface.hh"
 #include "G4SubtractionSolid.hh"
-
 #include "globals.hh"
 
 
@@ -28,8 +27,6 @@
 #include "G4FieldManager.hh"
 #include "G4TransportationManager.hh"
 
-//#include "magneticField.hh"
-//#include "electricField.hh"
 #include "globalField.hh"
 
 #include "G4AnalysisManager.hh"
@@ -40,38 +37,32 @@
 
 #include "CADMesh-master/CADMesh.hh"
 
+#include "ConstructionParameters.hh"
+
 
 
 class globalField;
+class ConstructionParameters;
 
 
-class MyDetectorConstruction : public G4VUserDetectorConstruction
+class DetectorConstruction : public G4VUserDetectorConstruction
 {
 public:
-     MyDetectorConstruction(G4double argdModerator, G4double argdModeratorFront, G4double argDistTarMod, G4double argDistTargetOrigin, 
-         G4int argChoiceGeometry, G4double argWidthModeratorPart, G4double argModeratorHeight, G4double argScaleBDipole, G4double argScaleBNeon, 
-         G4double argScaleBSolenoid, G4double argScaleBTarget, G4double argScaleE);
-	//MyDetectorConstruction(G4double distGunTar, G4double distTarMod, G4double dModerator);  // constructor with parameters
-	~MyDetectorConstruction();
+     DetectorConstruction(ConstructionParameters *argConstructionParameters);
+	~DetectorConstruction();
     virtual G4VPhysicalVolume* Construct();
     virtual void ConstructSDandField() override;
 private:
-    G4int choiceGeometry;
-    G4double dModerator, dModeratorEnd, dModeratorFront, distTarMod, distTargetOrigin, moderatorHeight;
-    G4double scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE;
-
+    ConstructionParameters* constructionParameters;
     //G4AnalysisManager* man;
-    G4GenericMessenger* fMessenger;
     void DefineMaterials();
     void SetMaterials();
-    void StoreConstructionParameters();
-    G4String moderatorMaterialMessenger = "Tungsten";
-    G4String outputNameParameters;
     //parameters to change
-    G4double distGunTar; // are global now lol , distTarMod, dModerator;
     // static parameters
+    /*
     G4double rTargetOut, dTargetOut, rTargetIn, dEffectiveTarget, dTargetIn, lengthModerator, widthModerator, widthModeratorPart, worldVertices,
         heightWorld, lengthWorld, widthWorld;      
+        */
     G4Box* solidWorld, * solidModerator, * solidModeratorEnd, *solidModeratorFront;
     G4Tubs* solidTargetOut, * solidTargetIn;
     G4SubtractionSolid *solidTarget;
@@ -100,10 +91,6 @@ private:
     G4FieldManager* elFieldMgr;
 
     G4Cache<globalField*> fFieldSetUp;
-
-    G4bool placeBehind;
-    G4double angleToAxis;
-    G4double angleOfModerator;
 
 
 };
