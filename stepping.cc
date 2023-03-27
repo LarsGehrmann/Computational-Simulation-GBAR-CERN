@@ -42,7 +42,7 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 			const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
 			if (procName == "conv") {
 				man = G4AnalysisManager::Instance();
-				man->SetVerboseLevel(3);
+				man->SetVerboseLevel(0);
 				for (size_t lp = 0; lp < (*secondary).size(); lp++) {
 					auto particle = (*secondary)[lp]->GetDefinition();
 					G4String particleName = particle->GetParticleName();
@@ -90,7 +90,7 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 			int x = 5;
 			//G4cout << "Annihi" << G4endl;
 			man = G4AnalysisManager::Instance();
-			man->SetVerboseLevel(3);
+			man->SetVerboseLevel(0);
 			man->FillNtupleDColumn(4, 0, aStep->GetPostStepPoint()->GetPhysicalVolume()->GetCopyNo());
 			//man->FillNtupleDColumn(4, 0, x);
 			man->AddNtupleRow(4);
@@ -143,7 +143,7 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 			G4String volumeName = aStep->GetTrack()->GetVolume()->GetName();
 			if (particleName == "e+" && volumeName == "physicalSampleWall") {
 				man = G4AnalysisManager::Instance();
-				man->SetVerboseLevel(3);
+				man->SetVerboseLevel(0);
 				x = aStep->GetPreStepPoint()->GetPosition().getX();
 				y = aStep->GetPreStepPoint()->GetPosition().getY();
 				z = aStep->GetPreStepPoint()->GetPosition().getZ();
@@ -170,6 +170,7 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 
 	}
 	*/
+
 	if (aStep->GetPreStepPoint()->GetProcessDefinedStep()) {
 		//const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
 		const G4String& particleName = aStep->GetTrack()->GetDefinition()->GetParticleName();
@@ -179,8 +180,8 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 			if (volumeName == "physicalSampleWall0" && lastEventID[0] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
 				lastEventID[0] = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
 				const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
-				man = G4AnalysisManager::Instance();
-				man->SetVerboseLevel(3);
+				G4AnalysisManager* man = G4AnalysisManager::Instance();
+				man->SetVerboseLevel(0);
 				man->FillNtupleDColumn(5, 0, 0);
 				x = aStep->GetPreStepPoint()->GetPosition().getX();
 				y = aStep->GetPreStepPoint()->GetPosition().getY();
@@ -193,8 +194,8 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 			else if (volumeName == "physicalSampleWall1"  && lastEventID[1] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
 				lastEventID[1] = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
 				const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
-				man = G4AnalysisManager::Instance();
-				man->SetVerboseLevel(3);
+				G4AnalysisManager* man = G4AnalysisManager::Instance();
+				man->SetVerboseLevel(0);
 				man->FillNtupleDColumn(5, 0, 1.);
 				x = aStep->GetPreStepPoint()->GetPosition().getX();
 				y = aStep->GetPreStepPoint()->GetPosition().getY();
@@ -207,8 +208,8 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 			else if (volumeName == "physicalSampleWall2" && lastEventID[2] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
 				lastEventID[2] = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
 				const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
-				man = G4AnalysisManager::Instance();
-				man->SetVerboseLevel(3);
+				G4AnalysisManager* man = G4AnalysisManager::Instance();
+				man->SetVerboseLevel(0);
 				man->FillNtupleDColumn(5, 0, 2.);
 				x = aStep->GetPreStepPoint()->GetPosition().getX();
 				y = aStep->GetPreStepPoint()->GetPosition().getY();
@@ -221,8 +222,8 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 			else if (volumeName == "physicalSampleWall3" && lastEventID[3] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
 				lastEventID[3] = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
 				const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
-				man = G4AnalysisManager::Instance();
-				man->SetVerboseLevel(3);
+				G4AnalysisManager* man = G4AnalysisManager::Instance();
+				man->SetVerboseLevel(0);
 				man->FillNtupleDColumn(5, 0, 3.);
 				x = aStep->GetPreStepPoint()->GetPosition().getX();
 				y = aStep->GetPreStepPoint()->GetPosition().getY();
@@ -235,8 +236,8 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 			else if (volumeName == "physicalSampleWall4" && lastEventID[4] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
 				lastEventID[4] = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
 				const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
-				man = G4AnalysisManager::Instance();
-				man->SetVerboseLevel(3);
+				G4AnalysisManager* man = G4AnalysisManager::Instance();
+				man->SetVerboseLevel(0);
 				man->FillNtupleDColumn(5, 0, 4.);
 				x = aStep->GetPreStepPoint()->GetPosition().getX();
 				y = aStep->GetPreStepPoint()->GetPosition().getY();
@@ -248,4 +249,5 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 			}
 		}
 	}
+	
 }

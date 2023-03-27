@@ -29,7 +29,7 @@
 
 #include "globalField.hh"
 
-#include "G4AnalysisManager.hh"
+//#include "G4AnalysisManager.hh"
 
 
 #include "G4Run.hh"

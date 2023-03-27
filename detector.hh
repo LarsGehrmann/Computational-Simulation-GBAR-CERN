@@ -10,7 +10,7 @@
 #include "G4Step.hh"
 #include "G4Track.hh"
 #include "G4GenericMessenger.hh"
-#include "G4AnalysisManager.hh"
+//#include "G4AnalysisManager.hh"
 #include "G4Run.hh"
 
 

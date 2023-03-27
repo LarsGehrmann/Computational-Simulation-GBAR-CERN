@@ -75,6 +75,8 @@ void DetectorConstruction::SetMaterials()
 
 G4VPhysicalVolume *DetectorConstruction::Construct()
 {
+    G4cout << "In Construct()!" << G4endl;
+    G4cout << "distance: " << constructionParameters->GetDistTargetOrigin() << G4endl;
     DetectorConstruction::SetMaterials();
 
     G4double rTargetOut, rTargetIn, dTargetOut, dTargetIn, dEffectiveTarget, widthModerator;

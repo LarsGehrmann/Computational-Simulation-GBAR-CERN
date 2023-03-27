@@ -8,7 +8,7 @@
 class MyActionInitialization : public G4VUserActionInitialization
 {
 	public:
-		MyActionInitialization(G4int argChoiceParticle, G4double argDistTargetOrigin, G4double argAvgE, G4int argChoiceGeometry, 
+		MyActionInitialization(int argRunNo, G4int argChoiceParticle, G4double argDistTargetOrigin, G4double argAvgE, G4int argChoiceGeometry, 
 			G4double argdModerator, G4double argDistTarMod, G4double argScaleB);
 		~MyActionInitialization();
 
@@ -17,6 +17,7 @@ class MyActionInitialization : public G4VUserActionInitialization
 		virtual void Build() const;
 		//virtual void BuildForMaster() const;
 private:
+	int runNo;
 	G4int choiceParticle;
 	G4double distTargetOrigin, avgE;
 	G4int choiceGeometry;

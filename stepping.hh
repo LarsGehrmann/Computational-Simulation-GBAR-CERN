@@ -32,7 +32,7 @@ public:
 
 	~MySteppingAction();
 	virtual void UserSteppingAction(const G4Step*);
-	G4AnalysisManager* man;
+	//G4AnalysisManager* man;
 private:
 	G4int choiceGeometry;
 	G4GenericMessenger* fMessenger;

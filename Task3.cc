@@ -40,6 +40,8 @@
 
 /// Comment of sensitive detecor
 
+///  Built on runmanager and change: initilize! buildAtLeastOnce hast to get false;
+
 int main(int argc, char** argv)
 {
     G4int choiceGeometry = 2;
@@ -61,7 +63,6 @@ int main(int argc, char** argv)
     G4double scaleE = 1.;
 
 
-    G4UIExecutive* ui = 0;
     G4RunManager* runManager = new G4RunManager;
    
 
@@ -69,42 +70,45 @@ int main(int argc, char** argv)
         widthModeratorPart, distTargetOrigin, moderatorHeight, scaleBDipole, scaleBNeon, scaleBSolenoid,
         scaleBTarget, scaleE);
     
-    runManager->SetUserInitialization(new DetectorConstruction(&constructionParameters));
+   // runManager->SetUserInitialization(new DetectorConstruction(&constructionParameters));
     runManager->SetUserInitialization(new MyPhysicsList());
-    runManager->SetUserInitialization(new MyActionInitialization(choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator, 
-        distTarMod, scaleE));
+    //runManager->SetUserInitialization(new MyActionInitialization(choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator, 
+     //   distTarMod, scaleE));
 
-    runManager->Initialize();
-   
+    G4UIExecutive* ui = 0;
     if (argc == 1) {
         ui = new G4UIExecutive(argc, argv);
     }
+    /*
     G4VisManager *visManager = new G4VisExecutive();
     visManager->Initialize();
+    */
     G4UImanager *UImanager = G4UImanager::GetUIpointer();   
-    UImanager->ApplyCommand("/run/initialize");
-
-
+    //UImanager->ApplyCommand("/run/initialize");
     G4int curRun = 0;
-    G4int maxRun = 2;
+    G4int maxRun = 10;
+    bool firstRun = true;
 
     for (curRun = 0; curRun < maxRun; ++curRun) {
         distTargetOrigin = 25 * cm + curRun * 5 * cm;
+
         constructionParameters.SetDistTargetOrigin(distTargetOrigin);
         constructionParameters.StoreParameters(curRun);
-
         runManager->SetUserInitialization(new DetectorConstruction(&constructionParameters));
-       runManager->SetUserInitialization(new MyActionInitialization(choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
-            distTarMod, scaleE));
+        runManager->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
+           distTarMod, scaleE));
+        UImanager->ApplyCommand("/run/reinitilizeGeometry true");
         UImanager->ApplyCommand("/run/initialize");
-        //UImanager->ApplyCommand("/run/reinitilizeGeometry");
-        UImanager->ApplyCommand("/run/beamOn 5");
+
+       runManager->Initialize();
+       runManager->BeamOn(1000);
+       // UImanager->ApplyCommand("/run/initialize");
     }
      
-
+    G4cout << "After loop!" << G4endl;
 
      //UImanager->ApplyCommand("/cuts/setMaxCutEnergy 9 MeV");
-    
+    /*
      if (ui) {
         UImanager->ApplyCommand("/control/execute vis.mac");
         UImanager->ApplyCommand("/control/execute gui.mac");
@@ -119,8 +123,8 @@ int main(int argc, char** argv)
         G4String fileName = argv[1];
         UImanager->ApplyCommand(command + fileName);
      }
-     
-    delete runManager;
+     */
+   // delete runManager;
     return EXIT_SUCCESS;
 }
 

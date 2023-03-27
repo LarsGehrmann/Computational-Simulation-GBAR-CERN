@@ -2,9 +2,10 @@
 #include "event.hh"
 #include "stepping.hh"
 
-MyActionInitialization::MyActionInitialization(G4int argChoiceParticle, G4double argDistTargetOrigin, G4double argAvgE, 
+MyActionInitialization::MyActionInitialization(int argRunNo, G4int argChoiceParticle, G4double argDistTargetOrigin, G4double argAvgE, 
 	G4int argChoiceGeometry, G4double argdModerator, G4double argDistTarMod, G4double argScaleB)
 {
+	runNo = argRunNo;
 	choiceParticle = argChoiceParticle;
 	distTargetOrigin = argDistTargetOrigin;
 	avgE = argAvgE;
@@ -21,10 +22,11 @@ MyActionInitialization::~MyActionInitialization()
 
 
 void MyActionInitialization::Build()const{
+
 	MyPrimaryGenerator* generator = new MyPrimaryGenerator(choiceParticle, distTargetOrigin, avgE);
 	SetUserAction(generator);
 
-	MyRunAction* runAction = new MyRunAction(dModerator, avgE, distTargetOrigin, distTarMod, scaleB);
+	MyRunAction* runAction = new MyRunAction(runNo, dModerator, avgE, distTargetOrigin, distTarMod, scaleB);
 	SetUserAction(runAction);
 
 	MyEventAction* eventAction = new MyEventAction(runAction);

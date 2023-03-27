@@ -11,13 +11,14 @@
 class MyRunAction : public G4UserRunAction
 {
 public:
-	MyRunAction(G4double argdModerator, G4double argAvgE, G4double argDistTargetOrigin, G4double distTarMod, G4double argScaleB);
+	MyRunAction(int argRunNo, G4double argdModerator, G4double argAvgE, G4double argDistTargetOrigin, G4double distTarMod, G4double argScaleB);
 	~MyRunAction();
-	//G4AnalysisManager* man;
+	G4AnalysisManager* man;
 	virtual void BeginOfRunAction(const G4Run* run);
 	virtual void EndOfRunAction(const G4Run*);
 
 private:
+	int runNo;
 	//G4double eDepMod, eDepModGamma, eDepModElectron, eDepModPositron;
 	//G4int noAnnihilationTar, noPairProductionTar, noAnnihilationMod, noPairProductionMod, noAnnihilationModEnd, noPairProductionModEnd;
 	G4double dModerator, avgE, distTargetOrigin, distTarMod, scaleB;

@@ -104,19 +104,18 @@ void ConstructionParameters::SetModeratorMaterial(G4String argModeratorMaterial)
 void ConstructionParameters::StoreParameters(int runNumber) {
 
     G4AnalysisManager* man = G4AnalysisManager::Instance();
-    man->SetVerboseLevel(3);
+    man->SetVerboseLevel(0);
 
     std::stringstream strRunID;
     strRunID << runNumber;
 
     G4String fileName = "ConstructionParameters" + strRunID.str() + ".csv";
-    G4String tupleName = "Construction Parameters" + strRunID.str();
+    G4String tupleName = "Construction Parameters";
+    //tupleName = "";
     
 
 
-
-    man->OpenFile(fileName);
-
+    if (runNumber == 0) {
     // Create tuples
     man->CreateNtuple(tupleName,tupleName);
     man->CreateNtupleDColumn(0,"choiceGeometry");
@@ -130,6 +129,9 @@ void ConstructionParameters::StoreParameters(int runNumber) {
     man->CreateNtupleDColumn(0, "scaling of Target B-field");
     man->CreateNtupleDColumn(0, "scaling of E-field");
     man->FinishNtuple(0);   
+    }
+
+    man->OpenFile(fileName);
 
 
     man->FillNtupleDColumn(0, 0, choiceGeometry);
@@ -142,10 +144,8 @@ void ConstructionParameters::StoreParameters(int runNumber) {
     man->FillNtupleDColumn(0, 7, scaleBTarget);
     man->FillNtupleDColumn(0, 8, scaleE);
     man->AddNtupleRow(0);
+
     man->Write();
     man->CloseFile();
-    G4cout << "Before deleting  " << G4endl;
-    //delete G4AnalysisManager::Instance();
-    G4cout << "After deleting  " << G4endl;
 
 }
