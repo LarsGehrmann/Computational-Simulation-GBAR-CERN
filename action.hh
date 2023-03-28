@@ -8,8 +8,10 @@
 class MyActionInitialization : public G4VUserActionInitialization
 {
 	public:
+		MyActionInitialization(int argRunNo, G4int argChoiceParticle, G4double argDistTargetOrigin, G4double argAvgE, G4int argChoiceGeometry,
+			G4double argdModerator, G4double argDistTarMod);
 		MyActionInitialization(int argRunNo, G4int argChoiceParticle, G4double argDistTargetOrigin, G4double argAvgE, G4int argChoiceGeometry, 
-			G4double argdModerator, G4double argDistTarMod, G4double argScaleB);
+			G4double argdModerator, G4double argDistTarMod, G4String argFileName);
 		~MyActionInitialization();
 
 //		using G4VUserActionInitialization::Build();
@@ -22,6 +24,7 @@ private:
 	G4double distTargetOrigin, avgE;
 	G4int choiceGeometry;
 	G4double dModerator, distTarMod, scaleB;
+	G4String fileName;
 
 	G4double eDepModTotal, eDepModGammaTotal, eDepModElectronTotal, eDepModPositronTotal;
 	G4int noAnnihilationTar, noPairProductionTar, noAnnihilationMod, noPairProductionMod, 

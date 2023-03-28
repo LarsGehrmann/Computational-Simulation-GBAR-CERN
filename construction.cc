@@ -214,10 +214,10 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
             for (int j = 0; j < 20; ++j) {
                 physicalModeratorFront = new G4PVPlacement(0, G4ThreeVector(x, constructionParameters->GetModeratorHeight() 
                     + constructionParameters->GetDModeratorFront() / 2, z), logicModeratorFront, "physicalModeratorFront", logicWorld, false, 
-                    1000 + i * 20 + j, true);
+                    1000 + i * 20 + j, false);
                 physicalModerator = new G4PVPlacement(0, G4ThreeVector(x, constructionParameters->GetModeratorHeight()
                     + constructionParameters->GetDModeratorFront() + constructionParameters->GetDModerator() / 2, z), logicModerator,
-                    "physicalModerator", logicWorld, false, 2000 + i * 20 + j, true);
+                    "physicalModerator", logicWorld, false, 2000 + i * 20 + j, false);
                 z += dz;
             }
             z = zStart;
@@ -291,13 +291,14 @@ void DetectorConstruction::ConstructSDandField() {
     G4double x = -2 * cm;
     G4double y = -34 * cm;
     G4double z = -70 * cm;
-    */
+
     G4double x = -22. * cm;
     G4double y = -76. * cm;
     G4double z = -64. * cm;
     G4double point[4] = { x,y,z,0 };
     G4double field[6] = { -1, -1, -1, -1, -1, -1 };
     globField->GetFieldValue(point, field);
+    
     G4cout << "----------------------------------------------------------------------------------------------------------" << G4endl;
     G4cout << "----------------------------------------------------------------------------------------------------------" << G4endl;
 
@@ -305,6 +306,6 @@ void DetectorConstruction::ConstructSDandField() {
         << field[3] << ", " << field[4] << ", " << field[5] << G4endl;
     G4cout << "----------------------------------------------------------------------------------------------------------" << G4endl;
     G4cout << "----------------------------------------------------------------------------------------------------------" << G4endl;
-
+        */
 }
 

@@ -19,6 +19,8 @@ public:
 	~ConstructionParameters();
 
     void StoreParameters(int runNumber);
+    void StoreParameters(int runNumber, G4String argFileName);
+
 
     G4int GetChoiceGeometry();
     G4double GetDModerator();

@@ -138,11 +138,63 @@ void ConstructionParameters::StoreParameters(int runNumber) {
     man->FillNtupleDColumn(0, 1, dModerator);
     man->FillNtupleDColumn(0, 2, dModeratorFront);
     man->FillNtupleDColumn(0, 3, distTargetOrigin);
-    man->FillNtupleDColumn(0, 4, scaleBDipole);
-    man->FillNtupleDColumn(0, 5, scaleBNeon);
-    man->FillNtupleDColumn(0, 6, scaleBSolenoid);
-    man->FillNtupleDColumn(0, 7, scaleBTarget);
-    man->FillNtupleDColumn(0, 8, scaleE);
+    man->FillNtupleDColumn(0, 4, moderatorHeight);
+    man->FillNtupleDColumn(0, 5, scaleBDipole);
+    man->FillNtupleDColumn(0, 6, scaleBNeon);
+    man->FillNtupleDColumn(0, 7, scaleBSolenoid);
+    man->FillNtupleDColumn(0, 8, scaleBTarget);
+    man->FillNtupleDColumn(0, 9, scaleE);
+    man->AddNtupleRow(0);
+
+    man->Write();
+    man->CloseFile();
+
+}
+
+
+void ConstructionParameters::StoreParameters(int runNumber, G4String argFileName) {
+
+    G4AnalysisManager* man = G4AnalysisManager::Instance();
+    man->SetVerboseLevel(0);
+
+    std::stringstream strRunID;
+    strRunID << runNumber;
+
+    G4String fileName = "Parameters" + argFileName + strRunID.str() + ".csv";
+    G4String tupleName = "ParametersTuple";
+    //tupleName = "";
+
+
+    /*
+    if (runNumber == 0) {
+        // Create tuples
+        man->CreateNtuple(tupleName, tupleName);
+        man->CreateNtupleDColumn(0, "choiceGeometry");
+        man->CreateNtupleDColumn(0, "dModerator");
+        man->CreateNtupleDColumn(0, "dModeratorFront");
+        man->CreateNtupleDColumn(0, "distTargetOrigin");
+        man->CreateNtupleDColumn(0, "moderatorHeight");
+        man->CreateNtupleDColumn(0, "scaling of Dipole B-field");
+        man->CreateNtupleDColumn(0, "scaling of Neon B-field");
+        man->CreateNtupleDColumn(0, "scaling of Solenoid B-field");
+        man->CreateNtupleDColumn(0, "scaling of Target B-field");
+        man->CreateNtupleDColumn(0, "scaling of E-field");
+        man->FinishNtuple(0);
+    }
+    */
+    man->OpenFile(fileName);
+
+
+    man->FillNtupleDColumn(0, 0, choiceGeometry);
+    man->FillNtupleDColumn(0, 1, dModerator);
+    man->FillNtupleDColumn(0, 2, dModeratorFront);
+    man->FillNtupleDColumn(0, 3, distTargetOrigin);
+    man->FillNtupleDColumn(0, 4, moderatorHeight);
+    man->FillNtupleDColumn(0, 5, scaleBDipole);
+    man->FillNtupleDColumn(0, 6, scaleBNeon);
+    man->FillNtupleDColumn(0, 7, scaleBSolenoid);
+    man->FillNtupleDColumn(0, 8, scaleBTarget);
+    man->FillNtupleDColumn(0, 9, scaleE);
     man->AddNtupleRow(0);
 
     man->Write();

@@ -5,15 +5,13 @@
 #include <iostream>
 #include <string>
 
-MyRunAction::MyRunAction(int argRunNo, G4double argdModerator, G4double argAvgE, G4double argDistTargetOrigin, G4double argDistTarMod, G4double argScaleB)
+MyRunAction::MyRunAction(int argRunNo, G4double argdModerator, G4double argAvgE, G4double argDistTargetOrigin, G4double argDistTarMod)
 {
 	runNo = argRunNo;
 	dModerator = argdModerator;
 	avgE = argAvgE;
 	distTargetOrigin = argDistTargetOrigin;
 	distTarMod = argDistTarMod;
-	scaleB = argScaleB;
-
 
 	std::stringstream strRunID;
 	strRunID << runNo;
@@ -81,31 +79,39 @@ MyRunAction::MyRunAction(int argRunNo, G4double argdModerator, G4double argAvgE,
 
 	//G4String fileNameAnnihis = outputNameAnnihis + strRunID.str() + ".csv";
 	//man->OpenFile(fileNameAnnihis);
+}
+MyRunAction::MyRunAction(int argRunNo, G4double argdModerator, G4double argAvgE, G4double argDistTargetOrigin, G4double argDistTarMod, G4String argFileName)
+{
+	runNo = argRunNo;
+	dModerator = argdModerator;
+	avgE = argAvgE;
+	distTargetOrigin = argDistTargetOrigin;
+	distTarMod = argDistTarMod;
 
 
+	std::stringstream strRunID;
+	strRunID << runNo;
 
+	G4cout << "Run ID: " << runNo << G4endl;
+	man = G4AnalysisManager::Instance();
+	man->SetVerboseLevel(0);
 
+	G4String fileName, tupleName;
 
+	if (runNo == 0) {
 
-	/*
-	eDepModTotal = argEDepModTotal;
-	eDepModGammaTotal = argEDepModGammaTotal;
-	eDepModElectronTotal = argEDepModElectronTotal;
-	eDepModPositronTotal = argEDepModPositronTotal;
-	noAnnihilationTar = argNoAnnihilationTar;
-	noPairProductionTar = argNoPairProductionTar;
-	noAnnihilationMod = argNoAnnihilationMod;
-	noPairProductionMod = argNoPairProductionMod;
-	noAnnihilationModEnd = argNoAnnihilationModEnd;
-	noPairProductionModEnd = argNoPairProductionModEnd;
-	annihiMod = argAnnihiMod;
-	eDepModGamma = argEDepModGamma;
-	eDepModElectron = argEDepModElectron;
-	eDepModPositron = argEDepModPositron;
-	*/
+	}
 
-	
+	fileName = argFileName + strRunID.str() + ".csv";
+	man->OpenFile(fileName);
+	//G4String fileNameHisto = outputNameHisto + strRunID.str() + ".csv";
+	//man->OpenFile(fileNameHisto);
 
+	//G4String fileNameSample = outputNameSample + strRunID.str() + ".csv";
+	//man->OpenFile(fileNameSample);
+
+	//G4String fileNameAnnihis = outputNameAnnihis + strRunID.str() + ".csv";
+	//man->OpenFile(fileNameAnnihis);
 }
 
 MyRunAction::~MyRunAction()

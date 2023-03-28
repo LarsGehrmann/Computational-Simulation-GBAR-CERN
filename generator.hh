@@ -11,29 +11,67 @@
 #include <random>
 #include <string>
 
-extern G4double distTargetOrigin;
-extern G4double avgE;
-//extern G4int choiceParticle;
 
-
-class MyPrimaryGenerator : public G4VUserPrimaryGeneratorAction
+class FastElectron : public G4VUserPrimaryGeneratorAction
 {
-	public:
-		MyPrimaryGenerator(G4int argChoiceParticle, G4double argDistTargetOrigin, G4double argAvgE);
-		~MyPrimaryGenerator();
+public:
+	FastElectron(G4double argDistTargetOrigin, G4double argAvgE);
+	~FastElectron();
 
-		virtual void GeneratePrimaries(G4Event*);
+	virtual void GeneratePrimaries(G4Event*);
 
-	private:
-		G4int choiceParticle = -1;
-		G4double distTargetOrigin;
-		G4double avgE;
+private:
+	G4double distTargetOrigin;
+	G4double avgE;
 
-		G4ParticleGun *fParticleGun;
-		G4GenericMessenger* fMessenger;
-		int posCounter;
-		int posNumber = 24380;
-		double **posTable;  // x y z, px, py, pz, E
+	G4ParticleGun* fParticleGun;
+	G4GenericMessenger* fMessenger;
 
+};
+class FastPositronSample : public G4VUserPrimaryGeneratorAction
+{
+public:
+	FastPositronSample(G4double argDistTargetOrigin);
+	~FastPositronSample();
+
+	virtual void GeneratePrimaries(G4Event*);
+
+private:
+	G4double distTargetOrigin;
+
+	G4ParticleGun* fParticleGun;
+	G4GenericMessenger* fMessenger;
+	int posCounter;
+	int posNumber = 24380;
+	double** posTable;  // x y z, px, py, pz, E
+
+};
+class FastElectronCOMSOL : public G4VUserPrimaryGeneratorAction
+{
+public:
+	FastElectronCOMSOL();
+	~FastElectronCOMSOL();
+	virtual void GeneratePrimaries(G4Event*);
+private:
+	G4ParticleGun* fParticleGun;
+};
+class FastPositronCOMSOL : public G4VUserPrimaryGeneratorAction
+{
+public:
+	FastPositronCOMSOL();
+	~FastPositronCOMSOL();
+	virtual void GeneratePrimaries(G4Event*);
+private:
+	G4ParticleGun* fParticleGun;
+};
+class SlowPositronCOMSOL : public G4VUserPrimaryGeneratorAction
+{
+public:
+	SlowPositronCOMSOL();
+	~SlowPositronCOMSOL();
+	virtual void GeneratePrimaries(G4Event*);
+
+private:
+	G4ParticleGun* fParticleGun;
 };
 #endif

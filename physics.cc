@@ -4,7 +4,7 @@ MyPhysicsList::MyPhysicsList()
 {
 	G4EmParameters* param = G4EmParameters::Instance();
     param->SetDefaults();
-    param->SetVerbose(3);
+    param->SetVerbose(0);
     param->SetMinEnergy(10*eV);
     param->SetMaxEnergy(10*TeV);
     //RegisterPhysics(new G4EmStandardPhysics_option4(1));

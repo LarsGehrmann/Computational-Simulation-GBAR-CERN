@@ -2,8 +2,9 @@
 #include "event.hh"
 #include "stepping.hh"
 
-MyActionInitialization::MyActionInitialization(int argRunNo, G4int argChoiceParticle, G4double argDistTargetOrigin, G4double argAvgE, 
-	G4int argChoiceGeometry, G4double argdModerator, G4double argDistTarMod, G4double argScaleB)
+
+MyActionInitialization::MyActionInitialization(int argRunNo, G4int argChoiceParticle, G4double argDistTargetOrigin, G4double argAvgE,
+	G4int argChoiceGeometry, G4double argdModerator, G4double argDistTarMod)
 {
 	runNo = argRunNo;
 	choiceParticle = argChoiceParticle;
@@ -12,7 +13,20 @@ MyActionInitialization::MyActionInitialization(int argRunNo, G4int argChoicePart
 	choiceGeometry = argChoiceGeometry;
 	dModerator = argdModerator;
 	distTarMod = argDistTarMod;
-	scaleB = argScaleB;
+	fileName = "DefaultFileName";
+}
+
+MyActionInitialization::MyActionInitialization(int argRunNo, G4int argChoiceParticle, G4double argDistTargetOrigin, G4double argAvgE, 
+	G4int argChoiceGeometry, G4double argdModerator, G4double argDistTarMod, G4String argFileName)
+{
+	runNo = argRunNo;
+	choiceParticle = argChoiceParticle;
+	distTargetOrigin = argDistTargetOrigin;
+	avgE = argAvgE;
+	choiceGeometry = argChoiceGeometry;
+	dModerator = argdModerator;
+	distTarMod = argDistTarMod;
+	fileName = argFileName;
 }
 
 MyActionInitialization::~MyActionInitialization()
@@ -23,10 +37,32 @@ MyActionInitialization::~MyActionInitialization()
 
 void MyActionInitialization::Build()const{
 
-	MyPrimaryGenerator* generator = new MyPrimaryGenerator(choiceParticle, distTargetOrigin, avgE);
-	SetUserAction(generator);
+	// determine here which particles to genereate to avoid switch-statement in generate primaries
+	FastElectron* fastElectron = new FastElectron(distTargetOrigin, avgE);
+	FastPositronSample* fastPositronSample = new FastPositronSample(distTargetOrigin);
+	FastElectronCOMSOL* fastElectronCOMSOL = new FastElectronCOMSOL();
+	FastPositronCOMSOL* fastPositronCOMSOL = new FastPositronCOMSOL();
+	SlowPositronCOMSOL* slowPositronCOMSOL = new SlowPositronCOMSOL();
 
-	MyRunAction* runAction = new MyRunAction(runNo, dModerator, avgE, distTargetOrigin, distTarMod, scaleB);
+	switch (choiceParticle) {
+	case 0:
+		SetUserAction(fastElectron);
+		break;
+	case 1:
+		SetUserAction(fastPositronSample);
+		break;
+	case 2:
+		SetUserAction(fastElectronCOMSOL);
+		break;
+	case 3:
+		SetUserAction(fastPositronCOMSOL);
+		break;
+	case 4:
+		SetUserAction(slowPositronCOMSOL);
+		break;
+	}
+
+	MyRunAction* runAction = new MyRunAction(runNo, dModerator, avgE, distTargetOrigin, distTarMod, fileName);
 	SetUserAction(runAction);
 
 	MyEventAction* eventAction = new MyEventAction(runAction);
@@ -35,34 +71,3 @@ void MyActionInitialization::Build()const{
 	MySteppingAction* steppingAction = new MySteppingAction(eventAction, choiceGeometry);
 	SetUserAction(steppingAction);
 }
-
-/*
-void MyActionInitialization::customBuild()
-{
-	MyPrimaryGenerator* generator = new MyPrimaryGenerator(choiceParticle, distTargetOrigin, avgE);
-	SetUserAction(generator);
-
-	MyRunAction* runAction = new MyRunAction(dModerator, avgE, distTargetOrigin, distTarMod, scaleB, &eDepModTotal, &eDepModGammaTotal,
-		&eDepModElectronTotal, &eDepModPositronTotal, &noAnnihilationTar, &noPairProductionTar,
-		&noAnnihilationMod, &noPairProductionMod, &noAnnihilationModEnd, &noPairProductionModEnd,
-		annihiMod, eDepModGamma, eDepModElectron, eDepModPositron);
-	SetUserAction(runAction);
-
-	MyEventAction* eventAction = new MyEventAction(runAction);
-	SetUserAction(eventAction);
-
-	MySteppingAction* steppingAction = new MySteppingAction(eventAction, choiceGeometry, &eDepModTotal, &eDepModGammaTotal,
-		&eDepModElectronTotal, &eDepModPositronTotal, &noAnnihilationTar, &noPairProductionTar,
-		&noAnnihilationMod, &noPairProductionMod, &noAnnihilationModEnd, &noPairProductionModEnd,
-		annihiMod, eDepModGamma, eDepModElectron, eDepModPositron);
-	SetUserAction(steppingAction);
-}
-*/
-
-
-/*
-, &eDepModTotal, &eDepModGammaTotal,
-		&eDepModElectronTotal, &eDepModPositronTotal, &noAnnihilationTar, &noPairProductionTar,
-		&noAnnihilationMod, &noPairProductionMod, &noAnnihilationModEnd, &noPairProductionModEnd,
-		annihiMod, eDepModGamma, eDepModElectron, eDepModPositron
-*/

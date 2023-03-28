@@ -11,7 +11,9 @@
 class MyRunAction : public G4UserRunAction
 {
 public:
-	MyRunAction(int argRunNo, G4double argdModerator, G4double argAvgE, G4double argDistTargetOrigin, G4double distTarMod, G4double argScaleB);
+	MyRunAction(int argRunNo, G4double argdModerator, G4double argAvgE, G4double argDistTargetOrigin, G4double distTarMod);
+	MyRunAction(int argRunNo, G4double argdModerator, G4double argAvgE, G4double argDistTargetOrigin, G4double distTarMod, G4String argFileName);
+
 	~MyRunAction();
 	G4AnalysisManager* man;
 	virtual void BeginOfRunAction(const G4Run* run);
@@ -21,7 +23,7 @@ private:
 	int runNo;
 	//G4double eDepMod, eDepModGamma, eDepModElectron, eDepModPositron;
 	//G4int noAnnihilationTar, noPairProductionTar, noAnnihilationMod, noPairProductionMod, noAnnihilationModEnd, noPairProductionModEnd;
-	G4double dModerator, avgE, distTargetOrigin, distTarMod, scaleB;
+	G4double dModerator, avgE, distTargetOrigin, distTarMod;
 
 
 	G4double* eDepModTotal; G4double* eDepModGammaTotal;  G4double* eDepModElectronTotal; G4double* eDepModPositronTotal; G4int* noAnnihilationTar;
