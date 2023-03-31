@@ -18,19 +18,11 @@ MyRunAction::MyRunAction(int argRunNo, G4double argdModerator, G4double argAvgE,
 
 	G4cout << "Run ID: " << runNo << G4endl;
 	man = G4AnalysisManager::Instance();
-	man->SetVerboseLevel(0);
+	man->SetVerboseLevel(3);
 
 	G4String fileName, tupleName;
 
 	if (runNo == 0) {
-		// dead0
-		/*
-		tupleName = "0th" + strRunID.str();
-		man->CreateNtuple("test", "test");
-		man->CreateNtupleDColumn(0, "dead0");
-		man->FinishNtuple(0);
-		*/
-		// dead1
 		tupleName = "1st";
 		man->CreateNtuple(tupleName, tupleName);
 		man->CreateNtupleDColumn(1, "dead");
@@ -94,13 +86,9 @@ MyRunAction::MyRunAction(int argRunNo, G4double argdModerator, G4double argAvgE,
 
 	G4cout << "Run ID: " << runNo << G4endl;
 	man = G4AnalysisManager::Instance();
-	man->SetVerboseLevel(0);
+	man->SetVerboseLevel(3);
 
 	G4String fileName, tupleName;
-
-	if (runNo == 0) {
-
-	}
 
 	fileName = argFileName + strRunID.str() + ".csv";
 	man->OpenFile(fileName);
@@ -130,7 +118,7 @@ void MyRunAction::EndOfRunAction(const G4Run* run)
 
 	G4cout << "In end of Run action" << G4endl;
 	man = G4AnalysisManager::Instance();
-	man->SetVerboseLevel(0);
+	man->SetVerboseLevel(3);
 
 	man->Write();
 	man->CloseFile();

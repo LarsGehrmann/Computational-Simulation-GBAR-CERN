@@ -78,10 +78,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
     G4cout << "In Construct()!" << G4endl;
     G4cout << "distance: " << constructionParameters->GetDistTargetOrigin() << G4endl;
     DetectorConstruction::SetMaterials();
-
     G4double rTargetOut, rTargetIn, dTargetOut, dTargetIn, dEffectiveTarget, widthModerator;
-
-
 
     widthModerator = 0.15 * mm;
     G4double worldVertices = 1000 * mm; // world length
@@ -229,7 +226,8 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
     }
     sampleWallSolid = new G4Box("solidSampleWall", thicknessSampleWall / 2, widthSampleWall / 2, widthSampleWall / 2);
     logicSampleWall = new G4LogicalVolume(sampleWallSolid, worldMat, "logicVSampleWall");
-    physicalSampleWall = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2 * cm, 0, 0), logicSampleWall, "physicalSampleWall", logicWorld, false, 10, true);
+    physicalSampleWall = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2 * cm, 0, 0), logicSampleWall, 
+        "physicalSampleWall", logicWorld, false, 10, true);
 
     sampleWallSolid4 = new G4Box("solidSampleWall4", thicknessSampleWall / 2, 20 / 2 * cm, 20 / 2 * cm);
 
@@ -249,35 +247,21 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
     RotationSampleWall3->rotateY(0 * deg);
     RotationSampleWall3->rotateZ(90 * deg);
 
-    physicalSampleWall0 = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2.0001 * cm, 0, 0), logicSampleWall1, "physicalSampleWall0", logicWorld, false, 11, true);
-    physicalSampleWall1 = new G4PVPlacement(0, G4ThreeVector(25 * cm, 0, 0), logicSampleWall1, "physicalSampleWall1", logicWorld, false, 12, true);
-    physicalSampleWall2 = new G4PVPlacement(RotationSampleWall2, G4ThreeVector(0, 0, 0), logicSampleWall2, "physicalSampleWall2", logicWorld, false, 13, true);
-    physicalSampleWall3 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, 30 * cm, 0), logicSampleWall3, "physicalSampleWall3", logicWorld, false, 14, true);
+    physicalSampleWall0 = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2.0001 * cm, 0, 0), logicSampleWall1, 
+        "physicalSampleWall0", logicWorld, false, 11, true);
+    physicalSampleWall1 = new G4PVPlacement(0, G4ThreeVector(25 * cm, 0, 0), logicSampleWall1, 
+        "physicalSampleWall1", logicWorld, false, 12, true);
+    physicalSampleWall2 = new G4PVPlacement(RotationSampleWall2, G4ThreeVector(0, 0, 0), logicSampleWall2, 
+        "physicalSampleWall2", logicWorld, false, 13, true);
+    physicalSampleWall3 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, 30 * cm, 0), logicSampleWall3, 
+        "physicalSampleWall3", logicWorld, false, 14, true);
     physicalSampleWall4 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, constructionParameters->GetModeratorHeight() 
-        - constructionParameters->GetDModeratorFront() / 2 - 0.00001 * cm, 0), logicSampleWall4, "physicalSampleWall4", logicWorld, false, 15, true);
-
-    //ConstructSDandField();
-    //StoreConstructionParameters();
+        - constructionParameters->GetDModeratorFront() / 2 - 0.00001 * cm, 0), logicSampleWall4, 
+        "physicalSampleWall4", logicWorld, false, 15, true);
 	return physicalWorld;
 }
 
 void DetectorConstruction::ConstructSDandField() {
-
-    /*
-    if (choiceGeometry == 0) {
-        sensDetModerator = new MySensitiveDetector("dModeratorSensDet");
-        sensDetModeratorEnd = new MySensitiveDetector("dModeratorEndSensDet");
-        logicModerator->SetSensitiveDetector(sensDetModerator);
-        logicModeratorEnd->SetSensitiveDetector(sensDetModeratorEnd);
-    }
-    */
-    /*
-    if (choiceGeometry == 2) {
-        sensDetSampleWall = new MySensitiveDetector("sampleWallSensDet");
-        logicSampleWall->SetSensitiveDetector(sensDetSampleWall);
-    }
-    */
-
    
     globalField* globField = new globalField(constructionParameters->GetScaleBDipole(), constructionParameters->GetScaleBNeon(),
         constructionParameters->GetScaleBSolenoid(), constructionParameters->GetScaleBTarget(), 
@@ -287,25 +271,21 @@ void DetectorConstruction::ConstructSDandField() {
     G4ChordFinder* chordFinder = globField->getChordFinder();
     fieldMgr->SetChordFinder(chordFinder);
 
-    /*
-    G4double x = -2 * cm;
-    G4double y = -34 * cm;
-    G4double z = -70 * cm;
-
-    G4double x = -22. * cm;
-    G4double y = -76. * cm;
-    G4double z = -64. * cm;
+    
+    G4double x = 40. * cm;
+    G4double y = 0. * cm;
+    G4double z = -0. * cm;
     G4double point[4] = { x,y,z,0 };
     G4double field[6] = { -1, -1, -1, -1, -1, -1 };
     globField->GetFieldValue(point, field);
     
     G4cout << "----------------------------------------------------------------------------------------------------------" << G4endl;
     G4cout << "----------------------------------------------------------------------------------------------------------" << G4endl;
-
-    G4cout << "x,y,z: " << x << ", " << y << ", " << z << ";  Bx,By,Bz: " << field[0] << ", " << field[1] << ", " << field[2] << ";   Ex,Ey,Ez: "
-        << field[3] << ", " << field[4] << ", " << field[5] << G4endl;
+    G4cout << "x,y,z: " << x << ", " << y << ", " << z << G4endl;
+    G4cout << "Bx,By,Bz: " << field[0] << ", " << field[1] << ", " << field[2] << G4endl;
+    G4cout << "Ex,Ey,Ez: " << field[3] << ", " << field[4] << ", " << field[5] << G4endl;
     G4cout << "----------------------------------------------------------------------------------------------------------" << G4endl;
     G4cout << "----------------------------------------------------------------------------------------------------------" << G4endl;
-        */
+        
 }
 

@@ -58,4 +58,4 @@
 #/run/beamOn 50
 
 #/vis/scene/add/electricField 10
-#/vis/scene/add/magneticField 10
+/vis/scene/add/magneticField 10

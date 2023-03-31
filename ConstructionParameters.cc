@@ -96,6 +96,14 @@ void ConstructionParameters::SetScaleBTarget(G4double argScaleBTarget) {
 void ConstructionParameters::SetScaleE(G4double argScaleE) {
     scaleE = argScaleE;
 }
+void ConstructionParameters::SetScaleAll(G4double argScaleBDipole, G4double argScaleBNeon, G4double argScaleBSolenoid,
+    G4double argScaleBTarget, G4double argScaleE) {
+    scaleBDipole = argScaleBDipole;
+    scaleBNeon = argScaleBNeon;
+    scaleBSolenoid = argScaleBSolenoid;
+    scaleBTarget = argScaleBTarget;
+    scaleE = argScaleE;
+}
 void ConstructionParameters::SetModeratorMaterial(G4String argModeratorMaterial) {
     moderatorMaterial = argModeratorMaterial;
 }
@@ -109,10 +117,9 @@ void ConstructionParameters::StoreParameters(int runNumber) {
     std::stringstream strRunID;
     strRunID << runNumber;
 
-    G4String fileName = "ConstructionParameters" + strRunID.str() + ".csv";
+    G4String fileName =  "Parameters" + strRunID.str() + ".csv";
     G4String tupleName = "Construction Parameters";
-    //tupleName = "";
-    
+   
 
 
     if (runNumber == 0) {
@@ -160,7 +167,7 @@ void ConstructionParameters::StoreParameters(int runNumber, G4String argFileName
     std::stringstream strRunID;
     strRunID << runNumber;
 
-    G4String fileName = "Parameters" + argFileName + strRunID.str() + ".csv";
+    G4String fileName =  argFileName + "Parameters" + strRunID.str() + ".csv";
     G4String tupleName = "ParametersTuple";
     //tupleName = "";
 

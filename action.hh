@@ -26,18 +26,6 @@ private:
 	G4double dModerator, distTarMod, scaleB;
 	G4String fileName;
 
-	G4double eDepModTotal, eDepModGammaTotal, eDepModElectronTotal, eDepModPositronTotal;
-	G4int noAnnihilationTar, noPairProductionTar, noAnnihilationMod, noPairProductionMod, 
-		noAnnihilationModEnd, noPairProductionModEnd;
-
-	double ** annihiMod;
-	double ** eDepModGamma;
-	double ** eDepModElectron;
-	double ** eDepModPositron;
-
-	//virtual void Build() const;
-
-
 };
 
 #endif

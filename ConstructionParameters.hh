@@ -45,6 +45,7 @@ public:
     void SetScaleBSolenoid(G4double argScaleBSolenoid);
     void SetScaleBTarget(G4double argScaleBTarget);
     void SetScaleE(G4double argScaleE);
+    void SetScaleAll(G4double argScaleBDipole, G4double argScaleBNeon, G4double argScaleBSolenoid, G4double argScaleBTarget, G4double argScaleE);
     void SetModeratorMaterial(G4String argModeratorMaterial);
 
 

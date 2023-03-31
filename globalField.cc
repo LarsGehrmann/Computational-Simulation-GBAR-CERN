@@ -128,19 +128,15 @@ globalField::globalField(G4double argScaleBDipole, G4double argScaleBNeon, G4dou
 
 
 void globalField::readField(G4String fieldType, G4String origin, G4double scale) {
-	//scaleB = 0.1;
-	//G4cout << "Scaling of B-field: " << scaleB << G4endl;
-
 	double lenUnit = millimeter;
 	double fieldUnit;
 	G4String fileName;
 	int ix, iy, iz;
-	if (fieldType == "magField") {	///////////////////////////////
+	if (fieldType == "magField") {	
 		G4cout << "Reading magnetic field" << G4endl;
-		//fileName = "magField.TAB";
 		fileName = fieldType + origin + ".txt";
 		fieldUnit = tesla;
-		std::ifstream file(fileName); // Open the file for reading.
+		std::ifstream file(fileName);
 		// Read in the data
 		G4double xval = 0.;
 		G4double yval = 0.;
@@ -164,9 +160,6 @@ void globalField::readField(G4String fieldType, G4String origin, G4double scale)
 					BxField[ix][iy][iz] += bx * tesla * scale;
 					ByField[ix][iy][iz] += by * tesla * scale;
 					BzField[ix][iy][iz] += bz * tesla * scale;
-
-					
-					
 				}
 			}
 		}
@@ -174,23 +167,15 @@ void globalField::readField(G4String fieldType, G4String origin, G4double scale)
 		maxx = xval * lenUnit;
 		maxy = yval * lenUnit;
 		maxz = zval * lenUnit;
-
-		// Should really check that the limits are not the wrong way around.
-		//if (maxx < minx) { swap(maxx, minx); invertX = true; }
-		//if (maxy < miny) { swap(maxy, miny); invertY = true; }
-		//if (maxz < minz) { swap(maxz, minz); invertZ = true; }
 		dx = maxx - minx;
 		dy = maxy - miny;
 		dz = maxz - minz;
 	}
-	else if (fieldType == "elField") {	/////////////////////////////////////////////////////////
+	else if (fieldType == "elField") {
 		G4cout << "Reading electric field" << G4endl;
 		fileName = "elField.TAB";
-		//fileName = fieldType + origin + ".txt";
 		fieldUnit = volt / meter;
-
 		std::ifstream file(fileName); // Open the file for reading.
-		
 		// Read in the data
 		G4double xval = 0.;
 		G4double yval = 0.;
@@ -232,11 +217,6 @@ void globalField::readField(G4String fieldType, G4String origin, G4double scale)
 		G4cerr << "Unclear which field should be called!";
 		exit(1);
 	}
-
-
-
-
-
 }
 
 
@@ -256,14 +236,9 @@ globalField::~globalField()
   if (fChordFinder)     delete fChordFinder;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-
 G4ChordFinder* globalField::getChordFinder() {
 	return this->fChordFinder;
 }
-
-
 
 void globalField::ConstructField()
 {
@@ -417,10 +392,6 @@ void globalField::GetFieldValue(const G4double* point, G4double* field) const //
 	double yfraction = (y - miny) / dy;
 	double zfraction = (z - minz) / dz;
 
-	//if (invertX) { xfraction = 1 - xfraction; }
-	//if (invertY) { yfraction = 1 - yfraction; }
-	//if (invertZ) { zfraction = 1 - zfraction; }
-
 	// Need addresses of these to pass to modf below.
 	// modf uses its second argument as an OUTPUT argument.
 	double xdindex, ydindex, zdindex;
@@ -459,20 +430,9 @@ void globalField::GetFieldValue(const G4double* point, G4double* field) const //
 		valx0z1 = table[xindex][0][zindex + 1]; mulx0z1 = (1 - xlocal) * zlocal;
 		valx1z1 = table[xindex + 1][0][zindex + 1]; mulx1z1 = xlocal * zlocal;
 #endif
-		/*
-		xindex = 15;
-		yindex = 10;
-		zindex = 10;
-		
-		G4cout << "---------------------------------------------------------------------" << G4endl;
-		G4cout << "x,y,z: " << point[0] << ", " << point[1] << ", " << point[2] << G4endl;
-		G4cout << "idx:: " << xindex << ",  " << yindex << ",  " << zindex << G4endl;
-		G4cout << "Magnetic field: " << BxField[xindex][yindex][zindex] << ", " << 
-			ByField[xindex][yindex][zindex] << ", " << BzField[xindex][yindex][zindex] << G4endl;
-		exit(1);
-		*/
 
 		// Full 3(->6)-dimensional version
+		// magnetic field
 		field[0] =
 			BxField[xindex][yindex][zindex] * (1 - xlocal) * (1 - ylocal) * (1 - zlocal) +
 			BxField[xindex][yindex][zindex + 1] * (1 - xlocal) * (1 - ylocal) * zlocal +
@@ -501,7 +461,7 @@ void globalField::GetFieldValue(const G4double* point, G4double* field) const //
 			BzField[xindex + 1][yindex + 1][zindex] * xlocal * ylocal * (1 - zlocal) +
 			BzField[xindex + 1][yindex + 1][zindex + 1] * xlocal * ylocal * zlocal;
 
-		//////////////////////////
+		// electric field
 		field[3] =
 			ExField[xindex][yindex][zindex] * (1 - xlocal) * (1 - ylocal) * (1 - zlocal) +
 			ExField[xindex][yindex][zindex + 1] * (1 - xlocal) * (1 - ylocal) * zlocal +
@@ -530,70 +490,7 @@ void globalField::GetFieldValue(const G4double* point, G4double* field) const //
 			EzField[xindex + 1][yindex + 1][zindex] * xlocal * ylocal * (1 - zlocal) +
 			EzField[xindex + 1][yindex + 1][zindex + 1] * xlocal * ylocal * zlocal;
 	}
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  // NOTE: this routine dominates the CPU time for tracking.
-  // Using the simple array fFp[] instead of fields[] 
-  // directly sped it up
-
-    /*
-  field[0] = field[1] = field[2] = field[3] = field[4] = field[5] = 0.0;
-
-  // protect against Geant4 bug that calls us with point[] NaN.
-  if(point[0] != point[0]) return;
-
-  // (can't use fNfp or fFp, as they may change)
-  if (fFirst) ((globalField*)this)->SetupArray();   // (cast away const)
-
-  for (int i=0; i<fNfp; ++i) {
-      const elementField* p = fFp[i];
-      if (p->IsInBoundingBox(point)) {
-         p->AddFieldValue(point,field);
-      }
-  }
-  */
-  /*
-	// scale B-field
-	G4double scaleB = 1;
-	for (int i = 0; i < 3; i++) {
-		field[i] *= scaleB;
-	}
-
-	// scale E-field
-	G4double scaleE = 1;
-	for (int i = 3; i < 6; i++) {
-		field[i] *= scaleE;
-	}
-	*/
-
-	
-	/*
-	G4double normB = 0;
-	for (int i = 0; i < 3; ++i) {
-		normB += field[i] * field[i];
-	}
-	normB = sqrt(normB);
-
-	if (point[1] == 0 && point[2] == 0) {
-		G4cout << "Point: " << point[0] << ", " << point[1] << ", " << point[2] << "; Magnetic Field: " << field[0] <<", " << field[1] << ", " << field[2] << ";    Norm of magnetic field : " << normB << G4endl;
-	}
-
-
-	G4double normE = 0;
-	for (int i = 3; i < 6; ++i) {
-		normE += field[i] * field[i];
-	}
-	normE = sqrt(normE);
-	if (point[1] == 0 && point[2] == 0) {
-		G4cout << "Point: " << point[0] << ", " << point[1] << ", " << point[2] << "; Electric Field: " << field[3] << ", " << field[4] << ", " << field[5] << ";    Norm of electric field : " << normE << G4endl;
-	}
-	*/
-
-
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void globalField::Clear()
 {
@@ -611,8 +508,6 @@ void globalField::Clear()
   fFp = NULL;
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 void globalField::SetupArray()
 {
   fFirst = false;
@@ -620,20 +515,3 @@ void globalField::SetupArray()
   fFp = new const elementField* [fNfp+1]; // add 1 so it's never 0
   for (int i=0; i<fNfp; ++i) fFp[i] = (*fFields)[i];
 }
-
-
-//exit(0);
-/*
-if (isnan(xval))
-{
-	xval = 0.0;
-}
-if (isnan(yval))
-{
-	yval = 0.0;
-}
-if (isnan(zval))
-{
-	zval = 0.0;
-}
-*/

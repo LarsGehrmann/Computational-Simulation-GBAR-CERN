@@ -11,22 +11,6 @@ MySteppingAction::MySteppingAction(MyEventAction* eventAction, G4int argChoiceGe
 	for (int i = 0; i < noSampleWalls; ++i) {
 		lastEventID[i] = -1;
 	}
-	/*
-	eDepModTotal = argEDepModTotal;
-	eDepModGammaTotal = argEDepModGammaTotal;
-	eDepModElectronTotal = argEDepModElectronTotal;
-	eDepModPositronTotal = argEDepModPositronTotal;
-	noAnnihilationTar = argNoAnnihilationTar;
-	noPairProductionTar = argNoPairProductionTar;
-	noAnnihilationMod = argNoAnnihilationMod;
-	noPairProductionMod = argNoPairProductionMod;
-	noAnnihilationModEnd = argNoAnnihilationModEnd;
-	noPairProductionModEnd = argNoPairProductionModEnd;
-	annihiMod = argAnnihiMod;
-	eDepModGamma = argEDepModGamma;
-	eDepModElectron = argEDepModElectron;
-	eDepModPositron = argEDepModPositron;
-	*/
 }
 
 MySteppingAction::~MySteppingAction()
