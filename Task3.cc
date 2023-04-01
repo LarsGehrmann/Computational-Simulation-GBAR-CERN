@@ -40,7 +40,7 @@
 
 int main(int argc, char** argv)
 {
-    bool showVis = false;
+    bool showVis = true;
 
     G4int choiceGeometry = 2;
     G4int choiceParticle = 1;
@@ -55,10 +55,12 @@ int main(int argc, char** argv)
     G4double moderatorHeight = 60 * cm;
 
     G4double scaleBDipole = 1.;
-    G4double scaleBNeon = 1.4;
+    G4double scaleBNeon = 1.;
     G4double scaleBSolenoid = 1.;
-    G4double scaleBTarget = 1.6;
+    G4double scaleBTarget = 1.;
     G4double scaleE = 1.;
+
+    G4int noEvents = 10000;
 
     G4RunManager* runMan = new G4RunManager;
     ConstructionParameters constructionParameters(choiceGeometry, dModerator, dModeratorFront,
@@ -84,7 +86,7 @@ int main(int argc, char** argv)
         runMan->InitializeGeometry();
         runMan->GeometryHasBeenModified();
         runMan->Initialize();
-        runMan->BeamOn(10000);
+        runMan->BeamOn(noEvents);
         /*
         G4String fileName = "height";
         for (curRun = 0; curRun < maxRun; ++curRun) {   // for every run
