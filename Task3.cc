@@ -40,7 +40,7 @@
 
 int main(int argc, char** argv)
 {
-    bool showVis = true;
+    bool showVis = false;
 
     G4int choiceGeometry = 2;
     G4int choiceParticle = 1;
@@ -54,10 +54,10 @@ int main(int argc, char** argv)
     G4double widthModeratorPart = 1 * cm;
     G4double moderatorHeight = 60 * cm;
 
-    G4double scaleBDipole = 1.;
-    G4double scaleBNeon = 1.;
+    G4double scaleBDipole = 1.3;
+    G4double scaleBNeon = 2.7;
     G4double scaleBSolenoid = 1.;
-    G4double scaleBTarget = 1.;
+    G4double scaleBTarget = 8.;
     G4double scaleE = 1.;
 
     G4int noEvents = 10000;
@@ -78,20 +78,10 @@ int main(int argc, char** argv)
 
     if (!showVis) {
         createTuples();
-        G4String fileName = "Standard";
-        constructionParameters.StoreParameters(curRun, fileName);
-        runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
-        runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
-            distTarMod, fileName));
-        runMan->InitializeGeometry();
-        runMan->GeometryHasBeenModified();
-        runMan->Initialize();
-        runMan->BeamOn(noEvents);
-        /*
-        G4String fileName = "height";
+        G4String fileName = "targetSecondWall";
         for (curRun = 0; curRun < maxRun; ++curRun) {   // for every run
-            moderatorHeight = 30 * cm + 5 * cm * curRun;
-            constructionParameters.SetModeratorHeight(moderatorHeight);
+            scaleBTarget = 0.8 + curRun * 0.1;
+            constructionParameters.SetScaleBTarget(scaleBTarget);
             constructionParameters.StoreParameters(curRun, fileName);
 
             runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
@@ -100,9 +90,8 @@ int main(int argc, char** argv)
             runMan->InitializeGeometry();
             runMan->GeometryHasBeenModified();
             runMan->Initialize();
-            runMan->BeamOn(1000);
+            runMan->BeamOn(noEvents);
         }
-        */
         /*
         for (int i = 0; i < 5; ++i) {       // for every field
             for (curRun = 0; curRun < maxRun; ++curRun) {   // for every run
