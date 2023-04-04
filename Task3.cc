@@ -17,8 +17,6 @@
 
 #include "ConstructionParameters.hh"
 #include "construction.hh"
-
-//#include "detector.hh"
 #include "createTuples.hh"
 
 // choiceGeometry determines geometric setup:
@@ -43,7 +41,7 @@ int main(int argc, char** argv)
     bool showVis = false;
 
     G4int choiceGeometry = 2;
-    G4int choiceParticle = 1;
+    G4int choiceParticle = 3;
 
     G4double distTargetOrigin = 50.5 * cm;
     G4double avgE = 9 * MeV;
@@ -54,10 +52,10 @@ int main(int argc, char** argv)
     G4double widthModeratorPart = 1 * cm;
     G4double moderatorHeight = 60 * cm;
 
-    G4double scaleBDipole = 1.3;
-    G4double scaleBNeon = 2.7;
+    G4double scaleBDipole = 1.;
+    G4double scaleBNeon = 1.;
     G4double scaleBSolenoid = 1.;
-    G4double scaleBTarget = 8.;
+    G4double scaleBTarget = 3.;
     G4double scaleE = 1.;
 
     G4int noEvents = 10000;
@@ -74,15 +72,20 @@ int main(int argc, char** argv)
     G4UImanager *UImanager = G4UImanager::GetUIpointer();   
     G4String fileNames[5] = { "BDipole", "BNeon", "BSolenoid", "BTarget", "E" };
     G4int curRun = 0;
-    G4int maxRun = 12;
+    G4int maxRun = 1;
 
     if (!showVis) {
         createTuples();
-        G4String fileName = "targetSecondWall";
+       //G4String fileName = "targetSecondWall";
+       G4String fileName = "Standard";
+       //G4String fileName = "dipoleSecondWall";
+       //G4String fileName = "neonSecondWall";
+
+
         for (curRun = 0; curRun < maxRun; ++curRun) {   // for every run
-            scaleBTarget = 0.8 + curRun * 0.1;
-            constructionParameters.SetScaleBTarget(scaleBTarget);
-            constructionParameters.StoreParameters(curRun, fileName);
+            //scaleBNeon = 0.8 + curRun * 0.1;
+            //constructionParameters.SetScaleBNeon(scaleBNeon);
+            //constructionParameters.StoreParameters(curRun, fileName);
 
             runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
             runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
@@ -139,6 +142,7 @@ int main(int argc, char** argv)
         */
         G4cout << "After loop!" << G4endl;
     }
+
     else {
         G4VisManager* visManager = new G4VisExecutive();
         visManager->Initialize();
