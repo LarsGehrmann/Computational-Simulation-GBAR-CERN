@@ -168,7 +168,7 @@ void FastPositronCOMSOL::GeneratePrimaries(G4Event* anEvent)
 	G4ThreeVector mom;
 	energy = 1.0 * MeV;
 	r = 1. * cm * sqrt(G4UniformRand());
-	theta = 2. * 3.1415 * G4UniformRand();
+	theta = 2. * 3.1415 * G4UniformRand() * rad;
 	y = -5. * cm + r * sin(theta);
 	z = 3. * cm + r * cos(theta);
 	particle = particleTable->FindParticle("e+");

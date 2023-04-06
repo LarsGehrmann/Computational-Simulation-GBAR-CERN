@@ -1,8 +1,8 @@
 #include <iostream>
 #include <chrono>
+#include <string.h>
 
 #include "G4RunManager.hh"
-//#include "G4MTG4RunManagerager.hh"
 #include "G4UImanager.hh"
 #include "G4VisManager.hh"
 #include "G4VisExecutive.hh"
@@ -11,6 +11,7 @@
 #include "G4ScoringManager.hh"
 #include "G4LogicalVolume.hh"
 #include "G4SystemOfUnits.hh"
+
 
 #include "physics.hh"
 #include "action.hh"
@@ -41,7 +42,7 @@ int main(int argc, char** argv)
     bool showVis = false;
 
     G4int choiceGeometry = 2;
-    G4int choiceParticle = 3;
+    G4int choiceParticle = 1;
 
     G4double distTargetOrigin = 50.5 * cm;
     G4double avgE = 9 * MeV;
@@ -55,10 +56,10 @@ int main(int argc, char** argv)
     G4double scaleBDipole = 1.;
     G4double scaleBNeon = 1.;
     G4double scaleBSolenoid = 1.;
-    G4double scaleBTarget = 3.;
+    G4double scaleBTarget = 1.;
     G4double scaleE = 1.;
 
-    G4int noEvents = 10000;
+    G4int noEvents = 100;
 
     G4RunManager* runMan = new G4RunManager;
     ConstructionParameters constructionParameters(choiceGeometry, dModerator, dModeratorFront,
@@ -72,16 +73,17 @@ int main(int argc, char** argv)
     G4UImanager *UImanager = G4UImanager::GetUIpointer();   
     G4String fileNames[5] = { "BDipole", "BNeon", "BSolenoid", "BTarget", "E" };
     G4int curRun = 0;
-    G4int maxRun = 1;
+    G4int maxRun = 4;
 
+    G4String fileName;
     if (!showVis) {
         createTuples();
-       //G4String fileName = "targetSecondWall";
-       G4String fileName = "Standard";
-       //G4String fileName = "dipoleSecondWall";
-       //G4String fileName = "neonSecondWall";
+       //fileName = "targetSecondWall";
+       //fileName = "Standard";
+       //fileName = "dipoleSecondWall";
+       //fileName = "neonSecondWall";
 
-
+       /*
         for (curRun = 0; curRun < maxRun; ++curRun) {   // for every run
             //scaleBNeon = 0.8 + curRun * 0.1;
             //constructionParameters.SetScaleBNeon(scaleBNeon);
@@ -94,7 +96,32 @@ int main(int argc, char** argv)
             runMan->GeometryHasBeenModified();
             runMan->Initialize();
             runMan->BeamOn(noEvents);
+        }*/
+
+       double ratio = -1;
+       for (int i = 0; i < maxRun; ++i) {    // for every fixed current in Neon
+           scaleBNeon = (i + 1);
+           ratio = 0.5;
+           while (ratio < 1.3) {
+               fileName = "ratioTargetNeonScaleNe"  + std::to_string(scaleBNeon) + "ratio" + std::to_string(ratio);
+               G4cout << fileName << G4endl;
+               scaleBTarget = scaleBNeon * ratio;
+               G4cout << "Neon, Target, ratio, j: " << scaleBNeon << ", " << scaleBTarget << ", " << ratio << G4endl;
+               constructionParameters.SetScaleAll(scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE);
+               constructionParameters.StoreParameters(curRun, fileName);
+               runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
+               runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
+                   distTarMod, fileName));
+               runMan->InitializeGeometry();
+               runMan->GeometryHasBeenModified();
+               runMan->Initialize();
+               runMan->BeamOn(noEvents);
+
+               ratio += 0.1;
+           }          
         }
+       exit(1);
+
         /*
         for (int i = 0; i < 5; ++i) {       // for every field
             for (curRun = 0; curRun < maxRun; ++curRun) {   // for every run
