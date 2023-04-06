@@ -136,9 +136,11 @@ end
 fprintf("Number of hits for x in [" + string(xmin) + "," + string(xmax) + "] and z in [" + string(zmin) + "," + string(zmax) + "]: ");
 fprintf(string(smallHits) + "\n");
 
-fprintf("Average x-component for positrons hitting the fourth wall: " + string(mean(wall4(1,:)) + "\n"))
-fprintf("Average y-component for positrons hitting the second wall: " + string(mean(wall2(2,:)) + "\n"))
-fprintf("Average z-component for positrons hitting the fourth wall: " + string(mean(wall4(3,:)) + "\n"))
+fprintf("Avg. 0th wall, (x,y,z)/cm: " + string(mean(wall0(1,:))) + ", " + string(mean(wall0(2,:))) +  ", " + string(mean(wall0(3,:))) + "\n");
+fprintf("Avg. 1st wall, (x,y,z)/cm: " + string(mean(wall1(1,:))) + ", " + string(mean(wall1(2,:))) +  ", " + string(mean(wall1(3,:))) + "\n");
+fprintf("Avg. 2nd wall, (x,y,z)/cm: " + string(mean(wall2(1,:))) + ", " + string(mean(wall2(2,:))) +  ", " + string(mean(wall2(3,:))) + "\n");
+fprintf("Avg. 3rd wall, (x,y,z)/cm: " + string(mean(wall3(1,:))) + ", " + string(mean(wall3(2,:))) +  ", " + string(mean(wall3(3,:))) + "\n");
+fprintf("Avg. 4th wall, (x,y,z)/cm: " + string(mean(wall4(1,:))) + ", " + string(mean(wall4(2,:))) +  ", " + string(mean(wall4(3,:))) + "\n");
 
 saveDir = saveDirStart + saveName + string(4) + saveDirEnd;
 saveas(gcf,saveDir);
