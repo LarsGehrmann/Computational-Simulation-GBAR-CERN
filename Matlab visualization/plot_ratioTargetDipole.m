@@ -1,15 +1,15 @@
-function plot_ratioTargetNeon()
+function plot_ratioTargetDipole()
 set(0,'defaultTextInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
 set(0, 'defaultAxesTickLabelInterpreter','latex');
 
-dirStart1 = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\ratioTarNeWalls";
-dirStart2 = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\ratioTarNeParameters";
+dirStart1 = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\ratioTarDiWalls";
+dirStart2 = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\ratioTarDiParameters";
 dirEnd1 = "_nt_SampleWalls.csv";
 dirEnd2 = "_nt_Parameters.csv";
 
 maxRun = 4;
-neonScale = zeros(1,maxRun);
+dipoleScale = zeros(1,maxRun);
 lastWallHit = zeros(maxRun,0);
 stdDev = zeros(maxRun,0);
 
@@ -21,7 +21,7 @@ for i=1:maxRun
     ratioCount = 0;
     clear ratio
     ratio(1) = 0.5;
-    while ratio(end) < 1.1 - 0.00001 % ??
+    while ratio(end) < 1.1 - 0.00001
         dir1 = dirStart1 + string(ratioCount + (i-1) * innerNumber) + dirEnd1;
         dir2 = dirStart2 + string(ratioCount + (i-1) * innerNumber) + dirEnd2;
         try
@@ -42,8 +42,8 @@ for i=1:maxRun
             stdDev(i,ratioCount+1) = std(tempStore(1,:)) + std(tempStore(3,:));
             % read parameters
             M = csvread(dir2, 14, 0);
-            neonScale(i) = M(1,7);
-            ratio(ratioCount+1) = M(1,9) / neonScale(i);
+            dipoleScale(i) = M(1,7);
+            ratio(ratioCount+1) = M(1,9) / dipoleScale(i);
             ratioCount = ratioCount + 1;
         catch ME
             break
@@ -59,9 +59,9 @@ grid on
 legendHelp = "empty";
 for i = 1:maxRun
     plot(ratio,lastWallHit(i,:),colors(i))
-    legendHelp(i) = "scaleNeon = " + string(neonScale(i));
+    legendHelp(i) = "scaleDipole = " + string(dipoleScale(i));
 end
-xlabel('$\textrm{scaleTarget / scaleNeon}$')
+xlabel('$\textrm{scaleTarget / scaleDipole}$')
 ylabel('$\textrm{No. hits}$')
 legend(legendHelp)
 title('$\textbf{Number of hits vs. ratio}$')
@@ -71,9 +71,9 @@ hold on
 grid on
 for i = 1:maxRun
     plot(ratio,stdDev(i,:),colors(i))
-    legendHelp(i) = "scaleNeon = " + string(neonScale(i));
+    legendHelp(i) = "scaleDipole = " + string(dipoleScale(i));
 end
-xlabel('$\textrm{scaleTarget / scaleNeon}$')
+xlabel('$\textrm{scaleTarget / scaleDipole}$')
 ylabel('$(\sigma_x + \sigma_z) / \textrm{cm}$')
 legend(legendHelp)
 title('$\textbf{Standard deviation vs. ratio}$')

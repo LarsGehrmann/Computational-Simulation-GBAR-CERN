@@ -3,6 +3,10 @@
 function plot_sampleWalls()
 
 saveName = "test";
+xmin = -3;
+xmax = 2;
+zmin = -4;
+zmax = 1;
 
 set(0,'defaultTextInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
@@ -118,10 +122,7 @@ colorbar
 titleHelp = {"$\textbf{Positrons passing through fourth sample wall}$", "$\textbf{Total positrons: } $" + string(length(wall4(1,:)))};
 title(titleHelp,'FontSize',14)
 
-xmin = -4;
-xmax = 1;
-zmin = -3;
-zmax = 2;
+
 smallHits = 0;
 for i=1:length(wall4)
     x = wall4(1,i);

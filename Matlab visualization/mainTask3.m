@@ -14,3 +14,4 @@ clear all, clc, close all;
 %plot_scaleBDipoleHits()
 %plot_scaleBNeonHits()
 plot_ratioTargetNeon()
+%plot_ratioTargetDipole()
