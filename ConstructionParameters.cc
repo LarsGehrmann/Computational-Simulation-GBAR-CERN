@@ -120,26 +120,7 @@ void ConstructionParameters::StoreParameters(int runNumber) {
     G4String fileName =  "Parameters" + strRunID.str() + ".csv";
     G4String tupleName = "Construction Parameters";
    
-
-
-    if (runNumber == 0) {
-    // Create tuples
-    man->CreateNtuple(tupleName,tupleName);
-    man->CreateNtupleDColumn(0,"choiceGeometry");
-    man->CreateNtupleDColumn(0, "dModerator");
-    man->CreateNtupleDColumn(0, "dModeratorFront");
-    man->CreateNtupleDColumn(0, "distTargetOrigin");
-    man->CreateNtupleDColumn(0, "moderatorHeight");
-    man->CreateNtupleDColumn(0, "scaling of Dipole B-field");
-    man->CreateNtupleDColumn(0, "scaling of Neon B-field");
-    man->CreateNtupleDColumn(0, "scaling of Solenoid B-field");
-    man->CreateNtupleDColumn(0, "scaling of Target B-field");
-    man->CreateNtupleDColumn(0, "scaling of E-field");
-    man->FinishNtuple(0);   
-    }
-
     man->OpenFile(fileName);
-
 
     man->FillNtupleDColumn(0, 0, choiceGeometry);
     man->FillNtupleDColumn(0, 1, dModerator);
@@ -167,28 +148,7 @@ void ConstructionParameters::StoreParameters(int runNumber, G4String argFileName
     std::stringstream strRunID;
     strRunID << runNumber;
 
-    G4String fileName =  argFileName + "Parameters" + strRunID.str() + ".csv";
-    G4String tupleName = "ParametersTuple";
-    //tupleName = "";
-
-
-    /*
-    if (runNumber == 0) {
-        // Create tuples
-        man->CreateNtuple(tupleName, tupleName);
-        man->CreateNtupleDColumn(0, "choiceGeometry");
-        man->CreateNtupleDColumn(0, "dModerator");
-        man->CreateNtupleDColumn(0, "dModeratorFront");
-        man->CreateNtupleDColumn(0, "distTargetOrigin");
-        man->CreateNtupleDColumn(0, "moderatorHeight");
-        man->CreateNtupleDColumn(0, "scaling of Dipole B-field");
-        man->CreateNtupleDColumn(0, "scaling of Neon B-field");
-        man->CreateNtupleDColumn(0, "scaling of Solenoid B-field");
-        man->CreateNtupleDColumn(0, "scaling of Target B-field");
-        man->CreateNtupleDColumn(0, "scaling of E-field");
-        man->FinishNtuple(0);
-    }
-    */
+    G4String fileName = argFileName;
     man->OpenFile(fileName);
 
 

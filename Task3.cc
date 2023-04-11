@@ -1,6 +1,10 @@
 #include <iostream>
 #include <chrono>
 #include <string.h>
+#include <iomanip>
+#include <sstream>
+
+
 
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
@@ -59,13 +63,15 @@ int main(int argc, char** argv)
     G4double scaleBTarget = 1.;
     G4double scaleE = 1.;
 
-    G4int noEvents = 100;
+    G4int noEvents = 10000;
 
     G4RunManager* runMan = new G4RunManager;
     ConstructionParameters constructionParameters(choiceGeometry, dModerator, dModeratorFront,
         widthModeratorPart, distTargetOrigin, moderatorHeight, scaleBDipole, scaleBNeon, scaleBSolenoid,
         scaleBTarget, scaleE);
     runMan->SetUserInitialization(new MyPhysicsList());
+    createTuples();
+    G4String fileName;
     G4UIExecutive* ui = 0;
     if (argc == 1) {
         ui = new G4UIExecutive(argc, argv);
@@ -75,20 +81,35 @@ int main(int argc, char** argv)
     G4int curRun = 0;
     G4int maxRun = 4;
 
-    G4String fileName;
+    G4String fileNameWalls;
+    G4String fileNameParameters;
+
+
+    /*
+    fileName = "Standard";
+    runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
+    runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
+        distTarMod, fileName));
+    runMan->InitializeGeometry();
+    runMan->GeometryHasBeenModified();
+    runMan->Initialize();
+    runMan->BeamOn(noEvents);
+    */
+
+
+
     if (!showVis) {
-        createTuples();
        //fileName = "targetSecondWall";
        //fileName = "Standard";
        //fileName = "dipoleSecondWall";
        //fileName = "neonSecondWall";
 
-       /*
+       
         for (curRun = 0; curRun < maxRun; ++curRun) {   // for every run
             //scaleBNeon = 0.8 + curRun * 0.1;
             //constructionParameters.SetScaleBNeon(scaleBNeon);
             //constructionParameters.StoreParameters(curRun, fileName);
-
+            /*
             runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
             runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
                 distTarMod, fileName));
@@ -96,32 +117,38 @@ int main(int argc, char** argv)
             runMan->GeometryHasBeenModified();
             runMan->Initialize();
             runMan->BeamOn(noEvents);
-        }*/
-
+            */
+        }
+       int ratioCount = -1;
        double ratio = -1;
-       for (int i = 0; i < maxRun; ++i) {    // for every fixed current in Neon
-           scaleBNeon = (i + 1);
+       int innerNumber = 0;
+       for (int i = 0; i < maxRun; ++i) {    // for every fixed current in 
+           scaleBNeon = (double)(i + 2.)/2.;
            ratio = 0.5;
-           while (ratio < 1.3) {
-               fileName = "ratioTargetNeonScaleNe"  + std::to_string(scaleBNeon) + "ratio" + std::to_string(ratio);
+           ratioCount = 0;
+           while (ratio < 2.2) {
+               fileNameWalls = "ratioTarNeWalls"  + std::to_string(ratioCount + i * innerNumber) + ".csv";
+               fileNameParameters = "ratioTarNeParameters" + std::to_string(ratioCount + i * innerNumber) + ".csv";
                G4cout << fileName << G4endl;
                scaleBTarget = scaleBNeon * ratio;
-               G4cout << "Neon, Target, ratio, j: " << scaleBNeon << ", " << scaleBTarget << ", " << ratio << G4endl;
                constructionParameters.SetScaleAll(scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE);
-               constructionParameters.StoreParameters(curRun, fileName);
+               constructionParameters.StoreParameters(curRun, fileNameParameters);
                runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
                runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
-                   distTarMod, fileName));
+                   distTarMod, fileNameWalls));
                runMan->InitializeGeometry();
                runMan->GeometryHasBeenModified();
                runMan->Initialize();
                runMan->BeamOn(noEvents);
-
                ratio += 0.1;
+               ratioCount++;
+
            }          
+           innerNumber = ratioCount;
+
         }
        exit(1);
-
+       
         /*
         for (int i = 0; i < 5; ++i) {       // for every field
             for (curRun = 0; curRun < maxRun; ++curRun) {   // for every run

@@ -133,7 +133,7 @@ void globalField::readField(G4String fieldType, G4String origin, G4double scale)
 	G4String fileName;
 	int ix, iy, iz;
 	if (fieldType == "magField") {	
-		G4cout << "Reading magnetic field" << G4endl;
+		G4cout << "Reading magnetic field: " + origin << G4endl;
 		fileName = fieldType + origin + ".txt";
 		fieldUnit = tesla;
 		std::ifstream file(fileName);
