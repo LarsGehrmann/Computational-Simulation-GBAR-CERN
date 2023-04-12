@@ -67,7 +67,7 @@ void MyRunAction::EndOfRunAction(const G4Run* run)
 
 	G4cout << "In end of Run action" << G4endl;
 	man = G4AnalysisManager::Instance();
-	man->SetVerboseLevel(3);
+	man->SetVerboseLevel(0);
 
 	man->Write();
 	man->CloseFile();

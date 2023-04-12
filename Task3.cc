@@ -64,7 +64,6 @@ int main(int argc, char** argv)
     G4double scaleE = 1.;
 
     G4int noEvents = 10000;
-
     G4RunManager* runMan = new G4RunManager;
     ConstructionParameters constructionParameters(choiceGeometry, dModerator, dModeratorFront,
         widthModeratorPart, distTargetOrigin, moderatorHeight, scaleBDipole, scaleBNeon, scaleBSolenoid,
@@ -84,9 +83,9 @@ int main(int argc, char** argv)
     G4String fileNameWalls;
     G4String fileNameParameters;
 
-
     /*
-    fileName = "Standard";
+    
+    fileName = "Standard.csv";
     runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
     runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
         distTarMod, fileName));
@@ -119,19 +118,20 @@ int main(int argc, char** argv)
             runMan->BeamOn(noEvents);
             */
         }
+        
        int ratioCount = -1;
        double ratio = -1;
        int innerNumber = 0;
        for (int i = 0; i < maxRun; ++i) {    // for every fixed current in 
-           scaleBNeon = (double)(i + 2.)/2.;
+           scaleBDipole = (double)(i + 2.)/2.;
            ratio = 0.5;
            ratioCount = 0;
            while (ratio < 2.2) {
-               fileNameWalls = "ratioTarNeWalls"  + std::to_string(ratioCount + i * innerNumber) + ".csv";
-               fileNameParameters = "ratioTarNeParameters" + std::to_string(ratioCount + i * innerNumber) + ".csv";
+               fileNameWalls = "ratioTarDiWalls"  + std::to_string(ratioCount + i * innerNumber) + ".csv";
+               fileNameParameters = "ratioTarDiParameters" + std::to_string(ratioCount + i * innerNumber) + ".csv";
                G4cout << fileName << G4endl;
-               scaleBTarget = scaleBNeon * ratio;
-               constructionParameters.SetScaleAll(scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE);
+               scaleBTarget = scaleBDipole * ratio;
+               constructionParameters.SetScaleAll(scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBDipole, scaleE);
                constructionParameters.StoreParameters(curRun, fileNameParameters);
                runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
                runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
@@ -148,6 +148,7 @@ int main(int argc, char** argv)
 
         }
        exit(1);
+       
        
         /*
         for (int i = 0; i < 5; ++i) {       // for every field

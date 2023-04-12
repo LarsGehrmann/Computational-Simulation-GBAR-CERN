@@ -75,8 +75,7 @@ void DetectorConstruction::SetMaterials()
 
 G4VPhysicalVolume *DetectorConstruction::Construct()
 {
-    G4cout << "In Construct()!" << G4endl;
-    G4cout << "distance: " << constructionParameters->GetDistTargetOrigin() << G4endl;
+    G4bool testOverlap = false;
     DetectorConstruction::SetMaterials();
     G4double rTargetOut, rTargetIn, dTargetOut, dTargetIn, dEffectiveTarget, widthModerator;
 
@@ -87,7 +86,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
     G4double widthWorld = worldVertices;
     solidWorld = new G4Box("soldidWorld", lengthWorld, heightWorld, widthWorld);
     logicWorld = new G4LogicalVolume(solidWorld, worldMat, "logicVWorld");
-    physicalWorld = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicWorld, "physicalWorld", 0, false, 0, true);
+    physicalWorld = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicWorld, "physicalWorld", 0, false, 0, testOverlap);
 
     G4double widthSampleWall = 50 * cm;
     G4double thicknessSampleWall = 0.001 * mm;
@@ -96,19 +95,19 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
     meshCoils->SetScale(1000.0);
     coilsSolid = meshCoils->GetSolid();
     logicCoils = new G4LogicalVolume(coilsSolid, coilsMaterial, "logicCoils");
-    physicalCoils = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicCoils, "physicalCoils", logicWorld, false, 5, true);
+    physicalCoils = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicCoils, "physicalCoils", logicWorld, false, 5, testOverlap);
 
     auto meshElectrode = CADMesh::TessellatedMesh::FromSTL("electrode.stl");
     meshElectrode->SetScale(1000.0);
     electrodeSolid = meshElectrode->GetSolid();
     logicElectrode = new G4LogicalVolume(electrodeSolid, coilsMaterial, "logicElectrode");
-    physicalElectrode = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicElectrode, "physicalElectrode", logicWorld, false, 6, true);
+    physicalElectrode = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicElectrode, "physicalElectrode", logicWorld, false, 6, testOverlap);
 
     auto meshSolenoid = CADMesh::TessellatedMesh::FromSTL("solenoid.stl");
     meshSolenoid->SetScale(1000.0);
     solenoidSolid = meshSolenoid->GetSolid();
     logicSolenoid = new G4LogicalVolume(solenoidSolid, coilsMaterial, "logicSolenoid");
-    physicalSolenoid = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicSolenoid, "physicalSolenoid", logicWorld, false, 7, true);
+    physicalSolenoid = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicSolenoid, "physicalSolenoid", logicWorld, false, 7, testOverlap);
 
 
     switch (constructionParameters->GetChoiceGeometry()) {
@@ -137,7 +136,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
         solidTarget = new G4SubtractionSolid("solidTarget", solidTargetOut, solidTargetIn, 0, zTrans);
         logicTarget = new G4LogicalVolume(solidTarget, targetMaterial, "logicVTarget");
         physicalTarget = new G4PVPlacement(RotationTarget, G4ThreeVector(constructionParameters->GetDistTargetOrigin() + dTargetOut / 2, 0., 0.), 
-            logicTarget, "physicalTarget", logicWorld, false, 1, true);
+            logicTarget, "physicalTarget", logicWorld, false, 1, testOverlap);
 
         solidModerator = new G4Box("solidModerator", widthModerator / 2, constructionParameters->GetDModerator() / 2, 
             widthModerator / 2);
@@ -159,13 +158,13 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
         meshMod->SetScale(1000.0);
         modSolid = meshMod->GetSolid();
         logicMod = new G4LogicalVolume(modSolid, coilsMaterial, "logicMod");
-        physicalMod = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicMod, "physicalMod", logicWorld, false, 9, true);
+        physicalMod = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicMod, "physicalMod", logicWorld, false, 9, testOverlap);
 
         auto meshTar = CADMesh::TessellatedMesh::FromSTL("Target.stl");
         meshTar->SetScale(1000.0);
         tarSolid = meshTar->GetSolid();
         logicTar = new G4LogicalVolume(tarSolid, coilsMaterial, "logicTar");
-        physicalSolenoid = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicTar, "physicalTar", logicWorld, false, 8, true);
+        physicalSolenoid = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicTar, "physicalTar", logicWorld, false, 8, testOverlap);
 
         break;
     }
@@ -211,10 +210,10 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
             for (int j = 0; j < 20; ++j) {
                 physicalModeratorFront = new G4PVPlacement(0, G4ThreeVector(x, constructionParameters->GetModeratorHeight() 
                     + constructionParameters->GetDModeratorFront() / 2, z), logicModeratorFront, "physicalModeratorFront", logicWorld, false, 
-                    1000 + i * 20 + j, false);
+                    1000 + i * 20 + j, testOverlap);
                 physicalModerator = new G4PVPlacement(0, G4ThreeVector(x, constructionParameters->GetModeratorHeight()
                     + constructionParameters->GetDModeratorFront() + constructionParameters->GetDModerator() / 2, z), logicModerator,
-                    "physicalModerator", logicWorld, false, 2000 + i * 20 + j, false);
+                    "physicalModerator", logicWorld, false, 2000 + i * 20 + j, testOverlap);
                 z += dz;
             }
             z = zStart;
@@ -248,21 +247,24 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
     RotationSampleWall3->rotateZ(90 * deg);
 
     physicalSampleWall0 = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2.0001 * cm, 0, 0), logicSampleWall1, 
-        "physicalSampleWall0", logicWorld, false, 11, true);
+        "physicalSampleWall0", logicWorld, false, 11, testOverlap);
     physicalSampleWall1 = new G4PVPlacement(0, G4ThreeVector(25 * cm, 0, 0), logicSampleWall1, 
-        "physicalSampleWall1", logicWorld, false, 12, true);
+        "physicalSampleWall1", logicWorld, false, 12, testOverlap);
     physicalSampleWall2 = new G4PVPlacement(RotationSampleWall2, G4ThreeVector(0, 0, 0), logicSampleWall2, 
-        "physicalSampleWall2", logicWorld, false, 13, true);
+        "physicalSampleWall2", logicWorld, false, 13, testOverlap);
     physicalSampleWall3 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, 30 * cm, 0), logicSampleWall3, 
-        "physicalSampleWall3", logicWorld, false, 14, true);
+        "physicalSampleWall3", logicWorld, false, 14, testOverlap);
     physicalSampleWall4 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, constructionParameters->GetModeratorHeight() 
         - constructionParameters->GetDModeratorFront() / 2 - 0.00001 * cm, 0), logicSampleWall4, 
-        "physicalSampleWall4", logicWorld, false, 15, true);
+        "physicalSampleWall4", logicWorld, false, 15, testOverlap);
 	return physicalWorld;
 }
 
 void DetectorConstruction::ConstructSDandField() {
-   
+    // read only one field, e.g. pass vector with bools into constructor of global Field and, but need to entire field in memory and subtract
+    // oldField * scaleOldField.
+    // idea: keep globalField-instance in main and then call globalField.rescale(field-type, oldScale, newScale),
+    // then the entire field gets updated with field-type * (newScale - oldScale) => only one field has to be read instead of five
     globalField* globField = new globalField(constructionParameters->GetScaleBDipole(), constructionParameters->GetScaleBNeon(),
         constructionParameters->GetScaleBSolenoid(), constructionParameters->GetScaleBTarget(), 
         constructionParameters->GetScaleE());
@@ -271,7 +273,7 @@ void DetectorConstruction::ConstructSDandField() {
     G4ChordFinder* chordFinder = globField->getChordFinder();
     fieldMgr->SetChordFinder(chordFinder);
 
-    
+    /*
     G4double x = 40. * cm;
     G4double y = 0. * cm;
     G4double z = -0. * cm;
@@ -286,6 +288,7 @@ void DetectorConstruction::ConstructSDandField() {
     G4cout << "Ex,Ey,Ez: " << field[3] << ", " << field[4] << ", " << field[5] << G4endl;
     G4cout << "----------------------------------------------------------------------------------------------------------" << G4endl;
     G4cout << "----------------------------------------------------------------------------------------------------------" << G4endl;
-        
+     */
+
 }
 
