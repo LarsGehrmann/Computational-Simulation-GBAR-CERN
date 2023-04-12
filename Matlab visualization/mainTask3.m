@@ -6,12 +6,19 @@ clear all, clc, close all;
 %plot_scaleB();
 %plot_distTargetOrigin();
 %plot_Annihis();
-%plot_sampleWalls()
+plot_sampleWalls()
 %plot_Sample4distTargetOrigin()
 %plot_Sample4ModeratorHeight()
 %plot_Sample4Fields()
 %plot_scaleBTargetHits()
 %plot_scaleBDipoleHits()
 %plot_scaleBNeonHits()
-plot_ratioTargetNeon()
+%plot_ratioTargetNeon()
 %plot_ratioTargetDipole()
+%plot_ratioDipoleNeon()
+
+
+% xmin = -1.5;
+% xmax = 3.5;
+% zmin = -2.5;
+% zmax = 2.5;

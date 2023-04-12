@@ -2,7 +2,7 @@
 
 function plot_sampleWalls()
 
-saveName = "test";
+saveName = "strong 35I16I35";
 xmin = -3;
 xmax = 2;
 zmin = -4;
@@ -12,7 +12,7 @@ set(0,'defaultTextInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
 set(0, 'defaultAxesTickLabelInterpreter','latex');
 
-dir = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\Standard0_nt_SampleWalls.csv";
+dir = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\Standard_nt_SampleWalls.csv";
 M = dlmread(dir, ',', 8, 0);
 noHits = length(M);
 wall0 = zeros(3,0);

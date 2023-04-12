@@ -1,4 +1,4 @@
-function plot_ratioTargetDipole()
+function plot_ratioDipoleNeon()
 set(0,'defaultTextInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
 set(0, 'defaultAxesTickLabelInterpreter','latex');
@@ -63,7 +63,7 @@ for i = 1:maxRun
 end
 xlabel('$\textrm{scaleDipole / scaleNeon}$')
 ylabel('$\textrm{No. hits}$')
-legend(legendHelp,'Location','Northwest')
+legend(legendHelp,'Location','Northeast')
 title('$\textbf{Number of hits vs. ratio}$')
 
 figure
@@ -75,7 +75,7 @@ for i = 1:maxRun
 end
 xlabel('$\textrm{scaleDipole / scaleNeon}$')
 ylabel('$(\sigma_x + \sigma_z) / \textrm{cm}$')
-legend(legendHelp)
+legend(legendHelp,'Location','Northwest')
 title('$\textbf{Standard deviation vs. ratio}$')
 
 end
