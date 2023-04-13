@@ -52,6 +52,7 @@ void createTuples() {
 	man->CreateNtupleDColumn(5, "x");
 	man->CreateNtupleDColumn(5, "y");
 	man->CreateNtupleDColumn(5, "z");
+	man->CreateNtupleDColumn(5, "E");
 	man->FinishNtuple(5);
 
 }

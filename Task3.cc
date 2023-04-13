@@ -57,10 +57,10 @@ int main(int argc, char** argv)
     G4double widthModeratorPart = 1 * cm;
     G4double moderatorHeight = 60 * cm;
 
-    G4double scaleBDipole = 1.;
-    G4double scaleBNeon = 1.;
+    G4double scaleBDipole = 2.;
+    G4double scaleBNeon = 3.5;
     G4double scaleBSolenoid = 1.;
-    G4double scaleBTarget = 1.;
+    G4double scaleBTarget = 3.5;
     G4double scaleE = 1.;
 
     G4int noEvents = 10000;
@@ -83,7 +83,7 @@ int main(int argc, char** argv)
     G4String fileNameWalls;
     G4String fileNameParameters;
 
-    /*
+    
     
     fileName = "Standard.csv";
     runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
@@ -93,7 +93,7 @@ int main(int argc, char** argv)
     runMan->GeometryHasBeenModified();
     runMan->Initialize();
     runMan->BeamOn(noEvents);
-    */
+    
 
 
 
@@ -103,7 +103,7 @@ int main(int argc, char** argv)
        //fileName = "dipoleSecondWall";
        //fileName = "neonSecondWall";
 
-       
+   
         for (curRun = 0; curRun < maxRun; ++curRun) {   // for every run
             //scaleBNeon = 0.8 + curRun * 0.1;
             //constructionParameters.SetScaleBNeon(scaleBNeon);
@@ -118,7 +118,7 @@ int main(int argc, char** argv)
             runMan->BeamOn(noEvents);
             */
         }
-        
+        /*
        int ratioCount = -1;
        double ratio = -1;
        int innerNumber = 0;
@@ -131,7 +131,7 @@ int main(int argc, char** argv)
                fileNameParameters = "ratioTarDiParameters" + std::to_string(ratioCount + i * innerNumber) + ".csv";
                G4cout << fileName << G4endl;
                scaleBTarget = scaleBDipole * ratio;
-               constructionParameters.SetScaleAll(scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBDipole, scaleE);
+               constructionParameters.SetScaleAll(scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE);
                constructionParameters.StoreParameters(curRun, fileNameParameters);
                runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
                runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
@@ -146,7 +146,7 @@ int main(int argc, char** argv)
            }          
            innerNumber = ratioCount;
 
-        }
+        }*/
        exit(1);
        
        
