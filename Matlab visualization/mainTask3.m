@@ -16,9 +16,3 @@ plot_sampleWalls()
 %plot_ratioTargetNeon()
 %plot_ratioTargetDipole()
 %plot_ratioDipoleNeon()
-
-
-% xmin = -1.5;
-% xmax = 3.5;
-% zmin = -2.5;
-% zmax = 2.5;
