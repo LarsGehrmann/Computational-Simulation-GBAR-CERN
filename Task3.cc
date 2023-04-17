@@ -37,9 +37,8 @@
 // 4 slow e+ from COMSOL moderator
 // 5 slow e+ from actual moderator 
 
-/// Comment of sensitive detecor
 
-///  Built on G4RunManagerager and change: initilize! buildAtLeastOnce hast to get false;
+// Run again sampling to obtain new posTable.txt :)) you doin' good and will be finished soon ;D
 
 int main(int argc, char** argv)
 {
@@ -57,7 +56,7 @@ int main(int argc, char** argv)
     G4double widthModeratorPart = 1 * cm;
     G4double moderatorHeight = 60 * cm;
 
-    G4double scaleBDipole = 2.;
+    G4double scaleBDipole = 2;
     G4double scaleBNeon = 3.5;
     G4double scaleBSolenoid = 1.;
     G4double scaleBTarget = 3.5;
