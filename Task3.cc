@@ -56,10 +56,10 @@ int main(int argc, char** argv)
     G4double widthModeratorPart = 1 * cm;
     G4double moderatorHeight = 60 * cm;
 
-    G4double scaleBDipole = 2;
-    G4double scaleBNeon = 3.5;
+    G4double scaleBDipole = 1;
+    G4double scaleBNeon = 1.;
     G4double scaleBSolenoid = 1.;
-    G4double scaleBTarget = 3.5;
+    G4double scaleBTarget = 1.;
     G4double scaleE = 1.;
 
     G4int noEvents = 10000;

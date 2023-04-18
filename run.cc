@@ -64,8 +64,6 @@ void MyRunAction::BeginOfRunAction(const G4Run* run)
 
 void MyRunAction::EndOfRunAction(const G4Run* run) 
 {
-
-	G4cout << "In end of Run action" << G4endl;
 	man = G4AnalysisManager::Instance();
 	man->SetVerboseLevel(0);
 
@@ -75,19 +73,4 @@ void MyRunAction::EndOfRunAction(const G4Run* run)
 	G4int runID = run->GetRunID();
 	G4cout << "Finished run number: " << runID << G4endl;
 
-	//delete G4AnalysisManager::Instance();
-
-
 }
-
-
-
-/*
-try {
-	std::filesystem::remove(fileNameP1);
-	G4cout << "File deleted !!!!!!!!!!!!!!!!" << G4endl;
-}
-catch (const std::filesystem::filesystem_error& err) {
-	G4cout << "File NOT deleted !!!!!!!!!!!!!1" << G4endl;
-}
-*/

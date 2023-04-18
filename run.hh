@@ -21,8 +21,6 @@ public:
 
 private:
 	int runNo;
-	//G4double eDepMod, eDepModGamma, eDepModElectron, eDepModPositron;
-	//G4int noAnnihilationTar, noPairProductionTar, noAnnihilationMod, noPairProductionMod, noAnnihilationModEnd, noPairProductionModEnd;
 	G4double dModerator, avgE, distTargetOrigin, distTarMod;
 
 

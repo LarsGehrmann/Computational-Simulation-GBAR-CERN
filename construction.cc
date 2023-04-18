@@ -227,7 +227,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
     logicSampleWall = new G4LogicalVolume(sampleWallSolid, worldMat, "logicVSampleWall");
     physicalSampleWall = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2 * cm, 0, 0), logicSampleWall, 
         "physicalSampleWall", logicWorld, false, 10, true);
-
+    
     sampleWallSolid4 = new G4Box("solidSampleWall4", thicknessSampleWall / 2, 20 / 2 * cm, 20 / 2 * cm);
 
     logicSampleWall0 = new G4LogicalVolume(sampleWallSolid, worldMat, "logicVSampleWall0");
@@ -257,6 +257,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
     physicalSampleWall4 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, constructionParameters->GetModeratorHeight() 
         - constructionParameters->GetDModeratorFront() / 2 - 0.00001 * cm, 0), logicSampleWall4, 
         "physicalSampleWall4", logicWorld, false, 15, testOverlap);
+        
 	return physicalWorld;
 }
 
