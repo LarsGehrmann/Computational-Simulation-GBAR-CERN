@@ -4,11 +4,11 @@ set(0, 'defaultLegendInterpreter','latex');
 set(0, 'defaultAxesTickLabelInterpreter','latex');
 
 
-dir = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\posTable.csv";
+dir = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\posTableNew.csv";
 posTable = csvread(dir);
 % mm -> cm
 posTable(:,1:3) = posTable(:,1:3) / 10; 
-avgE = 0;
+avgE = 0;1
 for i = 1:length(posTable)
     avgE = avgE + posTable(i,7);
 end
