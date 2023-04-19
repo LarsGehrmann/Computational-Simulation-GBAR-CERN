@@ -6,6 +6,7 @@
 MyActionInitialization::MyActionInitialization(int argRunNo, G4int argChoiceParticle, G4double argDistTargetOrigin, G4double argAvgE,
 	G4int argChoiceGeometry, G4double argdModerator, G4double argDistTarMod)
 {
+
 	runNo = argRunNo;
 	choiceParticle = argChoiceParticle;
 	distTargetOrigin = argDistTargetOrigin;
@@ -19,6 +20,7 @@ MyActionInitialization::MyActionInitialization(int argRunNo, G4int argChoicePart
 MyActionInitialization::MyActionInitialization(int argRunNo, G4int argChoiceParticle, G4double argDistTargetOrigin, G4double argAvgE, 
 	G4int argChoiceGeometry, G4double argdModerator, G4double argDistTarMod, G4String argFileName)
 {
+
 	runNo = argRunNo;
 	choiceParticle = argChoiceParticle;
 	distTargetOrigin = argDistTargetOrigin;

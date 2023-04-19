@@ -45,7 +45,7 @@ int main(int argc, char** argv)
     bool showVis = false;
 
     G4int choiceGeometry = 2;
-    G4int choiceParticle = 1;
+    G4int choiceParticle = 3;
 
     G4double distTargetOrigin = 50.5 * cm;
     G4double avgE = 9 * MeV;
@@ -56,20 +56,22 @@ int main(int argc, char** argv)
     G4double widthModeratorPart = 1 * cm;
     G4double moderatorHeight = 60 * cm;
 
-    G4double scaleBDipole = 1;
-    G4double scaleBNeon = 1.;
+    G4double scaleBDipole = 2.;
+    G4double scaleBNeon = 3.5;
     G4double scaleBSolenoid = 1.;
-    G4double scaleBTarget = 1.;
+    G4double scaleBTarget = 3.5;
     G4double scaleE = 1.;
 
     G4int noEvents = 10000;
+
     G4RunManager* runMan = new G4RunManager;
     ConstructionParameters constructionParameters(choiceGeometry, dModerator, dModeratorFront,
         widthModeratorPart, distTargetOrigin, moderatorHeight, scaleBDipole, scaleBNeon, scaleBSolenoid,
         scaleBTarget, scaleE);
+
     runMan->SetUserInitialization(new MyPhysicsList());
     createTuples();
-    G4String fileName;
+
     G4UIExecutive* ui = 0;
     if (argc == 1) {
         ui = new G4UIExecutive(argc, argv);
@@ -79,24 +81,22 @@ int main(int argc, char** argv)
     G4int curRun = 0;
     G4int maxRun = 4;
 
+    G4String fileName;
     G4String fileNameWalls;
     G4String fileNameParameters;
 
-    
-    
-    fileName = "Standard.csv";
-    runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
-    runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
-        distTarMod, fileName));
-    runMan->InitializeGeometry();
-    runMan->GeometryHasBeenModified();
-    runMan->Initialize();
-    runMan->BeamOn(noEvents);
-    
-
-
-
     if (!showVis) {
+        fileName = "Standard.csv";
+        runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
+        runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
+            distTarMod, fileName));
+        runMan->InitializeGeometry();
+        runMan->GeometryHasBeenModified();
+        runMan->Initialize();
+
+        runMan->BeamOn(noEvents);
+
+
        //fileName = "targetSecondWall";
        //fileName = "Standard";
        //fileName = "dipoleSecondWall";
@@ -146,7 +146,7 @@ int main(int argc, char** argv)
            innerNumber = ratioCount;
 
         }*/
-       exit(1);
+      // exit(1);
        
        
         /*
@@ -196,13 +196,12 @@ int main(int argc, char** argv)
         */
         G4cout << "After loop!" << G4endl;
     }
-
     else {
         G4VisManager* visManager = new G4VisExecutive();
         visManager->Initialize();
         runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
         runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
-            distTarMod, fileNames[0]));
+            distTarMod, fileName));
         //UImanager->ApplyCommand("/cuts/setMaxCutEnergy 9 MeV");
         runMan->Initialize();
         if (ui) {

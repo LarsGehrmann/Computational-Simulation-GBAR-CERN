@@ -28,6 +28,7 @@ private:
 	G4GenericMessenger* fMessenger;
 
 };
+/* -------------------------------------------------------------------- */
 class FastPositronSample : public G4VUserPrimaryGeneratorAction
 {
 public:
@@ -42,10 +43,11 @@ private:
 	G4ParticleGun* fParticleGun;
 	G4GenericMessenger* fMessenger;
 	int posCounter;
-	int posNumber = 24380;
+	int posNumber = 16514;
 	double** posTable;  // x y z, px, py, pz, E
 
 };
+/* -------------------------------------------------------------------- */
 class FastElectronCOMSOL : public G4VUserPrimaryGeneratorAction
 {
 public:

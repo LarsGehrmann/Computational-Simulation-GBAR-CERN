@@ -160,7 +160,6 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 		//const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
 		const G4String& particleName = aStep->GetTrack()->GetDefinition()->GetParticleName();
 		if (particleName == "e+") {
-			G4cout << "HERE " << G4endl;
 			G4double x, y, z, E;
 			G4String volumeName = aStep->GetTrack()->GetVolume()->GetName();
 			if (volumeName == "physicalSampleWall0" && lastEventID[0] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {

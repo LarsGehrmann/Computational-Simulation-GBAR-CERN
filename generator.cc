@@ -42,7 +42,7 @@ void FastElectron::GeneratePrimaries(G4Event* anEvent)
 	fParticleGun->SetParticleEnergy(energy);
 	fParticleGun->GeneratePrimaryVertex(anEvent);
 }
-
+/* -------------------------------------------------------------------- */
 FastPositronSample::FastPositronSample(G4double argDistTargetOrigin)
 {
 	distTargetOrigin = argDistTargetOrigin;
@@ -62,11 +62,6 @@ FastPositronSample::FastPositronSample(G4double argDistTargetOrigin)
 	posCounter = 0;
 	while (file >> input)
 	{
-		/*
-		G4cout << "input: " << input << G4endl;
-		G4cout << "modCount: " << modCount << G4endl;
-		G4cout << "posCounter: " << posCounter << G4endl;
-		*/
 		posTable[posCounter][modCount] = input;
 		modCount++;
 		modCount = modCount % 7;
@@ -92,13 +87,14 @@ void FastPositronSample::GeneratePrimaries(G4Event* anEvent)
 	G4ThreeVector mom;
 	energy = posTable[posCounter][6] * MeV;
 	particle = particleTable->FindParticle("e+");
-	//pos.setX(posTable[posCounter][0]);
-	pos.setX(distTargetOrigin - 2 * cm);
+	pos.setX(posTable[posCounter][0]);
 	pos.setY(posTable[posCounter][1]);
 	pos.setZ(posTable[posCounter][2]);
 	mom.setX(posTable[posCounter][3]);
 	mom.setY(posTable[posCounter][4]);
 	mom.setZ(posTable[posCounter][5]);
+
+
 	posCounter++;
 	fParticleGun->SetParticlePosition(pos);
 	fParticleGun->SetParticleMomentumDirection(mom);
@@ -106,6 +102,7 @@ void FastPositronSample::GeneratePrimaries(G4Event* anEvent)
 	fParticleGun->SetParticleEnergy(energy);
 	fParticleGun->GeneratePrimaryVertex(anEvent);
 }
+/* -------------------------------------------------------------------- */
 
 FastElectronCOMSOL::FastElectronCOMSOL()
 {
