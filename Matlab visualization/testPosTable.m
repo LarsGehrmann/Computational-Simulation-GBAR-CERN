@@ -5,6 +5,7 @@ set(0, 'defaultAxesTickLabelInterpreter','latex');
 
 
 dir = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\posTableNew.csv";
+dir = "C:\Users\Gehrm\OneDrive\Desktop\Ny mapp\posTableNew.csv";
 posTable = csvread(dir);
 % mm -> cm
 posTable(:,1:3) = posTable(:,1:3) / 10; 

@@ -1,7 +1,8 @@
 %visualize the deposited energy in the moderator because Geant4 is not working properly with that
 
 function plot_sampleWalls()
-
+close all
+clc
 saveName = "Default";
 xmin = -1;
 xmax = 4;
@@ -20,6 +21,7 @@ wall1 = zeros(4,0);
 wall2 = zeros(4,0);
 wall3 = zeros(4,0);
 wall4 = zeros(4,0);
+avgE = zeros(1,5);
 for k = 1:noHits
     switch M(k,1)
         case 0
@@ -35,48 +37,59 @@ for k = 1:noHits
     end
 end
 % mm -> cm
-wall0(1:3,:) = wall0(1:3,:)/10;    
-wall1(1:3,:) = wall1(1:3,:)/10;  
-wall2(1:3,:) = wall2(1:3,:)/10;  
-wall3(1:3,:) = wall3(1:3,:)/10;  
-wall4(1:3,:) = wall4(1:3,:)/10;  
+wall0(1:3,:) = wall0(1:3,:)/10;
+wall1(1:3,:) = wall1(1:3,:)/10;
+wall2(1:3,:) = wall2(1:3,:)/10;
+wall3(1:3,:) = wall3(1:3,:)/10;
+wall4(1:3,:) = wall4(1:3,:)/10;
 
 
 saveDirStart = "C:\Users\Gehrm\OneDrive\Desktop\Master thesis\Presentations\safe 4\Heatmaps\";
 saveDirEnd = ".png";
 
-nBins = 25;
-figure
-EGrid = zeros(nBins,nBins);
-EGridCount = zeros(nBins,nBins);
-offset = 25; % walls from -offset...offset
-step = 2;
-for k = 1:length(wall0)
-    y = 2*floor(wall0(2,k)/2);
-    i = floor((y+offset)/step) + 1;
-    z = 2*floor(wall0(3,k)/2);
-    j = floor((z+offset)/step) + 1;
-    EGrid(i,j) = EGrid(i,j) + wall0(4,k);
-    EGridCount(i,j) = EGridCount(i,j) + 1;
-end
-for i = 1:nBins
-    for j = 1:nBins
-        if EGridCount(i,j) ~= 0
-            EGrid(i,j) = EGrid(i,j) / EGridCount(i,j);
-        end
-    end
-end
 
-edges = {(-offset:step:offset),(-offset:step:offset)}; 
+
+
+
+% 0th wall -------------------------------------------------------------------------%
+nBins = 2;
+nBins = [nBins,nBins];
+figure
+% EGrid = zeros(nBins+1,nBins+1);
+% EGridCount = zeros(nBins+1,nBins+1);
+offset = 25; % walls from -offset...offset
+step = 2*offset / (nBins(1)-1);
+% for k = 1:length(wall0)
+%     y = 2*floor(wall0(2,k)/2) + step/2;
+%     i = floor((y+offset)/step) + 2;
+%     z = 2*floor(wall0(3,k)/2)+ step/2;
+%     j = floor((z+offset)/step) + 2;
+%     EGrid(i,j) = EGrid(i,j) + wall0(4,k);
+%     EGridCount(i,j) = EGridCount(i,j) + 1;
+% end
+% for i = 1:nBins+1
+%     for j = 1:nBins+1
+%         if EGridCount(i,j) ~= 0
+%             EGrid(i,j) = EGrid(i,j) / EGridCount(i,j);
+%         end
+%     end
+% end
+edges = -offset:step:offset;
+edges = {edges,edges};
 data = [wall0(2,:); wall0(3,:)]';
-hh3 = hist3(data, edges)';
-y = -offset:offset;
-z = -offset:offset;
+hh3 = hist3(data,'Edges',edges)';
+hh3 = hist3(data,'nbins',nBins)';
+size(hh3)
+%y = -offset:2:offset;
+y = cell2mat(edges(1));
+z = cell2mat(edges(2));
 imagesc(y,z,hh3)
 set(gca,'YDir','normal')
 xlabel('$y / \textrm{cm}$')
 ylabel('$z / \textrm{cm}$')
-colorbar
+hcb = colorbar;
+colorTitleHandle = get(hcb,'title');
+set(colorTitleHandle ,'String','$N \textrm{ hits}$','Interpreter','Latex');
 titleHelp = {"$\textbf{Positrons passing through zeroth sample wall}$", "$\textbf{Total positrons: } $" + string(length(wall0(1,:)))};
 title(titleHelp,'FontSize',14)
 saveDir = saveDirStart + saveName + string(0) + saveDirEnd;
@@ -90,102 +103,199 @@ imagesc(y,z,EGrid)
 set(gca,'YDir','normal')
 xlabel('$y / \textrm{cm}$')
 ylabel('$z / \textrm{cm}$')
-colorbar
+hcb = colorbar;
+colorTitleHandle = get(hcb,'title');
+set(colorTitleHandle ,'String','$\bar{E} / \textrm{MeV}$','Interpreter','Latex');
 titleHelp = {"$\bar{E} \textbf{ of positrons passing through zeroth sample wall}$", "$\textbf{Total positrons: } $" + string(length(wall0(1,:)))};
 title(titleHelp,'FontSize',14)
-saveDir = saveDirStart + saveName + string(0) + saveDirEnd;
+saveDir = saveDirStart + saveName + string(0) + "E" +  saveDirEnd;
 saveas(gcf,saveDir);
-clear y z 
+clear y z
 
-%-------------------------------------------------------------------------%
-% figure
-% edges = {(-25:2:25),(-25:2:25)}; 
-% data = [wall1(2,:); wall1(3,:)]';
-% hh3 = hist3(data, edges)';
-% y = -25:25;
-% z = -25:25;
-% imagesc(y,z,hh3)
-% set(gca,'YDir','normal')
-% xlabel('$y / \textrm{cm}$')
-% ylabel('$z / \textrm{cm}$')
-% colorbar
-% titleHelp = {"$\textbf{Positrons passing through first sample wall}$", "$\textbf{Total positrons: } $" + string(length(wall1(1,:)))};
-% title(titleHelp,'FontSize',14)
-% saveDir = saveDirStart + saveName + string(1) + saveDirEnd;
-% saveas(gcf,saveDir);
-% 
-% figure
-% edges = {(-25:2:25),(-25:2:25)}; 
-% data = [wall2(2,:); wall2(3,:)]';
-% hh3 = hist3([wall2(2,:)', wall2(3,:)'],'Edges', edges)';
-% y = -25:25;
-% z = -25:25;
-% imagesc(y,z,hh3)
-% set(gca,'YDir','normal')
-% xlabel('$y / \textrm{cm}$')
-% ylabel('$z / \textrm{cm}$')
-% colorbar
-% titleHelp = {"$\textbf{Positrons passing through second sample wall}$", "$\textbf{Total positrons: } $" + string(length(wall2(1,:)))};
-% title(titleHelp,'FontSize',14)
-% 
-% saveDir = saveDirStart + saveName + string(2) + saveDirEnd;
-% saveas(gcf,saveDir);
-% 
-% figure
-% edges = {(-25:2:25),(-25:2:25)}; 
-% data = [wall3(1,:); wall3(3,:)]';
-% hh3 = hist3(data, edges)';
-% y = -25:25;
-% z = -25:25;
-% imagesc(y,z,hh3)
-% set(gca,'YDir','normal')
-% xlabel('$x / \textrm{cm}$')
-% ylabel('$z / \textrm{cm}$')
-% colorbar
-% titleHelp = {"$\textbf{Positrons passing through third sample wall}$", "$\textbf{Total positrons: } $" + string(length(wall3(1,:)))};
-% title(titleHelp,'FontSize',14)
-% saveDir = saveDirStart + saveName + string(3) + saveDirEnd;
-% saveas(gcf,saveDir);
-% clear y z
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% 
-% % figure
-% % edges = {(-10:1:10),(-10:1:10)}; 
-% % data = [wall4(1,:); wall4(3,:)]';
-% % hh3 = hist3(data, edges)';
-% % y = -10:10;
-% % z = -10:10;
-% % imagesc(y,z,hh3)
-% % set(gca,'YDir','normal')
-% % xlabel('$x / \textrm{cm}$')
-% % ylabel('$z / \textrm{cm}$')
-% % colorbar
-% % titleHelp = {"$\textbf{Positrons passing through fourth sample wall}$", "$\textbf{Total positrons: } $" + string(length(wall4(1,:)))};
-% % title(titleHelp,'FontSize',14)
+% 1st -------------------------------------------------------------------------%
+nBins = 25;
+figure
+EGrid = zeros(nBins+1,nBins+1);
+EGridCount = zeros(nBins+1,nBins+1);
+offset = 25; % walls from -offset...offset
+step = 2*offset / nBins;
+for k = 1:length(wall1)
+    y = 2*floor(wall1(2,k)/2);
+    i = floor((y+offset)/step) + 2;
+    z = 2*floor(wall1(3,k)/2);
+    j = floor((z+offset)/step) + 2;
+    EGrid(i,j) = EGrid(i,j) + wall1(4,k);
+    EGridCount(i,j) = EGridCount(i,j) + 1;
+end
 
-% -----------------------------------------------------------------------------------------------------------------------------------------------------------
+for i = 1:nBins+1
+    for j = 1:nBins+1
+        if EGridCount(i,j) ~= 0
+            EGrid(i,j) = EGrid(i,j) / EGridCount(i,j);
+        end
+    end
+end
+edges = {(-offset:step:offset),(-offset:step:offset)};
+data = [wall1(2,:); wall1(3,:)]';
+hh3 = hist3(data, edges)';
+y = -offset:2:offset;
+z = -offset:2:offset;
+imagesc(y,z,hh3)
+set(gca,'YDir','normal')
+xlabel('$y / \textrm{cm}$')
+ylabel('$z / \textrm{cm}$')
+hcb = colorbar;
+colorTitleHandle = get(hcb,'title');
+set(colorTitleHandle ,'String','$N \textrm{ hits}$','Interpreter','Latex');
+titleHelp = {"$\textbf{Positrons passing through first sample wall}$", "$\textbf{Total positrons: } $" + string(length(wall1(1,:)))};
+title(titleHelp,'FontSize',14)
+saveDir = saveDirStart + saveName + string(1) + saveDirEnd;
+saveas(gcf,saveDir);
+
+figure
+data = [EGrid(2,:); EGrid(3,:)]';
+y = -offset:offset;
+z = -offset:offset;
+imagesc(y,z,EGrid)
+set(gca,'YDir','normal')
+xlabel('$y / \textrm{cm}$')
+ylabel('$z / \textrm{cm}$')
+hcb = colorbar;
+colorTitleHandle = get(hcb,'title');
+set(colorTitleHandle ,'String','$\bar{E} / \textrm{MeV}$','Interpreter','Latex');
+titleHelp = {"$\bar{E} \textbf{ of positrons passing through first sample wall}$", "$\textbf{Total positrons: } $" + string(length(wall1(1,:)))};
+title(titleHelp,'FontSize',14)
+saveDir = saveDirStart + saveName + string(1) + "E" +  saveDirEnd;
+saveas(gcf,saveDir);
+clear y z
+
+% 2nd wall -------------------------------------------------------------------------%
+nBins = 25;
+figure
+EGrid = zeros(nBins+1,nBins+1);
+EGridCount = zeros(nBins+1,nBins+1);
+offset = 25; % walls from -offset...offset
+step = 2*offset / nBins;
+for k = 1:length(wall2)
+    y = 2*floor(wall2(2,k)/2);
+    i = floor((y+offset)/step) + 2;
+    z = 2*floor(wall2(3,k)/2);
+    j = floor((z+offset)/step) + 2;
+    EGrid(i,j) = EGrid(i,j) + wall2(4,k);
+    EGridCount(i,j) = EGridCount(i,j) + 1;
+end
+for i = 1:nBins+1
+    for j = 1:nBins+1
+        if EGridCount(i,j) ~= 0
+            EGrid(i,j) = EGrid(i,j) / EGridCount(i,j);
+        end
+    end
+end
+edges = {(-offset:step:offset),(-offset:step:offset)};
+data = [wall2(2,:); wall2(3,:)]';
+hh3 = hist3(data, edges)';
+y = -offset:2:offset;
+z = -offset:2:offset;
+imagesc(y,z,hh3)
+set(gca,'YDir','normal')
+xlabel('$y / \textrm{cm}$')
+ylabel('$z / \textrm{cm}$')
+hcb = colorbar;
+colorTitleHandle = get(hcb,'title');
+set(colorTitleHandle ,'String','$N \textrm{ hits}$','Interpreter','Latex');
+titleHelp = {"$\textbf{Positrons passing through second sample wall}$", "$\textbf{Total positrons: } $" + string(length(wall2(1,:)))};
+title(titleHelp,'FontSize',14)
+saveDir = saveDirStart + saveName + string(2) + saveDirEnd;
+saveas(gcf,saveDir);
+
+figure
+data = [EGrid(2,:); EGrid(3,:)]';
+y = -offset:2:offset;
+z = -offset:2:offset;
+imagesc(y,z,EGrid)
+set(gca,'YDir','normal')
+xlabel('$y / \textrm{cm}$')
+ylabel('$z / \textrm{cm}$')
+hcb = colorbar;
+colorTitleHandle = get(hcb,'title');
+set(colorTitleHandle ,'String','$\bar{E} / \textrm{MeV}$','Interpreter','Latex');
+titleHelp = {"$\bar{E} \textbf{ of positrons passing through second sample wall}$", "$\textbf{Total positrons: } $" + string(length(wall2(1,:)))};
+title(titleHelp,'FontSize',14)
+saveDir = saveDirStart + saveName + string(2) + "E" +  saveDirEnd;
+saveas(gcf,saveDir);
+clear y z
+% 3rd wall -------------------------------------------------------------------------%
+nBins = 25;
+figure
+EGrid = zeros(nBins+1,nBins+1);
+EGridCount = zeros(nBins+1,nBins+1);
+offset = 25; % walls from -offset...offset
+step = 2*offset / nBins;
+for k = 1:length(wall3)
+    x = 2*floor(wall3(1,k)/2);
+    i = floor((x+offset)/step) + 2;
+    z = 2*floor(wall3(3,k)/2);
+    j = floor((z+offset)/step) + 2;
+    EGrid(i,j) = EGrid(i,j) + wall3(4,k);
+    EGridCount(i,j) = EGridCount(i,j) + 1;
+end
+for i = 1:nBins+1
+    for j = 1:nBins+1
+        if EGridCount(i,j) ~= 0
+            EGrid(i,j) = EGrid(i,j) / EGridCount(i,j);
+        end
+    end
+end
+edges = {(-offset:step:offset),(-offset:step:offset)};
+data = [wall3(1,:); wall3(3,:)]';
+hh3 = hist3(data, edges)';
+x = -offset:2:offset;
+z = -offset:2:offset;
+imagesc(x,z,hh3)
+set(gca,'YDir','normal')
+xlabel('$x / \textrm{cm}$')
+ylabel('$z / \textrm{cm}$')
+hcb = colorbar;
+colorTitleHandle = get(hcb,'title');
+set(colorTitleHandle ,'String','$N \textrm{ hits}$','Interpreter','Latex');
+titleHelp = {"$\textbf{Positrons passing through third sample wall}$", "$\textbf{Total positrons: } $" + string(length(wall2(1,:)))};
+title(titleHelp,'FontSize',14)
+saveDir = saveDirStart + saveName + string(3) + saveDirEnd;
+saveas(gcf,saveDir);
+
+figure
+data = [EGrid(1,:); EGrid(3,:)]';
+x = -offset:offset;
+z = -offset:offset;
+imagesc(x,z,EGrid)
+set(gca,'YDir','normal')
+xlabel('$x / \textrm{cm}$')
+ylabel('$z / \textrm{cm}$')
+hcb = colorbar;
+colorTitleHandle = get(hcb,'title');
+set(colorTitleHandle ,'String','$\bar{E} / \textrm{MeV}$','Interpreter','Latex');
+titleHelp = {"$\bar{E} \textbf{ of positrons passing through third sample wall}$", "$\textbf{Total positrons: } $" + string(length(wall2(1,:)))};
+title(titleHelp,'FontSize',14)
+saveDir = saveDirStart + saveName + string(3) + "E" +  saveDirEnd;
+saveas(gcf,saveDir);
+clear x z
+
+% 4th wall -----------------------------------------------------------------------------------------------------------------------------------------------------------
 nBins = 20;
-EGrid = zeros(nBins,nBins);
-EGridCount = zeros(nBins,nBins);
+EGrid = zeros(nBins+1,nBins+1);
+EGridCount = zeros(nBins+1,nBins+1);
 offset = 10; % walls from -offset...offset
-step = 1;
+step = 2*offset / nBins;
 for k = 1:length(wall4)
     x = floor(wall4(1,k));
-    i = floor((x+offset)/step)+1;
+    i = floor((x+offset)/step)+2;
     z = floor(wall4(3,k));
-    j = floor((z+offset)/step)+1;
+    j = floor((z+offset)/step)+2;
     EGrid(i,j) = EGrid(i,j) + wall4(4,k);
     EGridCount(i,j) = EGridCount(i,j) + 1;
 end
-for i = 1:nBins
-    for j = 1:nBins
+for i = 1:nBins+1
+    for j = 1:nBins+1
         if EGridCount(i,j) ~= 0
             EGrid(i,j) = EGrid(i,j) / EGridCount(i,j);
         end
@@ -193,36 +303,38 @@ for i = 1:nBins
 end
 
 figure
-edges = {(-10:1:10),(-10:1:10)}; 
+edges = {(-10:1:10),(-10:1:10)};
 data = [wall4(1,:); wall4(3,:)]';
 hh3 = hist3(data, edges)';
-y = -10:10;
+x = -10:10;
 z = -10:10;
-imagesc(y,z,hh3)
+imagesc(x,z,hh3)
 set(gca,'YDir','normal')
 xlabel('$x / \textrm{cm}$')
 ylabel('$z / \textrm{cm}$')
-colorbar
+hcb = colorbar;
+colorTitleHandle = get(hcb,'title');
+set(colorTitleHandle ,'String','$N \textrm{ hits}$','Interpreter','Latex');
 titleHelp = {"$\textbf{Positrons passing through fourth sample wall}$", "$\textbf{Total positrons: } $" + string(length(wall4(1,:)))};
 title(titleHelp,'FontSize',14)
+saveDir = saveDirStart + saveName + string(4) + saveDirEnd;
+saveas(gcf,saveDir);
 
 figure
 data = [EGrid(1,:); EGrid(3,:)]';
 x = -offset:offset;
 z = -offset:offset;
-imagesc(y,z,EGrid)
+imagesc(x,z,EGrid)
 set(gca,'YDir','normal')
 xlabel('$x / \textrm{cm}$')
 ylabel('$z / \textrm{cm}$')
-colorbar
+hcb = colorbar;
+colorTitleHandle = get(hcb,'title');
+set(colorTitleHandle ,'String','$\bar{E} / \textrm{MeV}$','Interpreter','Latex');
 titleHelp = {"$\bar{E} \textbf{ of positrons passing through fourth sample wall}$", "$\textbf{Total positrons: } $" + string(length(wall4(1,:)))};
 title(titleHelp,'FontSize',14)
-saveDir = saveDirStart + saveName + string(0) + "E" +  saveDirEnd;
+saveDir = saveDirStart + saveName + string(4) + "E" +  saveDirEnd;
 saveas(gcf,saveDir);
-
-
-
-
 % -----------------------------------------------------------------------------------------------------------------------------------------------------------
 smallHits = 0;
 for i=1:length(wall4)
@@ -230,7 +342,7 @@ for i=1:length(wall4)
     z = wall4(3,i);
     if x > xmin && x < xmax
         if z > zmin && z < zmax
-                    smallHits = smallHits + 1;
+            smallHits = smallHits + 1;
 
         end
     end
@@ -247,3 +359,5 @@ fprintf("Avg. 4th wall, (x,y,z)/cm: " + string(mean(wall4(1,:))) + ", " + string
 saveDir = saveDirStart + saveName + string(4) + saveDirEnd;
 saveas(gcf,saveDir);
 end
+
+
