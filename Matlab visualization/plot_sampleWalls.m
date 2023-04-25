@@ -1,8 +1,6 @@
 %visualize the deposited energy in the moderator because Geant4 is not working properly with that
 
-function plot_sampleWalls()
-close all
-clc
+function plot_sampleWalls(modRadius)
 
 set(0,'defaultTextInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
@@ -61,11 +59,11 @@ wall4(1:3,:) = wall4(1:3,:)/10;
 %     end
 % end
 
-plotWall(4,wall4,20,10, saveDirStart, saveName, saveDirEnd)
+plotWall(4,wall4,20,10, saveDirStart, saveName, saveDirEnd, modRadius)
 
 end
 
-function plotWall(wallNo,wallHit,nBins,offset, saveDirStart, saveName, saveDirEnd)
+function plotWall(wallNo,wallHit,nBins,offset, saveDirStart, saveName, saveDirEnd, modRadius)
 idx1 = 0;
 idx2 = 0;
 if wallNo == 0
@@ -121,6 +119,7 @@ for i = 1:nBins
 end
 dir1 = [-offset offset];
 dir2 = [-offset offset];
+avgE = round(1000 * avgE / sum(sum(HitGrid))) / 1000;
 
 figure
 imagesc(dir1,dir2,HitGrid')
@@ -145,15 +144,11 @@ hcb = colorbar;
 colorTitleHandle = get(hcb,'title');
 set(colorTitleHandle ,'String','$\bar{E} / \textrm{MeV}$','Interpreter','Latex');
 titleHelpHelp = "$\bar{E} \textbf{ of positrons passing through }$" + noString + "$\textbf{ sample wall}$";
-titleHelp = {titleHelpHelp, "$\textbf{Total positrons: } $" + string(length(wallHit(1,:))), "$\textbf{Total average: }$" + string(avgE/sum(sum(HitGrid))) + "$\textbf{MeV}$"};
+titleHelp = {titleHelpHelp, "$\textbf{Total positrons: } $" + string(length(wallHit(1,:))), "$\textbf{Total average: }$" + string(avgE) + "$\textbf{MeV}$"};
 title(titleHelp,'FontSize',14)
 saveDir = saveDirStart + saveName + string(wallNo) + "E" +  saveDirEnd;
 saveas(gcf,saveDir);
 
-
-% implement maybe with circle radius as well ??
-%modRadius = 1.5; % moderator radius, assume
-modRadius = 3.5;
 maxIdx = 1;
 noEncircled = zeros(length(wallHit),1);
 countEncircled = 0;
@@ -200,7 +195,7 @@ if wallNo == 4
             circleCount = circleCount + 1;
         end
     end
-    ECircleAvg = sum(ECircle) / maxEnclosed;
+    ECircleAvg = round(1000*sum(ECircle) / maxEnclosed) / 1000;
     fprintf("Average energy inside circle: " + string(ECircleAvg) + "MeV\n");
     edges = logspace(-2,1,50);
     figure

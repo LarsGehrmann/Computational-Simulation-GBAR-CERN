@@ -2,11 +2,14 @@
 
 clear all, clc, close all;
 
+modRadius = 2.5; % cm
+
 %sample();
 %plot_scaleB();
 %plot_distTargetOrigin();
 %plot_Annihis();
-plot_sampleWalls()
+%showPosTableHisto()
+plot_sampleWalls(modRadius)
 %plot_Sample4distTargetOrigin()
 %plot_Sample4ModeratorHeight()
 %plot_Sample4Fields()
