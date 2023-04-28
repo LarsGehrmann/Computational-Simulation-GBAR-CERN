@@ -10,9 +10,9 @@
 class ConstructionParameters
 {
 public:
-	ConstructionParameters(G4int choiceGeometry, G4double argDModerator, G4double argDModeratorFront, G4double argWidthModeratorPart, 
+	ConstructionParameters(G4int choiceGeometry, G4double argDModeratorTotal, G4double argDModeratorFront, G4double argWidthModeratorPart, 
         G4double argDistTargetOrigin, G4double moderatorHeight, G4double scaleBDipole, G4double scaleBNeon, 
-        G4double scaleBSolenoid, G4double scaleBTarget, G4double scaleE); // regular constructor
+        G4double scaleBSolenoid, G4double scaleBTarget, G4double scaleE, G4String moderatorMaterial); // regular constructor
     ConstructionParameters(ConstructionParameters &toCopy); // copy constructor
 
 
@@ -23,9 +23,9 @@ public:
 
 
     G4int GetChoiceGeometry();
-    G4double GetDModerator();
+    G4double GetDModeratorTotal();
     G4double GetDModeratorFront();
-    G4double GetWidthModeratorPart();
+    G4double GetWidthModerator();
     G4double GetDistTargetOrigin();
     G4double GetModeratorHeight();
     G4double GetScaleBDipole();
@@ -35,9 +35,9 @@ public:
     G4double GetScaleE();
     G4String GetModeratorMaterial();
 
-    void SetDModerator(G4double argDModerator);
+    void SetDModeratorTotal(G4double argDModeratorTotal);
     void SetDModeratorFront(G4double argDModeratorFront);
-    void SetWidthModeratorPart(G4double argWidthModeratorPart);
+    void SetWidthModerator(G4double argWidthModerator);
     void SetDistTargetOrigin(G4double argDistTargetOrigin);
     void SetModeratorHeight(G4double argModeratorHeight);
     void SetScaleBDipole(G4double argScaleBDipole);
@@ -51,7 +51,7 @@ public:
 
 private:
     G4int choiceGeometry;
-    G4double dModerator, dModeratorFront, widthModeratorPart, distTargetOrigin, moderatorHeight, scaleBDipole,
+    G4double dModeratorTotal, dModeratorFront, widthModerator, distTargetOrigin, moderatorHeight, scaleBDipole,
         scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE;
     G4String moderatorMaterial;
 };

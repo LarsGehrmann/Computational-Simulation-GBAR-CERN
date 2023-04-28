@@ -67,6 +67,12 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 		}
 	}
 	*/
+
+
+
+
+
+
 	/*
 	if (aStep->GetPreStepPoint()->GetProcessDefinedStep()) {
 		const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
@@ -156,6 +162,22 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 	}
 	*/
 
+
+if (aStep->GetPreStepPoint()->GetProcessDefinedStep()) {
+	const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
+	const G4String& volumeName = aStep->GetTrack()->GetVolume()->GetName();
+	if (procName == "annihil" && volumeName == "physicalModeratorFront") {
+		G4AnalysisManager* man = G4AnalysisManager::Instance();
+		man->SetVerboseLevel(0);
+		man->FillNtupleDColumn(1, 0, aStep->GetPreStepPoint()->GetPosition().getX());
+		man->FillNtupleDColumn(1, 1, aStep->GetPreStepPoint()->GetPosition().getY());
+		man->FillNtupleDColumn(1, 2, aStep->GetPreStepPoint()->GetPosition().getZ());
+		man->FillNtupleDColumn(1, 3, aStep->GetPreStepPoint()->GetKineticEnergy());
+		man->AddNtupleRow(1);
+
+	}
+}
+
 	if (aStep->GetPreStepPoint()->GetProcessDefinedStep()) {
 		//const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
 		const G4String& particleName = aStep->GetTrack()->GetDefinition()->GetParticleName();
@@ -168,14 +190,10 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 				G4AnalysisManager* man = G4AnalysisManager::Instance();
 				man->SetVerboseLevel(0);
 				man->FillNtupleDColumn(5, 0, 0);
-				x = aStep->GetPreStepPoint()->GetPosition().getX();
-				y = aStep->GetPreStepPoint()->GetPosition().getY();
-				z = aStep->GetPreStepPoint()->GetPosition().getZ();
-				E = aStep->GetPreStepPoint()->GetKineticEnergy();
-				man->FillNtupleDColumn(5, 1, x);
-				man->FillNtupleDColumn(5, 2, y);
-				man->FillNtupleDColumn(5, 3, z);
-				man->FillNtupleDColumn(5, 4, E);
+				man->FillNtupleDColumn(5, 1, aStep->GetPreStepPoint()->GetPosition().getX());
+				man->FillNtupleDColumn(5, 2, aStep->GetPreStepPoint()->GetPosition().getY());
+				man->FillNtupleDColumn(5, 3, aStep->GetPreStepPoint()->GetPosition().getZ());
+				man->FillNtupleDColumn(5, 4, aStep->GetPreStepPoint()->GetKineticEnergy());
 				man->AddNtupleRow(5);
 			}
 			else if (volumeName == "physicalSampleWall1"  && lastEventID[1] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
@@ -184,14 +202,10 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 				G4AnalysisManager* man = G4AnalysisManager::Instance();
 				man->SetVerboseLevel(0);
 				man->FillNtupleDColumn(5, 0, 1.);
-				x = aStep->GetPreStepPoint()->GetPosition().getX();
-				y = aStep->GetPreStepPoint()->GetPosition().getY();
-				z = aStep->GetPreStepPoint()->GetPosition().getZ();
-				E = aStep->GetPreStepPoint()->GetKineticEnergy();
-				man->FillNtupleDColumn(5, 1, x);
-				man->FillNtupleDColumn(5, 2, y);
-				man->FillNtupleDColumn(5, 3, z);
-				man->FillNtupleDColumn(5, 4, E);
+				man->FillNtupleDColumn(5, 1, aStep->GetPreStepPoint()->GetPosition().getX());
+				man->FillNtupleDColumn(5, 2, aStep->GetPreStepPoint()->GetPosition().getY());
+				man->FillNtupleDColumn(5, 3, aStep->GetPreStepPoint()->GetPosition().getZ());
+				man->FillNtupleDColumn(5, 4, aStep->GetPreStepPoint()->GetKineticEnergy());
 				man->AddNtupleRow(5);
 			}
 			else if (volumeName == "physicalSampleWall2" && lastEventID[2] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
@@ -200,14 +214,10 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 				G4AnalysisManager* man = G4AnalysisManager::Instance();
 				man->SetVerboseLevel(0);
 				man->FillNtupleDColumn(5, 0, 2.);
-				x = aStep->GetPreStepPoint()->GetPosition().getX();
-				y = aStep->GetPreStepPoint()->GetPosition().getY();
-				z = aStep->GetPreStepPoint()->GetPosition().getZ();
-				E = aStep->GetPreStepPoint()->GetKineticEnergy();
-				man->FillNtupleDColumn(5, 1, x);
-				man->FillNtupleDColumn(5, 2, y);
-				man->FillNtupleDColumn(5, 3, z);
-				man->FillNtupleDColumn(5, 4, E);
+				man->FillNtupleDColumn(5, 1, aStep->GetPreStepPoint()->GetPosition().getX());
+				man->FillNtupleDColumn(5, 2, aStep->GetPreStepPoint()->GetPosition().getY());
+				man->FillNtupleDColumn(5, 3, aStep->GetPreStepPoint()->GetPosition().getZ());
+				man->FillNtupleDColumn(5, 4, aStep->GetPreStepPoint()->GetKineticEnergy());
 				man->AddNtupleRow(5);
 			}
 			else if (volumeName == "physicalSampleWall3" && lastEventID[3] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
@@ -216,14 +226,10 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 				G4AnalysisManager* man = G4AnalysisManager::Instance();
 				man->SetVerboseLevel(0);
 				man->FillNtupleDColumn(5, 0, 3.);
-				x = aStep->GetPreStepPoint()->GetPosition().getX();
-				y = aStep->GetPreStepPoint()->GetPosition().getY();
-				z = aStep->GetPreStepPoint()->GetPosition().getZ();
-				E = aStep->GetPreStepPoint()->GetKineticEnergy();
-				man->FillNtupleDColumn(5, 1, x);
-				man->FillNtupleDColumn(5, 2, y);
-				man->FillNtupleDColumn(5, 3, z);
-				man->FillNtupleDColumn(5, 4, E);
+				man->FillNtupleDColumn(5, 1, aStep->GetPreStepPoint()->GetPosition().getX());
+				man->FillNtupleDColumn(5, 2, aStep->GetPreStepPoint()->GetPosition().getY());
+				man->FillNtupleDColumn(5, 3, aStep->GetPreStepPoint()->GetPosition().getZ());
+				man->FillNtupleDColumn(5, 4, aStep->GetPreStepPoint()->GetKineticEnergy());
 				man->AddNtupleRow(5);
 			}
 			else if (volumeName == "physicalSampleWall4" && lastEventID[4] != G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID()) {
@@ -232,14 +238,10 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 				G4AnalysisManager* man = G4AnalysisManager::Instance();
 				man->SetVerboseLevel(0);
 				man->FillNtupleDColumn(5, 0, 4.);
-				x = aStep->GetPreStepPoint()->GetPosition().getX();
-				y = aStep->GetPreStepPoint()->GetPosition().getY();
-				z = aStep->GetPreStepPoint()->GetPosition().getZ();
-				E = aStep->GetPreStepPoint()->GetKineticEnergy();
-				man->FillNtupleDColumn(5, 1, x);
-				man->FillNtupleDColumn(5, 2, y);
-				man->FillNtupleDColumn(5, 3, z);
-				man->FillNtupleDColumn(5, 4, E);
+				man->FillNtupleDColumn(5, 1, aStep->GetPreStepPoint()->GetPosition().getX());
+				man->FillNtupleDColumn(5, 2, aStep->GetPreStepPoint()->GetPosition().getY());
+				man->FillNtupleDColumn(5, 3, aStep->GetPreStepPoint()->GetPosition().getZ());
+				man->FillNtupleDColumn(5, 4, aStep->GetPreStepPoint()->GetKineticEnergy());
 				man->AddNtupleRow(5);
 			}
 		}

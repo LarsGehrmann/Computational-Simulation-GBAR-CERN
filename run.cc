@@ -18,14 +18,13 @@ MyRunAction::MyRunAction(int argRunNo, G4double argdModerator, G4double argAvgE,
 	std::stringstream strRunID;
 	strRunID << runNo;
 
-	G4cout << "Run ID: " << runNo << G4endl;
 	man = G4AnalysisManager::Instance();
 	man->SetVerboseLevel(3);
 
 	G4String fileName, tupleName;
 
 
-	fileName = "SampleWalls" + strRunID.str() + ".csv";
+	fileName = "defaultFileName" + strRunID.str() + ".csv";
 	man->OpenFile(fileName);
 }
 MyRunAction::MyRunAction(int argRunNo, G4double argdModerator, G4double argAvgE, G4double argDistTargetOrigin, G4double argDistTarMod, G4String argFileName)
@@ -40,7 +39,6 @@ MyRunAction::MyRunAction(int argRunNo, G4double argdModerator, G4double argAvgE,
 	std::stringstream strRunID;
 	strRunID << runNo;
 
-	G4cout << "Run ID: " << runNo << G4endl;
 	man = G4AnalysisManager::Instance();
 	man->SetVerboseLevel(3);
 
@@ -71,6 +69,4 @@ void MyRunAction::EndOfRunAction(const G4Run* run)
 	man->CloseFile();
 
 	G4int runID = run->GetRunID();
-	G4cout << "Finished run number: " << runID << G4endl;
-
 }

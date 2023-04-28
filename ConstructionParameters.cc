@@ -1,19 +1,16 @@
 #include "ConstructionParameters.hh"
 
 
-ConstructionParameters::ConstructionParameters(G4int argChoiceGeometry, G4double argDModerator, G4double argDModeratorFront,
-    G4double argWidthModeratorPart, G4double argDistTargetOrigin,
-
-    G4double argModeratorHeight, G4double argScaleBDipole,
-    G4double argScaleBNeon, G4double argScaleBSolenoid, G4double argScaleBTarget, G4double argScaleE)
+ConstructionParameters::ConstructionParameters(G4int argChoiceGeometry, G4double argDModeratorTotal, G4double argDModeratorFront,
+    G4double argWidthModerator, G4double argDistTargetOrigin, G4double argModeratorHeight, G4double argScaleBDipole,
+    G4double argScaleBNeon, G4double argScaleBSolenoid, G4double argScaleBTarget, G4double argScaleE, G4String argModeratorMaterial)
     :
-    choiceGeometry(argChoiceGeometry), dModerator(argDModerator), dModeratorFront(argDModeratorFront),
-    widthModeratorPart(argWidthModeratorPart), distTargetOrigin(argDistTargetOrigin), moderatorHeight(argModeratorHeight),
+    choiceGeometry(argChoiceGeometry), dModeratorTotal(argDModeratorTotal), dModeratorFront(argDModeratorFront),
+    widthModerator(argWidthModerator), distTargetOrigin(argDistTargetOrigin), moderatorHeight(argModeratorHeight),
     scaleBDipole(argScaleBDipole), scaleBNeon(argScaleBNeon), scaleBSolenoid(argScaleBSolenoid),
     scaleBTarget(argScaleBTarget),
-    scaleE(argScaleE)
+    scaleE(argScaleE), moderatorMaterial(argModeratorMaterial)
 {
-    G4cout << "ConstructionParameters constructor called" << G4endl;
 }
 
 ConstructionParameters::~ConstructionParameters() {
@@ -29,15 +26,15 @@ ConstructionParameters::ConstructionParameters(ConstructionParameters &toCopy) {
 G4int ConstructionParameters::GetChoiceGeometry() {
     return choiceGeometry;
 }
-G4double ConstructionParameters::GetDModerator() {
-    return dModerator;
+G4double ConstructionParameters::GetDModeratorTotal() {
+    return dModeratorTotal;
 }
 
 G4double ConstructionParameters::GetDModeratorFront() {
     return dModeratorFront;
 }
-G4double ConstructionParameters::GetWidthModeratorPart() {
-    return widthModeratorPart;
+G4double ConstructionParameters::GetWidthModerator() {
+    return widthModerator;
 }
 G4double ConstructionParameters::GetDistTargetOrigin() {
     return distTargetOrigin;
@@ -64,16 +61,16 @@ G4String ConstructionParameters::GetModeratorMaterial() {
     return moderatorMaterial;
 }
 
-void ConstructionParameters::SetDModerator(G4double argDModerator) {
-    dModerator = argDModerator;
+void ConstructionParameters::SetDModeratorTotal(G4double argDModeratorTotal) {
+    dModeratorTotal = argDModeratorTotal;
 }
 void ConstructionParameters::SetDModeratorFront(G4double argDModeratorFront) {
     dModeratorFront = argDModeratorFront;
 }
 
 
-void ConstructionParameters::SetWidthModeratorPart(G4double argWidthModeratorPart) {
-    widthModeratorPart = argWidthModeratorPart;
+void ConstructionParameters::SetWidthModerator(G4double argWidthModerator) {
+    widthModerator = argWidthModerator;
 }
 void ConstructionParameters::SetDistTargetOrigin(G4double argDistTargetOrigin) {
     distTargetOrigin = argDistTargetOrigin;
@@ -123,7 +120,7 @@ void ConstructionParameters::StoreParameters(int runNumber) {
     man->OpenFile(fileName);
 
     man->FillNtupleDColumn(0, 0, choiceGeometry);
-    man->FillNtupleDColumn(0, 1, dModerator);
+    man->FillNtupleDColumn(0, 1, dModeratorTotal);
     man->FillNtupleDColumn(0, 2, dModeratorFront);
     man->FillNtupleDColumn(0, 3, distTargetOrigin);
     man->FillNtupleDColumn(0, 4, moderatorHeight);
@@ -153,7 +150,7 @@ void ConstructionParameters::StoreParameters(int runNumber, G4String argFileName
 
 
     man->FillNtupleDColumn(0, 0, choiceGeometry);
-    man->FillNtupleDColumn(0, 1, dModerator);
+    man->FillNtupleDColumn(0, 1, dModeratorTotal);
     man->FillNtupleDColumn(0, 2, dModeratorFront);
     man->FillNtupleDColumn(0, 3, distTargetOrigin);
     man->FillNtupleDColumn(0, 4, moderatorHeight);

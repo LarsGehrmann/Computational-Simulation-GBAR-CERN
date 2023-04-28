@@ -63,24 +63,24 @@ private:
     G4double rTargetOut, dTargetOut, rTargetIn, dEffectiveTarget, dTargetIn, lengthModerator, widthModerator, widthModeratorPart, worldVertices,
         heightWorld, lengthWorld, widthWorld;      
         */
-    G4Box* solidWorld, * solidModerator, * solidModeratorEnd, *solidModeratorFront;
+    G4Box* solidWorld,  * solidModeratorFront, * solidModeratorBack;
     G4Tubs* solidTargetOut, * solidTargetIn;
     G4SubtractionSolid *solidTarget;
-    G4VSolid *coilsSolid, *electrodeSolid, *solenoidSolid, *tarSolid,  *modSolid, *sampleWallSolid, * sampleWallSolid4;
+    G4VSolid *coilsSolid, *electrodeSolid, *solenoidSolid, *tarSolid,  *modCOMSOLSolid, *sampleWallSolid, * sampleWallSolid4;
 
     G4RotationMatrix * RotationTarget, * RotationModerator, * RotationSampleWall2, * RotationSampleWall3, * RotationSampleWall4;
     G4ThreeVector zTrans;
     // materials
-    G4Material* worldMat, * targetMaterial, * moderatorMaterial, * moderatorEndMaterial, * coilsMaterial;
+    G4Material* worldMat, * targetMaterial, * moderatorMaterial, * coilsMaterial;
     // G4Elements and G4Materials
     G4Element * elNe, * elH, * elW;
     G4Material  * Ne, * H2, * W;
     // logical volumes
-    G4LogicalVolume *logicTarget, *logicModerator, *logicModeratorEnd, *logicModeratorFront, *logicWorld, *logicCoils, *logicElectrode, *logicSolenoid, *logicTar, 
-        *logicMod, *logicSampleWall, * logicSampleWall0, * logicSampleWall1, * logicSampleWall2, * logicSampleWall3, * logicSampleWall4;
+    G4LogicalVolume *logicTarget, *logicModeratorFront, *logicModeratorBack, *logicWorld, *logicCoils, *logicElectrode, *logicSolenoid, *logicTar, 
+        *logicModCOMSOL, *logicSampleWall, * logicSampleWall0, * logicSampleWall1, * logicSampleWall2, * logicSampleWall3, * logicSampleWall4;
     // physical volumes
-    G4VPhysicalVolume *physicalTarget, *physicalModerator, *physicalModeratorEnd, *physicalModeratorFront, *physicalWorld, *physicalCoils, *physicalElectrode, 
-        *physicalSolenoid, *physicalTar, *physicalMod, *physicalSampleWall, * physicalSampleWall0, * physicalSampleWall1, * physicalSampleWall2, * physicalSampleWall3, * physicalSampleWall4;
+    G4VPhysicalVolume * physicalWorld, *physicalTarget, *physicalModeratorFront, * physicalModeratorBack,  *physicalCoils, *physicalElectrode,
+        *physicalSolenoid, *physicalModCOMSOL,  *physicalTar, *physicalSampleWall, * physicalSampleWall0, * physicalSampleWall1, * physicalSampleWall2, * physicalSampleWall3, * physicalSampleWall4;
     // sensitive detector
     //MySensitiveDetector *sensDetModerator, *sensDetModeratorEnd, *sensDetSampleWall;
 

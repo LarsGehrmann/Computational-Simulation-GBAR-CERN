@@ -22,8 +22,11 @@ void createTuples() {
     man->FinishNtuple(0);
 
 
-	man->CreateNtuple("dead", "_");
-	man->CreateNtupleDColumn(1, "dead");
+	man->CreateNtuple("modFrontAnnihis", "_");
+	man->CreateNtupleDColumn(1, "x");
+	man->CreateNtupleDColumn(1, "y");
+	man->CreateNtupleDColumn(1, "z");
+	man->CreateNtupleDColumn(1, "E");
 	man->FinishNtuple(1);
 
 	man->CreateNtuple("Histogram", "_");

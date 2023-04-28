@@ -25,9 +25,8 @@
 #include "createTuples.hh"
 
 // choiceGeometry determines geometric setup:
-// 0 real geometry
+// 0 Sampling wall geometry
 // 1 COMSOL geometry
-// 2 sample e+ geometry
 /*--------------------------------------------*/
 // choiceParticle determines type of particles:
 // 0 fast e- from actual target
@@ -36,6 +35,8 @@
 // 3 fast e+ from COMSOL target
 // 4 slow e+ from COMSOL moderator
 // 5 slow e+ from actual moderator 
+/*--------------------------------------------*/
+// choiceStepping determines which data will be stored
 
 
 // Run again sampling to obtain new posTable.txt :)) you doin' good and will be finished soon ;D
@@ -44,30 +45,33 @@ int main(int argc, char** argv)
 {
     bool showVis = false;
 
-    G4int choiceGeometry = 2;
-    G4int choiceParticle = 3;
+    G4int choiceGeometry = 0;
+    G4int choiceParticle = 1;
 
     G4double distTargetOrigin = 50.5 * cm;
     G4double avgE = 9 * MeV;
-    G4double dModerator = 0.15 * mm;
-    G4double dModeratorEnd = 0.05 * mm;
-    G4double dModeratorFront = 0.05 * mm;
+    G4double dModeratorTotal = 0.250 * mm;
+    G4double dModeratorFront = 0.100 * mm;
+    dModeratorTotal = 5 * cm;
+    dModeratorFront = 4 * cm;
     G4double distTarMod = 2*mm;
-    G4double widthModeratorPart = 1 * cm;
+    G4double widthModerator = 20 * cm;
     G4double moderatorHeight = 60 * cm;
 
-    G4double scaleBDipole = 2.;
-    G4double scaleBNeon = 3.5;
+    G4double scaleBDipole = 1.2;
+    G4double scaleBNeon = 1.7;
     G4double scaleBSolenoid = 1.;
-    G4double scaleBTarget = 3.5;
+    G4double scaleBTarget = 1.7;
     G4double scaleE = 1.;
+
+    G4String moderatorMaterial = "Neon";
 
     G4int noEvents = 10000;
 
     G4RunManager* runMan = new G4RunManager;
-    ConstructionParameters constructionParameters(choiceGeometry, dModerator, dModeratorFront,
-        widthModeratorPart, distTargetOrigin, moderatorHeight, scaleBDipole, scaleBNeon, scaleBSolenoid,
-        scaleBTarget, scaleE);
+    ConstructionParameters constructionParameters(choiceGeometry, dModeratorTotal, dModeratorFront,
+        widthModerator, distTargetOrigin, moderatorHeight, scaleBDipole, scaleBNeon, scaleBSolenoid,
+        scaleBTarget, scaleE, moderatorMaterial);
 
     runMan->SetUserInitialization(new MyPhysicsList());
     createTuples();
@@ -88,7 +92,7 @@ int main(int argc, char** argv)
     if (!showVis) {
         fileName = "Standard.csv";
         runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
-        runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
+        runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
             distTarMod, fileName));
         runMan->InitializeGeometry();
         runMan->GeometryHasBeenModified();
@@ -109,7 +113,7 @@ int main(int argc, char** argv)
             //constructionParameters.StoreParameters(curRun, fileName);
             /*
             runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
-            runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
+            runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
                 distTarMod, fileName));
             runMan->InitializeGeometry();
             runMan->GeometryHasBeenModified();
@@ -133,7 +137,7 @@ int main(int argc, char** argv)
                constructionParameters.SetScaleAll(scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE);
                constructionParameters.StoreParameters(curRun, fileNameParameters);
                runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
-               runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
+               runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
                    distTarMod, fileNameWalls));
                runMan->InitializeGeometry();
                runMan->GeometryHasBeenModified();
@@ -185,7 +189,7 @@ int main(int argc, char** argv)
                     break;
                 }
                 runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
-                runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
+                runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
                 distTarMod, fileNames[i]));
                 runMan->InitializeGeometry();
                 runMan->GeometryHasBeenModified();
@@ -200,7 +204,7 @@ int main(int argc, char** argv)
         G4VisManager* visManager = new G4VisExecutive();
         visManager->Initialize();
         runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
-        runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModerator,
+        runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
             distTarMod, fileName));
         //UImanager->ApplyCommand("/cuts/setMaxCutEnergy 9 MeV");
         runMan->Initialize();
