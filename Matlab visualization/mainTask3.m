@@ -3,7 +3,8 @@
 clear all, clc, close all;
 
 modRadius = 2.5; % cm
-L_plus = 0.1; % micron diffusion length of solid neon (?)
+L_plus = 1*10^(-4); % cm diffusion length of solid neon
+%L_plus = 130*10^(-7); % cm diffusion length of solid neon
 
 %sample();
 %plot_scaleB();
