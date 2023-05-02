@@ -164,12 +164,16 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
         solidTargetIn = new G4Tubs("solidTargetIn", 0., rTargetIn, dTargetIn / 2, 0, 360);
         solidTarget = new G4SubtractionSolid("solidTarget", solidTargetOut, solidTargetIn, 0, zTrans);
         logicTarget = new G4LogicalVolume(solidTarget, targetMaterial, "logicVTarget");
-        physicalTarget = new G4PVPlacement(RotationTarget, G4ThreeVector(constructionParameters->GetDistTargetOrigin() + dTargetOut / 2, 0., 0.), logicTarget,
-            "physicalTarget", logicWorld, false, 1, true);
+        physicalTarget = new G4PVPlacement(RotationTarget, G4ThreeVector(constructionParameters->GetDistTargetOrigin() + dTargetOut / 2, 0., 0.),
+            logicTarget, "physicalTarget", logicWorld, false, 1, true);
 
-        solidModeratorFront = new G4Box("solidModeratorFront", constructionParameters->GetWidthModerator() / 2,
-            constructionParameters->GetDModeratorFront() / 2, constructionParameters->GetWidthModerator() / 2);
-        solidModeratorBack = new G4Box("solidModeratorBack", constructionParameters->GetWidthModerator() / 2,
+        solidModeratorFront = new G4Box("solidModeratorFront", 
+            constructionParameters->GetWidthModerator() / 2,
+            constructionParameters->GetDModeratorFront() / 2, 
+            constructionParameters->GetWidthModerator() / 2);
+
+        solidModeratorBack = new G4Box("solidModeratorBack", 
+            constructionParameters->GetWidthModerator() / 2,
             (constructionParameters->GetDModeratorTotal() - constructionParameters->GetDModeratorFront()) / 2, 
             constructionParameters->GetWidthModerator() / 2);
 
@@ -181,8 +185,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
             1, testOverlap);
         physicalModeratorBack = new G4PVPlacement(0, G4ThreeVector(0, constructionParameters->GetModeratorHeight()
             + constructionParameters->GetDModeratorFront() + (constructionParameters->GetDModeratorTotal() - constructionParameters->GetDModeratorFront()) / 2, 0),
-            logicModeratorBack, "physicalModeratorBack", logicWorld, false,
-            1, testOverlap);
+            logicModeratorBack, "physicalModeratorBack", logicWorld, false, 1, testOverlap);
         break;
     }
     case 1: {

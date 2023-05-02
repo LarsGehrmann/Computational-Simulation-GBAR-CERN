@@ -11,7 +11,7 @@
 #include <random>
 #include <string>
 
-
+/* -------------------------------------------------------------------- */
 class FastElectron : public G4VUserPrimaryGeneratorAction
 {
 public:
@@ -57,6 +57,7 @@ public:
 private:
 	G4ParticleGun* fParticleGun;
 };
+/* -------------------------------------------------------------------- */
 class FastPositronCOMSOL : public G4VUserPrimaryGeneratorAction
 {
 public:
@@ -66,6 +67,7 @@ public:
 private:
 	G4ParticleGun* fParticleGun;
 };
+/* -------------------------------------------------------------------- */
 class SlowPositronCOMSOL : public G4VUserPrimaryGeneratorAction
 {
 public:
@@ -76,4 +78,5 @@ public:
 private:
 	G4ParticleGun* fParticleGun;
 };
+/* -------------------------------------------------------------------- */
 #endif

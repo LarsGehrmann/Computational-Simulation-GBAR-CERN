@@ -96,6 +96,9 @@ void FastPositronSample::GeneratePrimaries(G4Event* anEvent)
 
 
 	posCounter++;
+	if (posCounter == posNumber) {
+		posCounter = 0;
+	}
 	fParticleGun->SetParticlePosition(pos);
 	fParticleGun->SetParticleMomentumDirection(mom);
 	fParticleGun->SetParticleDefinition(particle);

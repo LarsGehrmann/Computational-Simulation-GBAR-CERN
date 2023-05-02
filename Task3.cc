@@ -39,7 +39,6 @@
 // choiceStepping determines which data will be stored
 
 
-// Run again sampling to obtain new posTable.txt :)) you doin' good and will be finished soon ;D
 
 int main(int argc, char** argv)
 {
@@ -50,10 +49,9 @@ int main(int argc, char** argv)
 
     G4double distTargetOrigin = 50.5 * cm;
     G4double avgE = 9 * MeV;
-    G4double dModeratorTotal = 0.250 * mm;
-    G4double dModeratorFront = 0.100 * mm;
-    dModeratorTotal = 5 * cm;
-    dModeratorFront = 4 * cm;
+    G4double dModeratorTotal = 1.5 * mm;
+    G4double dModeratorFront = 0.500 * mm;
+    dModeratorTotal = dModeratorFront * 4;
     G4double distTarMod = 2*mm;
     G4double widthModerator = 20 * cm;
     G4double moderatorHeight = 60 * cm;
@@ -66,7 +64,7 @@ int main(int argc, char** argv)
 
     G4String moderatorMaterial = "Neon";
 
-    G4int noEvents = 10000;
+    G4int noEvents = 100000;
 
     G4RunManager* runMan = new G4RunManager;
     ConstructionParameters constructionParameters(choiceGeometry, dModeratorTotal, dModeratorFront,
@@ -97,7 +95,6 @@ int main(int argc, char** argv)
         runMan->InitializeGeometry();
         runMan->GeometryHasBeenModified();
         runMan->Initialize();
-
         runMan->BeamOn(noEvents);
 
 

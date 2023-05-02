@@ -21,12 +21,15 @@
 /vis/set/textColour white
 
 /vis/geometry/set/colour logicVTarget 16777216 0.709 0.674 0.623 1.
-#/vis/geometry/set/colour logicVModerator 16777216 0.7215 0.4509 0.2 1.00
-#/vis/geometry/set/colour logicVModeratorEnd 16777216 0 1 0 1.00
 
 /vis/geometry/set/forceSolid logicVTarget 1 1
 #/vis/geometry/set/forceSolid logicVModerator 1 1
 #/vis/geometry/set/forceSolid logicVModeratorEnd 1 1
+/vis/geometry/set/forceSolid logicModeratorFront 1 1
+/vis/geometry/set/forceSolid logicModeratorBack 1 1
+
+/vis/geometry/set/colour logicModeratorFront -1 1. 0. 0. 0.5
+/vis/geometry/set/colour logicModeratorBack -1 0. 1. 0. 0.5
 
 /vis/geometry/set/forceSolid logicCoils 1 1
 /vis/geometry/set/forceSolid logicElectrode 1 1
@@ -39,6 +42,7 @@
 /vis/geometry/set/colour logicVSampleWall2 16777216 0.10 0. 0. 0.2
 /vis/geometry/set/colour logicVSampleWall3 16777216 0.10 0. 0. 0.2
 /vis/geometry/set/colour logicVSampleWall4 16777216 0.10 0. 0. 0.2
+
 
 /vis/geometry/set/forceSolid logicVSampleWall0 1 1
 /vis/geometry/set/forceSolid logicVSampleWall1 1 1
