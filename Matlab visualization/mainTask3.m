@@ -2,8 +2,15 @@
 
 clear all, clc, close all;
 
+
+
+% E = 2;
+% frontLength = 500;
+% sc = scoreEnergy(E,frontLength)
+frontLength = 100;
 modRadius = 2.5; % cm
 L_plus = 1*10^(-4); % cm diffusion length of solid neon
+%L_plus = 10^-2
 %L_plus = 130*10^(-7); % cm diffusion length of solid neon
 
 %sample();
@@ -11,8 +18,8 @@ L_plus = 1*10^(-4); % cm diffusion length of solid neon
 %plot_distTargetOrigin();
 %plot_Annihis();
 %showPosTableHisto()
-plot_sampleWalls(modRadius)
-plot_sampleWallsScore(modRadius, L_plus);
+plot_sampleWalls(modRadius, frontLength)
+%plot_sampleWallsScore(modRadius, L_plus);
 %plot_Sample4distTargetOrigin()
 %plot_Sample4ModeratorHeight()
 %plot_Sample4Fields()

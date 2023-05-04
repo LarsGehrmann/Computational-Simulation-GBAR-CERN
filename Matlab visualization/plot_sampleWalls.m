@@ -1,6 +1,6 @@
 %visualize the deposited energy in the moderator because Geant4 is not working properly with that
 
-function plot_sampleWalls(modRadius)
+function plot_sampleWalls(modRadius, frontLength)
 
 set(0,'defaultTextInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
@@ -59,7 +59,7 @@ wall4(1:3,:) = wall4(1:3,:)/10;
 %     end
 % end
 
-plotWall(4,wall4,20,10, saveDirStart, saveName, saveDirEnd, modRadius)
+plotWall(4,wall4,20,10, saveDirStart, saveName, saveDirEnd, modRadius, frontLength)
 
 end
 
