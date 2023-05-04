@@ -64,7 +64,7 @@ int main(int argc, char** argv)
 
     G4String moderatorMaterial = "Neon";
 
-    G4int noEvents = 100000;
+    G4int noEvents = 10000;
 
     G4RunManager* runMan = new G4RunManager;
     ConstructionParameters constructionParameters(choiceGeometry, dModeratorTotal, dModeratorFront,
