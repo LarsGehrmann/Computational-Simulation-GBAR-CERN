@@ -5,6 +5,14 @@ dist = exp(C(2))*E^C(1);
 % sc = exp(-dist/L);
 
 switch frontLength
+    case 15
+        if E < 0.03
+            sc = 1;
+        else
+            C = [-2.117682728595330, 3.418870148139924];
+            sc = exp(C(2)) * E^C(1);
+            sc = sc / 10^5;
+        end
     case 100
         if E < 0.07
             sc = 1;

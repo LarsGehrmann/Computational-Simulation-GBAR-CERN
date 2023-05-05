@@ -102,174 +102,157 @@ title(titleHelp,'FontSize',14)
 saveDir = saveDirStart + saveName + string(wallNo) + "E" +  saveDirEnd;
 saveas(gcf,saveDir);
 
-maxIdx = 1;
-noEncircled = zeros(length(wallHit),1);
-countEncircled = 0;
-if wallNo == 4
-    for i=1:length(wallHit)
-        countEncircled = 0;
-        xMid = wallHit(1,i);
-        zMid = wallHit(3,i);
-        for j=1:length(wallHit)
-            if sqrt( (xMid - wallHit(1,j))^2 + (zMid - wallHit(3,j))^2) <= modRadius
-                countEncircled = countEncircled + 1;
-            end
-        end
-        noEncircled(i) = countEncircled;
+
+figure
+imagesc(dir1,dir2,scoreGrid')
+set(gca,'YDir','normal')
+xlabel(xlabelString)
+ylabel(ylabelString)
+hcb = colorbar;
+colorTitleHandle = get(hcb,'title');
+set(colorTitleHandle ,'String','$\textrm{Score}$','Interpreter','Latex');
+%set(gca,'ColorScale','log')
+titleHelp = {"$\textbf{Score}$", "$\textbf{Total score: } $" + string(sum(wallHit(5,:)))};
+title(titleHelp,'FontSize',14)
+saveDir = saveDirStart + saveName + "Score" +  saveDirEnd;
+saveas(gcf,saveDir);
+
+
+figure
+imagesc(dir1,dir2,distGrid')
+set(gca,'YDir','normal')
+xlabel(xlabelString)
+ylabel(ylabelString)
+hcb = colorbar;
+colorTitleHandle = get(hcb,'title');
+set(colorTitleHandle ,'String','$\bar{d} / \textrm{cm}$','Interpreter','Latex');
+%set(gca,'ColorScale','log')
+titleHelp = {"$\textbf{Average distance of annihilation location}$", "$\textbf{to moderator surface}$", "$\textbf{Total hits: } $" + ...
+    string(length(wallHit(1,:)))};
+title(titleHelp,'FontSize',14)
+saveDir = saveDirStart + saveName + "dist" +  saveDirEnd;
+saveas(gcf,saveDir);
+
+printBool = true;
+metric = "hits";
+[xCenterHits,zCenterHits,idxHits,maxPointsHits, noHitsHits, avgEHits] = findCircle(wallHit, modRadius, metric, printBool);
+metric = "score";
+[xCenterScore,zCenterScore,idxScore,maxPointsScore, noHitsScore, avgEScore] = findCircle(wallHit, modRadius, metric, printBool);
+
+
+
+figure
+plot(wallHit(1,:), wallHit(3,:), 'k.','MarkerSize', 5)
+hold on
+grid on
+th = linspace(0,2*pi,1000);
+xCircleHits = modRadius * cos(th) + xCenterHits;
+zCircleHits = modRadius * sin(th) + zCenterHits;
+xCircleScore = modRadius * cos(th) + xCenterScore;
+zCircleScore = modRadius * sin(th) + zCenterScore;
+plot(xCircleHits,zCircleHits,'r')
+plot(xCircleScore,zCircleScore,'b')
+legend("$\textrm{Hits}$", "$\textrm{Maximum hits}$", "$\textrm{Maximum score}$", 'Location', 'Northwest')
+xlim([-offset,offset])
+axis equal
+xlabel(xlabelString)
+ylabel(ylabelString)
+titleHelp = {"$\textbf{Hits on fourth sample wall with circle radius: } r = \textbf{ cm}$"  + string(modRadius),
+    "$\textbf{Center of maximum hits circle: (}$" + string(xCenterHits) + "$\textbf{,}$" + string(zCenterHits) + ...
+    "$\textbf{)cm with }$" + string(noHitsHits) + "$\textbf{ hits}$",
+    "$\textbf{Center of maximum score circle: (}$" + string(xCenterScore) + "$\textbf{,}$" + string(zCenterScore) + ...
+    "$\textbf{)cm with }$" + string(noHitsScore) + "$\textbf{ hits}$"
+    };
+
+title(titleHelp)
+
+ECircleHits = zeros(noHitsHits,1);
+ECircleScore = zeros(noHitsScore,1);
+circleCount = 1;
+for j=1:length(wallHit)
+    if sqrt( (xCenterHits - wallHit(1,j))^2 + (zCenterHits - wallHit(3,j))^2 ) <= modRadius
+        ECircleHits(circleCount) = wallHit(4,j);
+        circleCount = circleCount + 1;
     end
-    [maxEnclosed,maxIDX] = max(noEncircled);
-    xCenter = wallHit(1,maxIDX);
-    zCenter = wallHit(3,maxIDX);
-    fprintf("'Optimal' circle hits with radius r=" + string(modRadius) + "cm and midpoint:\n")
-    fprintf("x: " + string(xCenter) + "cm\n")
-    fprintf("z: " + string(zCenter) + "cm\n")
-    fprintf("Number of registered hits in that circle: " + string(noEncircled(maxIDX)) + "\n")
+end
 
-    figure
-    plot(wallHit(1,:), wallHit(3,:), 'k.','MarkerSize', 5)
-    hold on
-    grid on
-    th = linspace(0,2*pi,1000);
-    xCircle = modRadius * cos(th) + xCenter;
-    zCircle = modRadius * sin(th) + zCenter;
-    plot(xCircle,zCircle,'r')
-    xlim([-offset,offset])
-    axis equal
-    xlabel(xlabelString)
-    ylabel(ylabelString)
-    titleHelp = {"$\textbf{Hits on fourth sample wall with 'optimal' circle hits}$", "$\textbf{with radius: } r = $" + string(modRadius) + " $\textbf{cm and center: }c = \textbf{(}$" + string(xCenter) + "$,$" + string(zCenter) + "$\textbf{)cm}$", "$\textbf{Total hits inside circle: }$" + string(maxEnclosed)};
-    title(titleHelp)
-
-    ECircleHits = zeros(maxEnclosed,1);
-    circleCount = 1;
-    for i=1:length(wallHit)
-        if sqrt( (xCenter - wallHit(1,i))^2 + (zCenter - wallHit(3,i))^2 ) <= modRadius
-            ECircleHits(circleCount) = wallHit(4,i);
-            circleCount = circleCount + 1;
-        end
+circleCount = 1;
+for j=1:length(wallHit)
+    if sqrt( (xCenterScore - wallHit(1,j))^2 + (zCenterScore - wallHit(3,j))^2 ) <= modRadius
+        ECircleScore(circleCount) = wallHit(4,j);
+        circleCount = circleCount + 1;
     end
-    ECircleAvgHits = round(1000*sum(ECircleHits) / maxEnclosed) / 1000;
-    fprintf("Average energy inside circle: " + string(ECircleAvgHits) + "MeV\n");
-    edges = logspace(-2,1,50);
+end
 
-    figure
-    hist(ECircleHits, edges)
-    set(gca,'xscale','log')
-    xlim([10^-2,10])
-    grid on
-    titleHelp = {"$\textbf{Kinetic energy of positrons in 'optimal' circle hits}$", "$\textbf{Number of hits in circle: }$" + string(maxEnclosed) + "$\textbf{; } \bar{E} \textbf{ inside circle: }$" + string(ECircleAvgHits) + "$\textbf{MeV}$"};
-    title(titleHelp)
-    xlabel('$E / \textrm{MeV}$')
-    ylabel('$\textrm{No}$')
-
-    figure
-    imagesc(dir1,dir2,distGrid')
-    set(gca,'YDir','normal')
-    xlabel(xlabelString)
-    ylabel(ylabelString)
-    hcb = colorbar;
-    colorTitleHandle = get(hcb,'title');
-    set(colorTitleHandle ,'String','$\bar{d} / \textrm{cm}$','Interpreter','Latex');
-    %set(gca,'ColorScale','log')
-    titleHelp = {"$\textbf{Average distance of annihilation location}$", "$\textbf{to moderator surface}$", "$\textbf{Total hits: } $" + ...
-        string(length(wallHit(1,:)))};
-    title(titleHelp,'FontSize',14)
-    saveDir = saveDirStart + saveName + "dist" +  saveDirEnd;
-    saveas(gcf,saveDir);
-%--------------------------------------------------------------------------------------------------------------------------------------%
-    figure
-    imagesc(dir1,dir2,scoreGrid')
-    set(gca,'YDir','normal')
-    xlabel(xlabelString)
-    ylabel(ylabelString)
-    hcb = colorbar;
-    colorTitleHandle = get(hcb,'title');
-    set(colorTitleHandle ,'String','$\textrm{Score}$','Interpreter','Latex');
-    %set(gca,'ColorScale','log')
-    titleHelp = {"$\textbf{Score}$", "$\textbf{Total score: } $" + string(sum(wallHit(5,:)))};
-    title(titleHelp,'FontSize',14)
-    saveDir = saveDirStart + saveName + "Score" +  saveDirEnd;
-    saveas(gcf,saveDir);
-
-    scoreEncircled = zeros(length(wallHit),1);
-    for i=1:length(wallHit)
-        countScore = 0;
-        xMid = wallHit(1,i);
-        zMid = wallHit(3,i);
-        for j=1:length(wallHit)
-            if sqrt( (xMid - wallHit(1,j))^2 + (zMid - wallHit(3,j))^2 ) <= modRadius
-                countScore = countScore + wallHit(5,j);
-            end
-        end
-        scoreEncircled(i) = countScore;
-    end
-    [maxScore,maxIDXScore] = max(scoreEncircled);
-    circleHitsScore = noEncircled(maxIDXScore);
-    xCenter = wallHit(1,maxIDXScore);
-    zCenter = wallHit(3,maxIDXScore);
-    fprintf("\n'Optimal' circle score with radius r=" + string(modRadius) + "cm and midpoint:\n")
-    fprintf("x: " + string(xCenter) + "cm\n")
-    fprintf("z: " + string(zCenter) + "cm\n")
-    fprintf("Score inside this circle: " + string(scoreEncircled(maxIDXScore)) + "\n")
-
-    figure
-    plot(wallHit(1,:), wallHit(3,:), 'k.','MarkerSize', 5)
-    hold on
-    grid on
-    th = linspace(0,2*pi,1000);
-    xCircle = modRadius * cos(th) + xCenter;
-    zCircle = modRadius * sin(th) + zCenter;
-    plot(xCircle,zCircle,'r')
-    xlim([-offset,offset])
-    axis equal
-    xlabel(xlabelString)
-    ylabel(ylabelString)
-    titleHelp = {"$\textbf{Hits on fourth sample wall with 'optimal' circle score}$", "$\textbf{with radius: } r = $" + string(modRadius) + ...
-        " $\textbf{cm and center: }c = \textbf{(}$" + string(xCenter) + "$,$" + string(zCenter) + "$\textbf{)cm}$", ...
-        "$\textbf{Total score inside circle: }$" + string(maxScore)};
-    title(titleHelp)
-
-    ECircleScore = zeros(1,circleHitsScore);
-    circleCount = 1;
-    for i=1:length(wallHit)
-        if sqrt( (xCenter - wallHit(1,i))^2 + (zCenter - wallHit(3,i))^2 ) <= modRadius
-            ECircleScore(circleCount) = wallHit(4,i);
-            circleCount = circleCount + 1;
-        end
-    end
-    ECircleAvgScore = round(1000*sum(ECircleScore) / circleCount) / 1000;
-    fprintf("Average energy inside circle score: " + string(ECircleAvgScore) + "MeV\n");
-    edges = logspace(-2,1,50);
-
-        h1 = histcounts(ECircleHits,edges);
-    h2 = histcounts(ECircleScore,edges);
-    
-    figure
-    hist(ECircleScore, edges)
-    set(gca,'xscale','log')
-    xlim([10^-2,10])
-    grid on
-    titleHelp = {"$\textbf{Kinetic energy of positrons in 'optimal' circle score}$", "$\textbf{Number of hits in circle: }$" + string(circleHitsScore) + "$\textbf{; } \bar{E} \textbf{ inside circle: }$" + string(ECircleAvgScore) + "$\textbf{MeV}$"};
-    title(titleHelp)
-    xlabel('$E / \textrm{MeV}$')
-    ylabel('$\textrm{No}$')
-
-    figure
-    hold on
+edges = logspace(-2,1,50);
+histHits = histcounts(ECircleHits,edges);
+histScore = histcounts(ECircleScore,edges);
 
 
-    barWidth = 1.3;
-    bar(log10(edges(1:end-1)),[h1;h2]','BarWidth', barWidth);
-    set(gca,'Xtick',-2:1); %// adjust manually; values in log scale
-    set(gca,'Xticklabel',10.^get(gca,'Xtick')); %// use labels with linear values
-    grid on
-    xlabel('$E / \textrm{MeV}$')
-    ylabel('$\textrm{No}$')
-    legend('$\textrm{Optimal circle hits}$','$\textrm{Optimal circle score}$','Location','Northwest')
-    titleHelp = {"$\textbf{Comparison between energy distribution}$", "$\textbf{inside optimal hits and optimal score circle}$",...
-        "$\textbf{Hits in optimal hits circle: }$" + string(sum(h1)) + "$\textbf{; Hits in optimal score circle: }$" + string(sum(h2))};
-    title(titleHelp)
 
-end % if fourth wall
+
+figure
+barWidth = 1.3;
+bar(log10(edges(1:end-1)),[histHits;histScore]','BarWidth', barWidth);
+set(gca,'Xtick',-2:1); %// adjust manually; values in log scale
+set(gca,'Xticklabel',10.^get(gca,'Xtick')); %// use labels with linear values
+grid on
+xlabel('$E / \textrm{MeV}$')
+ylabel('$\textrm{No}$')
+legend('$\textrm{Optimal circle hits}$','$\textrm{Optimal circle score}$','Location','Northwest')
+titleHelp = {"$\textbf{Comparison between energy distribution}$", "$\textbf{inside optimal hits and optimal score circle}$",...
+    "$\textbf{Hits in max hits circle: }$" + string(sum(histHits)) + "$\textbf{ with } \bar{E} = $" + string(round(1000*avgEHits)/1000) + "$\textbf{ MeV}$", ...
+    "$\textbf{Hits in max score circle: }$" + string(sum(histScore)) + "$\textbf{ with } \bar{E} = $" + string(round(1000*avgEScore)/1000) + "$\textbf{ MeV}$"
+};
+title(titleHelp)
+
+
+
+%
+% ECircleHits = zeros(maxEnclosed,1);
+% circleCount = 1;
+% for i=1:length(wallHit)
+%     if sqrt( (xCenter - wallHit(1,i))^2 + (zCenter - wallHit(3,i))^2 ) <= modRadius
+%         ECircleHits(circleCount) = wallHit(4,i);
+%         circleCount = circleCount + 1;
+%     end
+% end
+% ECircleAvgHits = round(1000*sum(ECircleHits) / maxEnclosed) / 1000;
+% fprintf("Average energy inside circle: " + string(ECircleAvgHits) + "MeV\n");
+% edges = logspace(-2,1,50);
+%
+% figure
+% hist(ECircleHits, edges)
+% set(gca,'xscale','log')
+% xlim([10^-2,10])
+% grid on
+% titleHelp = {"$\textbf{Kinetic energy of positrons in 'optimal' circle hits}$", "$\textbf{Number of hits in circle: }$" + string(maxEnclosed) + "$\textbf{; } \bar{E} \textbf{ inside circle: }$" + string(ECircleAvgHits) + "$\textbf{MeV}$"};
+% title(titleHelp)
+% xlabel('$E / \textrm{MeV}$')
+% ylabel('$\textrm{No}$')
+%
+
+% %--------------------------------------------------------------------------------------------------------------------------------------%
+% figure
+% imagesc(dir1,dir2,scoreGrid')
+% set(gca,'YDir','normal')
+% xlabel(xlabelString)
+% ylabel(ylabelString)
+% hcb = colorbar;
+% colorTitleHandle = get(hcb,'title');
+% set(colorTitleHandle ,'String','$\textrm{Score}$','Interpreter','Latex');
+% %set(gca,'ColorScale','log')
+% titleHelp = {"$\textbf{Score}$", "$\textbf{Total score: } $" + string(sum(wallHit(5,:)))};
+% title(titleHelp,'FontSize',14)
+% saveDir = saveDirStart + saveName + "Score" +  saveDirEnd;
+% saveas(gcf,saveDir);
+%
+
+% ECircleAvgScore = round(1000*sum(ECircleScore) / circleCount) / 1000;
+% fprintf("Average energy inside circle score: " + string(ECircleAvgScore) + "MeV\n");
+% edges = logspace(-2,1,50);
+%
+
+%end % if fourth wall
 
 end % plotWall
