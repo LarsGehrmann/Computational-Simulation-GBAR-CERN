@@ -162,7 +162,7 @@ void MySteppingAction::UserSteppingAction(const G4Step* aStep)
 	}
 	*/
 
-
+	// if e+ annihilate in front of moderator
 if (aStep->GetPreStepPoint()->GetProcessDefinedStep()) {
 	const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
 	const G4String& volumeName = aStep->GetTrack()->GetVolume()->GetName();
@@ -177,7 +177,7 @@ if (aStep->GetPreStepPoint()->GetProcessDefinedStep()) {
 
 	}
 }
-
+	// if e+ hit sampling wall
 	if (aStep->GetPreStepPoint()->GetProcessDefinedStep()) {
 		//const G4String& procName = aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName();
 		const G4String& particleName = aStep->GetTrack()->GetDefinition()->GetParticleName();

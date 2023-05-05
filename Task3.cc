@@ -56,10 +56,10 @@ int main(int argc, char** argv)
     G4double widthModerator = 20 * cm;
     G4double moderatorHeight = 60 * cm;
 
-    G4double scaleBDipole = 1.2;
-    G4double scaleBNeon = 1.7;
+    G4double scaleBDipole = 0.5;
+    G4double scaleBNeon = 1.5;
     G4double scaleBSolenoid = 1.;
-    G4double scaleBTarget = 1.7;
+    G4double scaleBTarget = 1.5;
     G4double scaleE = 1.;
 
     G4String moderatorMaterial = "Neon";
@@ -87,7 +87,45 @@ int main(int argc, char** argv)
     G4String fileNameWalls;
     G4String fileNameParameters;
 
+    double TarNeStart = 1.;
+    double TarNeStep = 0.5;;
+    double DiStart = 0.1;
+    double DiStep = 0.2;
+
+    int noTarNe = 4;
+    int noDi = 8;
+    
+
     if (!showVis) {
+        /*
+        for (int TarNeRun = 0; TarNeRun < noTarNe; ++TarNeRun) { // for every fixed target and neon current
+            scaleBTarget = TarNeStart + TarNeRun * TarNeStep;
+            scaleBNeon = scaleBTarget;
+            constructionParameters.SetScaleBTarget(scaleBTarget);
+            constructionParameters.SetScaleBNeon(scaleBNeon);
+            for (int DiRun = 0; DiRun < noDi; ++DiRun) {
+                fileNameWalls = "scoreScalingTarNeRunWalls" + std::to_string(TarNeRun) + "DiRun" + std::to_string(DiRun) + ".csv";
+                fileNameParameters = "scoreScalingTarNeRunParameters" + std::to_string(TarNeRun) + "DiRun" + std::to_string(DiRun) + ".csv";
+                scaleBDipole = DiStart + DiRun * DiStep;
+                constructionParameters.SetScaleBDipole(scaleBDipole);
+                constructionParameters.StoreParameters(-1, fileNameParameters);
+
+                runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
+                runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
+                    distTarMod, fileNameWalls));
+                runMan->InitializeGeometry();
+                runMan->GeometryHasBeenModified();
+                runMan->Initialize();
+                runMan->BeamOn(noEvents);
+
+
+
+
+            }
+
+        }
+        exit(2);
+        */
         fileName = "Standard.csv";
         runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
         runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
