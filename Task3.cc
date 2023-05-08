@@ -31,7 +31,7 @@
 // choiceParticle determines type of particles:
 // 0 fast e- from actual target
 // 1 fast e+ from sample 24380 particles (originate from 3 * 10^7 e-)
-// 2 fast e- from COMSOL target
+// 2 fast e- from COMSOL target 
 // 3 fast e+ from COMSOL target
 // 4 slow e+ from COMSOL moderator
 // 5 slow e+ from actual moderator 
@@ -56,7 +56,7 @@ int main(int argc, char** argv)
     G4double widthModerator = 20 * cm;
     G4double moderatorHeight = 60 * cm;
 
-    G4double scaleBDipole = 0.5;
+    G4double scaleBDipole = 0.3;
     G4double scaleBNeon = 1.5;
     G4double scaleBSolenoid = 1.;
     G4double scaleBTarget = 1.5;
@@ -89,11 +89,12 @@ int main(int argc, char** argv)
 
     double TarNeStart = 1.;
     double TarNeStep = 0.5;;
-    double DiStart = 0.1;
-    double DiStep = 0.2;
+    double ratioStart = 0.0;
+    double ratioStep = 0.05;
+    double ratio = -1;
 
     int noTarNe = 4;
-    int noDi = 8;
+    int noDi = 16;
     
 
     if (!showVis) {
@@ -106,7 +107,9 @@ int main(int argc, char** argv)
             for (int DiRun = 0; DiRun < noDi; ++DiRun) {
                 fileNameWalls = "scoreScalingTarNeRunWalls" + std::to_string(TarNeRun) + "DiRun" + std::to_string(DiRun) + ".csv";
                 fileNameParameters = "scoreScalingTarNeRunParameters" + std::to_string(TarNeRun) + "DiRun" + std::to_string(DiRun) + ".csv";
-                scaleBDipole = DiStart + DiRun * DiStep;
+                ratio = ratioStart + DiRun * ratioStep;
+                scaleBDipole = scaleBTarget * ratio;
+                G4cout << "scaleBDipole: " << scaleBDipole << G4endl;
                 constructionParameters.SetScaleBDipole(scaleBDipole);
                 constructionParameters.StoreParameters(-1, fileNameParameters);
 
@@ -126,6 +129,7 @@ int main(int argc, char** argv)
         }
         exit(2);
         */
+        
         fileName = "Standard.csv";
         runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
         runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
@@ -134,7 +138,7 @@ int main(int argc, char** argv)
         runMan->GeometryHasBeenModified();
         runMan->Initialize();
         runMan->BeamOn(noEvents);
-
+        
 
        //fileName = "targetSecondWall";
        //fileName = "Standard";
