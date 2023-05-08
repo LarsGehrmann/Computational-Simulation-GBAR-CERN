@@ -1,5 +1,5 @@
 % points is metric according to which best metric is found "hits"/"score"
-function [xCenter,zCenter,idx,maxPoints, noHits, avgE] = findCircle(wallHit, modRadius, metric, printBool)
+function [xCenter,zCenter,idx,maxPoints,noHits, avgE] = findCircle(wallHit, modRadius, metric, printBool)
 pointsEncircled = zeros(length(wallHit),1);
 hitsEncircled = zeros(length(wallHit),1);
 avgEVec = zeros(length(wallHit),1);
@@ -10,7 +10,7 @@ for i=1:length(wallHit)
         if sqrt( (xMid - wallHit(1,j))^2 + (zMid - wallHit(3,j))^2 ) <= modRadius
             if metric == "hits"
                 pointsEncircled(i) = pointsEncircled(i) + 1;
-                hitsEncircled(i) = hitsEncircled(i) + 1; % redundant
+                hitsEncircled(i) = hitsEncircled(i) + 1; 
                 avgEVec(i) = avgEVec(i) + wallHit(4,j);
             elseif  metric == "score"
                 pointsEncircled(i) = pointsEncircled(i) + wallHit(5,j);

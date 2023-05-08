@@ -12,10 +12,11 @@ dirMidParameters = "DiRun";
 dirEndParameters =  "_nt_Parameters.csv";
 
 noTarNe = 4;
-noDi = 8;
+noDi = 16;
 
 TarNeScales = zeros(noTarNe,1);
-DiScales = zeros(noDi,1);
+ratios = zeros(noDi,1);
+
 
 hits = zeros(noTarNe,noDi);
 scores = zeros(noTarNe,noDi);
@@ -53,30 +54,32 @@ for TarNeRun=0:noTarNe-1
         scores(TarNeRun+1,DiRun+1) = maxPoints;
         dirParameters =  dirStartParameters + string(TarNeRun) +  dirMidParameters + string(DiRun) + dirEndParameters;
         parameters = csvread(dirParameters, 14, 0);
-        DiScales(DiRun+1) = parameters(6);
+        scaleDi = parameters(6);
+        ratios(DiRun+1) = scaleDi / parameters(7);
     end
     TarNeScales(TarNeRun+1) = parameters(7);
 end
 
 
 colors = ["r", "b", "k", "m","c", "g", "y"];
-figure
+figure('Renderer', 'painters', 'Position', [10 10 900 600])
+pbaspect([1 1 1])
 
 
 for i=1:noTarNe
     yyaxis left
-    plotMatrix(2*i-1) = plot(DiScales,hits(i,:),colors(i) + "-")
+    plotMatrix(2*i-1) = plot(ratios,hits(i,:),colors(i) + "-");
     hold on
     yyaxis right
-    plotMatrix(2*i) = plot(DiScales,scores(i,:), colors(i) + "-.");
+    plotMatrix(2*i) = plot(ratios,scores(i,:), colors(i) + "-.");
     legendHelp(2*i-1) = "$\textrm{Hits, scTarNe} = $" + string(TarNeScales(i));
     legendHelp(2*i) = "$\textrm{Score, scTarNe} = $" + string(TarNeScales(i));
 
 end
 hold off
 grid on
-legend(plotMatrix,legendHelp,'Location','best')
-xlabel('$\textrm{scaleDipole}$')
+legend(plotMatrix,legendHelp,'Location','eastoutside')
+xlabel('$\textrm{Ratio scaleDi / scaleTar}$')
 yyaxis left
 ylabel('$\textrm{Number of hits}$')
 yyaxis right

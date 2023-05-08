@@ -157,11 +157,12 @@ xlim([-offset,offset])
 axis equal
 xlabel(xlabelString)
 ylabel(ylabelString)
-titleHelp = {"$\textbf{Hits on fourth sample wall with circle radius: } r = \textbf{ cm}$"  + string(modRadius),
-    "$\textbf{Center of maximum hits circle: (}$" + string(xCenterHits) + "$\textbf{,}$" + string(zCenterHits) + ...
+titleHelp = {"$\textbf{Hits on fourth sample wall with circle radius: } r = $" + string(modRadius) + "$\textbf{ cm}$",
+    "$\textbf{Center of maximum hits circle: (}$" + string(round(100*xCenterHits) / 100) + "$\textbf{,}$" + string(round(100*zCenterHits) / 100) + ...
     "$\textbf{)cm with }$" + string(noHitsHits) + "$\textbf{ hits}$",
-    "$\textbf{Center of maximum score circle: (}$" + string(xCenterScore) + "$\textbf{,}$" + string(zCenterScore) + ...
-    "$\textbf{)cm with }$" + string(noHitsScore) + "$\textbf{ hits}$"
+    "$\textbf{Center of maximum score circle: (}$" + string(round(100*xCenterScore) / 100) + "$\textbf{,}$" + string(round(100*xCenterScore) / 100) + ...
+    "$\textbf{)cm with }$" + string(noHitsScore) + "$\textbf{ hits}$",
+    "$\textbf{Score of max score circle: }$" + string(round(100*maxPointsScore)/100)
     };
 
 title(titleHelp)
