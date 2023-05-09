@@ -39,7 +39,8 @@ lgd.Title.String = '$\textbf{Energy deposited by:}$';
 lgd.FontSize = 10;
 lgd.Title.FontSize = 12;
 ylabel('$\bar{E}_{\textrm{dep}} / \textrm{MeV}$')
-title('$\textbf{Energy deposition}$','FontSize', 15)
+titleHelp = {"$\textbf{Average energy deposition in the}$","$\textbf{moderator for different particles}$"}
+title(titleHelp,'FontSize', 15)
 
 figure
 bar(1:3,noPairProd)

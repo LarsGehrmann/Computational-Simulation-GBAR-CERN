@@ -7,8 +7,8 @@ dir = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\posTable.txt";
 
 
 M = load(dir);
-n = 10^4;
-E = M(1:n,7);
+E = M(:,7);
+n = length(E);
 avgE = round(sum(E) / n * 1000) / 1000;
 edges = logspace(-2,1,50);
 

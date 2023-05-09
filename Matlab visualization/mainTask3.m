@@ -13,11 +13,11 @@ L_plus = 1*10^(-4); % cm diffusion length of solid neon
 %L_plus = 10^-2
 %L_plus = 130*10^(-7); % cm diffusion length of solid neon
 
-plot_sampleWalls(modRadius, frontLength)
+% plot_sampleWalls(modRadius, frontLength)
 %plotRatioScore(modRadius, frontLength)
 
 
-%sample();
+sample();
 %plot_scaleB();
 %plot_distTargetOrigin();
 %plot_Annihis();

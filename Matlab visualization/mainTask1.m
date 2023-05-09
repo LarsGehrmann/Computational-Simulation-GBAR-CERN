@@ -15,6 +15,6 @@ clear all; close all; clc
 %plot_distTarMod_noPos();
 %plot_avgE_noPos();
 
-showHistos("log");
+%showHistos("log");
 
-% eDepBar()
+eDepBar()
