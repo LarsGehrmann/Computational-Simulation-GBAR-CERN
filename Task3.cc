@@ -16,13 +16,15 @@
 #include "G4LogicalVolume.hh"
 #include "G4SystemOfUnits.hh"
 
-
 #include "physics.hh"
 #include "action.hh"
 
+#include "RunParameters.hh"
 #include "ConstructionParameters.hh"
 #include "construction.hh"
 #include "createTuples.hh"
+
+#include "testRatio.hh"
 
 // choiceGeometry determines geometric setup:
 // 0 Sampling wall geometry
@@ -66,10 +68,14 @@ int main(int argc, char** argv)
 
     G4int noEvents = 10000;
 
+    G4String fileName = "Standard.csv";
+
     G4RunManager* runMan = new G4RunManager;
     ConstructionParameters constructionParameters(choiceGeometry, dModeratorTotal, dModeratorFront,
         widthModerator, distTargetOrigin, moderatorHeight, scaleBDipole, scaleBNeon, scaleBSolenoid,
         scaleBTarget, scaleE, moderatorMaterial);
+    RunParameters runParameters(noEvents, choiceParticle, choiceGeometry, distTargetOrigin, avgE, dModeratorTotal, distTarMod, fileName);
+
 
     runMan->SetUserInitialization(new MyPhysicsList());
     createTuples();
@@ -83,54 +89,28 @@ int main(int argc, char** argv)
     G4int curRun = 0;
     G4int maxRun = 4;
 
-    G4String fileName;
-    G4String fileNameWalls;
-    G4String fileNameParameters;
+//    G4String fileNameWalls;
+ //   G4String fileNameParameters;
 
     double TarNeStart = 1.;
     double TarNeStep = 0.5;;
     double ratioStart = 0.0;
     double ratioStep = 0.05;
-    double ratio = -1;
 
     int noTarNe = 4;
     int noDi = 16;
+
+
     
+    testRatio(&constructionParameters, &runParameters, runMan, TarNeStart, TarNeStep, ratioStart, ratioStep, noTarNe, noDi);
+    exit(2);
 
     if (!showVis) {
         /*
-        for (int TarNeRun = 0; TarNeRun < noTarNe; ++TarNeRun) { // for every fixed target and neon current
-            scaleBTarget = TarNeStart + TarNeRun * TarNeStep;
-            scaleBNeon = scaleBTarget;
-            constructionParameters.SetScaleBTarget(scaleBTarget);
-            constructionParameters.SetScaleBNeon(scaleBNeon);
-            for (int DiRun = 0; DiRun < noDi; ++DiRun) {
-                fileNameWalls = "scoreScalingTarNeRunWalls" + std::to_string(TarNeRun) + "DiRun" + std::to_string(DiRun) + ".csv";
-                fileNameParameters = "scoreScalingTarNeRunParameters" + std::to_string(TarNeRun) + "DiRun" + std::to_string(DiRun) + ".csv";
-                ratio = ratioStart + DiRun * ratioStep;
-                scaleBDipole = scaleBTarget * ratio;
-                G4cout << "scaleBDipole: " << scaleBDipole << G4endl;
-                constructionParameters.SetScaleBDipole(scaleBDipole);
-                constructionParameters.StoreParameters(-1, fileNameParameters);
-
-                runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
-                runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
-                    distTarMod, fileNameWalls));
-                runMan->InitializeGeometry();
-                runMan->GeometryHasBeenModified();
-                runMan->Initialize();
-                runMan->BeamOn(noEvents);
-
-
-
-
-            }
-
-        }
         exit(2);
         */
         
-        fileName = "Standard.csv";
+        
         runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
         runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
             distTarMod, fileName));
