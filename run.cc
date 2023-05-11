@@ -19,7 +19,7 @@ MyRunAction::MyRunAction(int argRunNo, G4double argdModerator, G4double argAvgE,
 	strRunID << runNo;
 
 	man = G4AnalysisManager::Instance();
-	man->SetVerboseLevel(3);
+	man->SetVerboseLevel(0);
 
 	G4String fileName, tupleName;
 
@@ -40,7 +40,7 @@ MyRunAction::MyRunAction(int argRunNo, G4double argdModerator, G4double argAvgE,
 	strRunID << runNo;
 
 	man = G4AnalysisManager::Instance();
-	man->SetVerboseLevel(3);
+	man->SetVerboseLevel(0);
 
 	G4String fileName, tupleName;
 

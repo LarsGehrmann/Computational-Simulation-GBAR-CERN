@@ -25,6 +25,7 @@ public:
     void SetChoiceParticle(G4int argChoiceParticle);
     void SetChoiceGeometry(G4int argChoiceGeometry);
     void SetDModeratorTotal(G4double argDModeratorTotal);
+    void SetDistTargetOrigin(G4double argDistTargetOrigin);
     void SetFileName(G4String argFilename);
 
 

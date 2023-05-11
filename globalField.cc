@@ -356,7 +356,7 @@ void globalField::SetStepper()
     case 4:
 //      fStepper = new G4ClassicalRK4( fEquation, 8 ); // no spin tracking
       fStepper = new G4ClassicalRK4( fEquation, 12 ); // with spin tracking
-      G4cout << "G4ClassicalRK4 (default) is called" << G4endl;
+      //G4cout << "G4ClassicalRK4 (default) is called" << G4endl;
       break;
     case 5:
 //      fStepper = new G4CashKarpRKF45( fEquation, 8 ); // no spin tracking

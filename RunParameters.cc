@@ -49,6 +49,9 @@ void RunParameters::SetChoiceGeometry(int argChoiceGeometry) {
 void RunParameters::SetDModeratorTotal(G4double argDModeratorTotal) {
     dModeratorTotal = argDModeratorTotal;
 }
+void RunParameters::SetDistTargetOrigin(G4double argDistTargetOrigin) {
+    distTargetOrigin = argDistTargetOrigin;
+}
 void RunParameters::SetFileName(G4String argFileName) {
     fileName = argFileName;
 }

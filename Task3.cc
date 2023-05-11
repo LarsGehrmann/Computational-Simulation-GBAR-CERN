@@ -24,8 +24,11 @@
 #include "construction.hh"
 #include "createTuples.hh"
 
+#include "testDistancesTargetOrigin.hh"
+#include "testFields.hh"
 #include "testRatio.hh"
 
+/*--------------------------------------------*/
 // choiceGeometry determines geometric setup:
 // 0 Sampling wall geometry
 // 1 COMSOL geometry
@@ -38,9 +41,10 @@
 // 4 slow e+ from COMSOL moderator
 // 5 slow e+ from actual moderator 
 /*--------------------------------------------*/
-// choiceStepping determines which data will be stored
 
 
+
+// shift positron smaple x coordinate based on distance target orign you doing good ;)
 
 int main(int argc, char** argv)
 {
@@ -58,10 +62,10 @@ int main(int argc, char** argv)
     G4double widthModerator = 20 * cm;
     G4double moderatorHeight = 60 * cm;
 
-    G4double scaleBDipole = 0.3;
-    G4double scaleBNeon = 1.5;
+    G4double scaleBDipole = 1.;
+    G4double scaleBNeon = 1.;
     G4double scaleBSolenoid = 1.;
-    G4double scaleBTarget = 1.5;
+    G4double scaleBTarget = 1.;
     G4double scaleE = 1.;
 
     G4String moderatorMaterial = "Neon";
@@ -74,7 +78,8 @@ int main(int argc, char** argv)
     ConstructionParameters constructionParameters(choiceGeometry, dModeratorTotal, dModeratorFront,
         widthModerator, distTargetOrigin, moderatorHeight, scaleBDipole, scaleBNeon, scaleBSolenoid,
         scaleBTarget, scaleE, moderatorMaterial);
-    RunParameters runParameters(noEvents, choiceParticle, choiceGeometry, distTargetOrigin, avgE, dModeratorTotal, distTarMod, fileName);
+    RunParameters runParameters(noEvents, choiceParticle, choiceGeometry, distTargetOrigin, avgE, dModeratorTotal, distTarMod, 
+        fileName);
 
 
     runMan->SetUserInitialization(new MyPhysicsList());
@@ -85,31 +90,24 @@ int main(int argc, char** argv)
         ui = new G4UIExecutive(argc, argv);
     }
     G4UImanager *UImanager = G4UImanager::GetUIpointer();   
-    G4String fileNames[5] = { "BDipole", "BNeon", "BSolenoid", "BTarget", "E" };
+
     G4int curRun = 0;
     G4int maxRun = 4;
 
 //    G4String fileNameWalls;
  //   G4String fileNameParameters;
 
-    double TarNeStart = 1.;
-    double TarNeStep = 0.5;;
-    double ratioStart = 0.0;
-    double ratioStep = 0.05;
 
-    int noTarNe = 4;
-    int noDi = 16;
-
-
-    
-    testRatio(&constructionParameters, &runParameters, runMan, TarNeStart, TarNeStep, ratioStart, ratioStep, noTarNe, noDi);
+    G4double minDist = 40 * cm;
+    G4double maxDist = 75 * cm;
+    G4double stepDist = 5 * cm;
+    G4int noDist = 11;
+    testDistancesTargetOrigin(&constructionParameters, &runParameters, runMan,
+        minDist, maxDist, stepDist, noDist);
     exit(2);
 
+
     if (!showVis) {
-        /*
-        exit(2);
-        */
-        
         
         runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
         runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
@@ -118,106 +116,6 @@ int main(int argc, char** argv)
         runMan->GeometryHasBeenModified();
         runMan->Initialize();
         runMan->BeamOn(noEvents);
-        
-
-       //fileName = "targetSecondWall";
-       //fileName = "Standard";
-       //fileName = "dipoleSecondWall";
-       //fileName = "neonSecondWall";
-
-   
-        for (curRun = 0; curRun < maxRun; ++curRun) {   // for every run
-            //scaleBNeon = 0.8 + curRun * 0.1;
-            //constructionParameters.SetScaleBNeon(scaleBNeon);
-            //constructionParameters.StoreParameters(curRun, fileName);
-            /*
-            runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
-            runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
-                distTarMod, fileName));
-            runMan->InitializeGeometry();
-            runMan->GeometryHasBeenModified();
-            runMan->Initialize();
-            runMan->BeamOn(noEvents);
-            */
-        }
-        /*
-       int ratioCount = -1;
-       double ratio = -1;
-       int innerNumber = 0;
-       for (int i = 0; i < maxRun; ++i) {    // for every fixed current in 
-           scaleBDipole = (double)(i + 2.)/2.;
-           ratio = 0.5;
-           ratioCount = 0;
-           while (ratio < 2.2) {
-               fileNameWalls = "ratioTarDiWalls"  + std::to_string(ratioCount + i * innerNumber) + ".csv";
-               fileNameParameters = "ratioTarDiParameters" + std::to_string(ratioCount + i * innerNumber) + ".csv";
-               G4cout << fileName << G4endl;
-               scaleBTarget = scaleBDipole * ratio;
-               constructionParameters.SetScaleAll(scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE);
-               constructionParameters.StoreParameters(curRun, fileNameParameters);
-               runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
-               runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
-                   distTarMod, fileNameWalls));
-               runMan->InitializeGeometry();
-               runMan->GeometryHasBeenModified();
-               runMan->Initialize();
-               runMan->BeamOn(noEvents);
-               ratio += 0.1;
-               ratioCount++;
-
-           }          
-           innerNumber = ratioCount;
-
-        }*/
-      // exit(1);
-       
-       
-        /*
-        for (int i = 0; i < 5; ++i) {       // for every field
-            for (curRun = 0; curRun < maxRun; ++curRun) {   // for every run
-                G4double scaleBDipole = 1.;
-                G4double scaleBNeon = 1.;
-                G4double scaleBSolenoid = 1.;
-                G4double scaleBTarget = 1.;
-                G4double scaleE = 1.;
-                switch (i) {
-                case 0:
-                    scaleBDipole = 0.8 + curRun * 0.1;
-                    constructionParameters.SetScaleAll(scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE);
-                    constructionParameters.StoreParameters(curRun, fileNames[i]);
-                    break;
-                case 1:
-                    scaleBNeon = 0.8 + curRun * 0.1;
-                    constructionParameters.SetScaleAll(scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE);
-                    constructionParameters.StoreParameters(curRun, fileNames[i]);
-                    break;
-                case 2:
-                    scaleBSolenoid = 0.8 + curRun * 0.1;
-                    constructionParameters.SetScaleAll(scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE);
-                    constructionParameters.StoreParameters(curRun, fileNames[i]);
-                    break;
-                case 3:
-                    scaleBTarget = 0.8 + curRun * 0.1;
-                    constructionParameters.SetScaleAll(scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE);
-                    constructionParameters.StoreParameters(curRun, fileNames[i]);
-                    break;
-                case 4:
-                    scaleE = 0.8 + curRun * 0.1;
-                    constructionParameters.SetScaleAll(scaleBDipole, scaleBNeon, scaleBSolenoid, scaleBTarget, scaleE);
-                    constructionParameters.StoreParameters(curRun, fileNames[i]);
-                    break;
-                }
-                runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
-                runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
-                distTarMod, fileNames[i]));
-                runMan->InitializeGeometry();
-                runMan->GeometryHasBeenModified();
-                runMan->Initialize();
-                runMan->BeamOn(10000);
-            }
-        }
-        */
-        G4cout << "After loop!" << G4endl;
     }
     else {
         G4VisManager* visManager = new G4VisExecutive();
@@ -243,3 +141,25 @@ int main(int argc, char** argv)
     return EXIT_SUCCESS;
 }
 
+
+
+
+/*    double TarNeStart = 1.;
+    double TarNeStep = 0.5;;
+    double ratioStart = 0.0;
+    double ratioStep = 0.05;
+
+    int noTarNe = 4;
+    int noDi = 16;
+
+    //testRatio(&constructionParameters, &runParameters, runMan, TarNeStart, TarNeStep, ratioStart, ratioStep, noTarNe, noDi);
+    //exit(2);
+*/
+
+/*
+    G4double minScale = 0.7;
+    G4double maxScale = 2.0;
+    G4double stepScale = 0.1;
+    testFields(&constructionParameters, &runParameters, runMan, minScale, maxScale, stepScale);
+    exit(2);
+*/
