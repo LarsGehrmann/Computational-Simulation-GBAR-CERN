@@ -18,10 +18,12 @@ metric = "hits";
 printBool = false;
 xCenters = zeros(1,3);
 zCenters = zeros(1,3);
+avgEVec = zeros(1,3);
 for i=1:3
     [xCenter,zCenter,idx,maxPoints,noHits, avgE] = findCircle(wallHit, modRadius(i), metric, printBool);
     xCenters(i) = xCenter;
     zCenters(i) = zCenter;
+    avgEVec(i) = avgE
 end
 
 ECircle = zeros(0,3);
@@ -96,6 +98,6 @@ titleHelp = {"$\textbf{Comparison between energy distribution inside optimal cir
 title(titleHelp)
 fprintf("Distance between center of largest and smallest circle: " + string(sqrt((xCenters(end)-xCenters(1))^2 + ...
     (zCenters(end)-zCenters(1))^2 )) + "cm\n");
-fprintf("Number of hits in circles from largest to smallest circle: " + string(circleHitsPrint(3)) + ", " + string(circleHitsPrint(2)) + ", " +string(circleHitsPrint(1)) + "\n")
-
+fprintf("Number of hits in circles from smallest to largest circle: " + string(circleHitsPrint(3)) + ", " + string(circleHitsPrint(2)) + ", " +string(circleHitsPrint(1)) + "\n")
+fprintf("Average energy in circles from smallest to largest circle: " + string(avgEVec(3)) + ", " + string(avgEVec(2)) + ", " +string(avgEVec(1)) + "\n")
 end

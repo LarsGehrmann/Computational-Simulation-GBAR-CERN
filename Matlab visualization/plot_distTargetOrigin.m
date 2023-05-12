@@ -51,9 +51,10 @@ yyaxis left
 ylabel('$\textrm{No hits on fourth sample wall}$','FontSize',12)
 yyaxis right
 ylabel('$\textrm{No hits in optimal circle}$')
-legend('$\textrm{Hits on fourth sample wall}$', '$\textrm{Hits inside circle}$', 'Location', 'best')
-titleHelp = {"\textbf{Number of positron hits as a function of distance between target and origin}$"
+legend('$\textrm{Hits on fourth sample wall}$', '$\textrm{Hits inside optimal circle}$', 'Location', 'northwest')
+titleHelp = {"$\textbf{Number of positron hits as a function}$", "$\textbf{of distance between target and origin}$"
     };
+title(titleHelp)
 
 % f = fit(distTargetOrigin',noAnnihi','gauss2');
 % X = min(distTargetOrigin);
