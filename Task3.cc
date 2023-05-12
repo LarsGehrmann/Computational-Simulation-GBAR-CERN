@@ -24,6 +24,7 @@
 #include "construction.hh"
 #include "createTuples.hh"
 
+#include "testRatioTarDi.hh"
 #include "testDistancesTargetOrigin.hh"
 #include "testFields.hh"
 #include "testRatio.hh"
@@ -92,18 +93,25 @@ int main(int argc, char** argv)
     G4UImanager *UImanager = G4UImanager::GetUIpointer();   
 
     G4int curRun = 0;
-    G4int maxRun = 4;
 
 //    G4String fileNameWalls;
  //   G4String fileNameParameters;
 
 
-    G4double minDist = 40 * cm;
-    G4double maxDist = 75 * cm;
-    G4double stepDist = 5 * cm;
-    G4int noDist = 11;
-    testDistancesTargetOrigin(&constructionParameters, &runParameters, runMan,
-        minDist, maxDist, stepDist, noDist);
+
+
+
+
+
+    double TarStart = 1.;
+    double TarStep = 0.5;;
+    double ratioStart = 0.5;
+    double ratioStep = 0.1;
+
+    int noTar = 4;
+    int noDi = 16;
+
+    testRatioTarDi(&constructionParameters, &runParameters, runMan, TarStart, TarStep, ratioStart, ratioStep, noTar, noDi);
     exit(2);
 
 
@@ -161,5 +169,15 @@ int main(int argc, char** argv)
     G4double maxScale = 2.0;
     G4double stepScale = 0.1;
     testFields(&constructionParameters, &runParameters, runMan, minScale, maxScale, stepScale);
+    exit(2);
+*/
+
+/*
+    G4double minDist = 35 * cm;
+    G4double maxDist = 70 * cm;
+    G4double stepDist = 2.5 * cm;
+    G4int noDist = 15;
+    testDistancesTargetOrigin(&constructionParameters, &runParameters, runMan,
+        minDist, maxDist, stepDist, noDist);
     exit(2);
 */

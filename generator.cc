@@ -87,7 +87,7 @@ void FastPositronSample::GeneratePrimaries(G4Event* anEvent)
 	G4ThreeVector mom;
 	energy = posTable[posCounter][6] * MeV;
 	particle = particleTable->FindParticle("e+");
-	pos.setX(posTable[posCounter][0]);
+	pos.setX(distTargetOrigin-2*cm);
 	pos.setY(posTable[posCounter][1]);
 	pos.setZ(posTable[posCounter][2]);
 	mom.setX(posTable[posCounter][3]);
