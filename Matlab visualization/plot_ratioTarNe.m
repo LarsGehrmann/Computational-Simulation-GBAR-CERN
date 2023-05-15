@@ -1,33 +1,32 @@
-function plot_ratioTarDi()
+function plot_ratioTarNe()
 set(0,'defaultTextInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
 set(0, 'defaultAxesTickLabelInterpreter','latex');
 
 
-dirStartWalls ="\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\hitsScalingTarDiRunWalls";
-dirMidWalls = "DiRun";
+dirStartWalls ="\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\hitsScalingTarNeRunWalls";
+dirMidWalls = "NeRun";
 dirEndWalls = "_nt_SampleWalls.csv";
-dirStartParameters = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\hitsScalingTarDiRunParameters";
-dirMidParameters = "DiRun";
+dirStartParameters = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\hitsScalingTarNeRunParameters";
+dirMidParameters = "NeRun";
 dirEndParameters =  "_nt_Parameters.csv";
 
 
 noTar = 4;
-noDi = 15;
+noNe = 15;
 
 tarScales = zeros(1,noTar);
-ratio = zeros(1,noDi);
+ratio = zeros(1,noNe);
 
-wallHitsNo = zeros(noTar,noDi);
-circleHitsNo = zeros(noTar,noDi);
+wallHitsNo = zeros(noTar,noNe);
+circleHitsNo = zeros(noTar,noNe);
 modRadius = 2.5;
 metric = "hits";
 printBool = false;
 
 
-
 for TarRun=0:noTar-1
-    for ratioRun=0:noDi-1
+    for ratioRun=0:noNe-1
         wallHits = zeros(4,0);
         dirWalls = dirStartWalls + string(TarRun) +  dirMidWalls + string(ratioRun) + dirEndWalls;
         allHits = csvread(dirWalls,9,0);
@@ -42,9 +41,9 @@ for TarRun=0:noTar-1
         circleHitsNo(TarRun+1,ratioRun+1) = maxPoints;
         dirParameters =  dirStartParameters + string(TarRun) +  dirMidParameters + string(ratioRun) + dirEndParameters;
         parameters = csvread(dirParameters,14,0);
-        diScale = parameters(6);
+        neScale = parameters(7);
         tarScales(TarRun+1) = parameters(9);
-        ratio(ratioRun+1) = diScale/tarScales(TarRun+1);
+        ratio(ratioRun+1) = neScale/tarScales(TarRun+1);
     end
 end
 
@@ -66,13 +65,13 @@ end
 hold off
 grid on
 legend(plotMatrix,legendHelp,'Location','eastoutside')
-xlabel('$\textrm{Ratio scaleDi / scaleTar}$')
+xlabel('$\textrm{Ratio scaleNe / scaleTar}$')
 yyaxis left
 ylabel('$\textrm{Number of hits}$')
 yyaxis right
 ylabel('$\textrm{Score}$')
 titleHelp = {"$\textbf{Number of hits as a function of ratio of}$",
-    "$\textbf{scaling of dipole coil and target coil}$"
+    "$\textbf{scaling of neon coil and target coil}$"
     };
 title(titleHelp)
 

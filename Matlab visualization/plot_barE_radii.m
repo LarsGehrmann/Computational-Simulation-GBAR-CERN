@@ -1,5 +1,8 @@
 function plot_barE_radii()
 
+set(0,'defaultTextInterpreter','latex');
+set(0, 'defaultLegendInterpreter','latex');
+set(0, 'defaultAxesTickLabelInterpreter','latex');
 offset = 10;
 xlabelString = '$x / \textrm{cm}$';
 ylabelString = '$z / \textrm{cm}$';

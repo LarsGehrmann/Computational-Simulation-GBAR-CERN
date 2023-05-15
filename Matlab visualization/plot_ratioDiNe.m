@@ -1,35 +1,34 @@
-function plot_ratioTarDi()
+function plot_ratioDiNe()
 set(0,'defaultTextInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
 set(0, 'defaultAxesTickLabelInterpreter','latex');
 
 
-dirStartWalls ="\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\hitsScalingTarDiRunWalls";
-dirMidWalls = "DiRun";
+dirStartWalls ="\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\hitsScalingDiNeRunWalls";
+dirMidWalls = "NeRun";
 dirEndWalls = "_nt_SampleWalls.csv";
-dirStartParameters = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\hitsScalingTarDiRunParameters";
+dirStartParameters = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\hitsScalingDiNeRunParameters";
 dirMidParameters = "DiRun";
 dirEndParameters =  "_nt_Parameters.csv";
 
 
-noTar = 4;
-noDi = 15;
+noDi = 4;
+noNe = 15;
 
-tarScales = zeros(1,noTar);
-ratio = zeros(1,noDi);
+diScales = zeros(1,noDi);
+ratio = zeros(1,noNe);
 
-wallHitsNo = zeros(noTar,noDi);
-circleHitsNo = zeros(noTar,noDi);
+wallHitsNo = zeros(noDi,noNe);
+circleHitsNo = zeros(noDi,noNe);
 modRadius = 2.5;
 metric = "hits";
 printBool = false;
 
 
-
-for TarRun=0:noTar-1
-    for ratioRun=0:noDi-1
+for DiRun=0:noDi-1
+    for ratioRun=0:noNe-1
         wallHits = zeros(4,0);
-        dirWalls = dirStartWalls + string(TarRun) +  dirMidWalls + string(ratioRun) + dirEndWalls;
+        dirWalls = dirStartWalls + string(DiRun) +  dirMidWalls + string(ratioRun) + dirEndWalls;
         allHits = csvread(dirWalls,9,0);
         allHits(:,2:4) = allHits(:,2:4) / 10; % mm->cm
         for i=1:length(allHits)
@@ -37,14 +36,14 @@ for TarRun=0:noTar-1
                 wallHits(:,end+1) = allHits(i,2:5);
             end
         end
-        wallHitsNo(TarRun+1,ratioRun+1) = length(wallHits);
+        wallHitsNo(DiRun+1,ratioRun+1) = length(wallHits);
         [xCenter,zCenter,idx,maxPoints,noHits, avgE] = findCircle(wallHits, modRadius, metric, printBool);
-        circleHitsNo(TarRun+1,ratioRun+1) = maxPoints;
-        dirParameters =  dirStartParameters + string(TarRun) +  dirMidParameters + string(ratioRun) + dirEndParameters;
+        circleHitsNo(DiRun+1,ratioRun+1) = maxPoints;
+        dirParameters =  dirStartParameters + string(DiRun) +  dirMidParameters + string(ratioRun) + dirEndParameters;
         parameters = csvread(dirParameters,14,0);
-        diScale = parameters(6);
-        tarScales(TarRun+1) = parameters(9);
-        ratio(ratioRun+1) = diScale/tarScales(TarRun+1);
+        neScale = parameters(7);
+        diScales(DiRun+1) = parameters(6);
+        ratio(ratioRun+1) = neScale/diScales(DiRun+1);
     end
 end
 
@@ -52,27 +51,27 @@ colors = ["r", "b", "k", "m","c", "g", "y"];
 figure('Renderer', 'painters', 'Position', [10 10 900 600])
 pbaspect([1 1 1])
 
-for i=1:noTar
+for i=1:noDi
     yyaxis left
     plotMatrix(2*i-1) = plot(ratio,wallHitsNo(i,:),colors(i) + "-");
     hold on
     yyaxis right
     plotMatrix(2*i) = plot(ratio,circleHitsNo(i,:), colors(i) + "-.");
-    legendHelp(2*i-1) = "$\textrm{Hits fourth wall, scTar} = $" + string(tarScales(i));
-    legendHelp(2*i) = "$\textrm{Hits circle, scTar} = $" + string(tarScales(i));
+    legendHelp(2*i-1) = "$\textrm{Hits fourth wall, scDi} = $" + string(diScales(i));
+    legendHelp(2*i) = "$\textrm{Hits circle, scDi} = $" + string(diScales(i));
 end
 
 
 hold off
 grid on
 legend(plotMatrix,legendHelp,'Location','eastoutside')
-xlabel('$\textrm{Ratio scaleDi / scaleTar}$')
+xlabel('$\textrm{Ratio scaleNe / scaleDi}$')
 yyaxis left
 ylabel('$\textrm{Number of hits}$')
 yyaxis right
 ylabel('$\textrm{Score}$')
 titleHelp = {"$\textbf{Number of hits as a function of ratio of}$",
-    "$\textbf{scaling of dipole coil and target coil}$"
+    "$\textbf{scaling of neon coil and dipole coil}$"
     };
 title(titleHelp)
 
