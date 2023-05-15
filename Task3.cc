@@ -25,6 +25,9 @@
 #include "createTuples.hh"
 
 #include "testRatioTarDi.hh"
+#include "testRatioTarNe.hh"
+#include "testRatioDiNe.hh"
+#include "testRatioTarEqNeAndDi.hh"
 #include "testDistancesTargetOrigin.hh"
 #include "testFields.hh"
 #include "testRatio.hh"
@@ -64,9 +67,9 @@ int main(int argc, char** argv)
     G4double moderatorHeight = 60 * cm;
 
     G4double scaleBDipole = 1.;
-    G4double scaleBNeon = 1.;
+    G4double scaleBNeon = 1.0;
     G4double scaleBSolenoid = 1.;
-    G4double scaleBTarget = 1.;
+    G4double scaleBTarget = 1.0;
     G4double scaleE = 1.;
 
     G4String moderatorMaterial = "Neon";
@@ -97,22 +100,17 @@ int main(int argc, char** argv)
 //    G4String fileNameWalls;
  //   G4String fileNameParameters;
 
-
-
-
-
-
-
     double TarStart = 1.;
     double TarStep = 0.5;;
-    double ratioStart = 0.5;
+    double ratioStart = 0.2;
     double ratioStep = 0.1;
 
     int noTar = 4;
-    int noDi = 16;
+    int noDi = 15;
 
-    testRatioTarDi(&constructionParameters, &runParameters, runMan, TarStart, TarStep, ratioStart, ratioStep, noTar, noDi);
+    testRatioTarEqNeAndDi(&constructionParameters, &runParameters, runMan, TarStart, TarStep, ratioStart, ratioStep, noTar, noDi);
     exit(2);
+
 
 
     if (!showVis) {
@@ -180,4 +178,44 @@ int main(int argc, char** argv)
     testDistancesTargetOrigin(&constructionParameters, &runParameters, runMan,
         minDist, maxDist, stepDist, noDist);
     exit(2);
+*/
+
+/*
+    double TarStart = 1.;
+    double TarStep = 0.5;;
+    double ratioStart = 0.2;
+    double ratioStep = 0.1;
+
+    int noTar = 4;
+    int noDi = 15;
+
+    testRatioTarDi(&constructionParameters, &runParameters, runMan, TarStart, TarStep, ratioStart, ratioStep, noTar, noDi);
+    exit(2);
+*/
+
+
+/*
+double DiStart = 1.;
+double DiStep = 0.5;
+double ratioStart = 0.4;
+double ratioStep = 0.2;
+
+int noDi = 4;
+int noNe = 15;
+
+testRatioDiNe(&constructionParameters, &runParameters, runMan, DiStart, DiStep, ratioStart, ratioStep, noDi, noNe);
+exit(2);
+*/
+
+/*
+double TarStart = 1.;
+double TarStep = 0.5;;
+double ratioStart = 0.5;
+double ratioStep = 0.1;
+
+int noTar = 4;
+int noNe = 15;
+
+testRatioTarNe(&constructionParameters, &runParameters, runMan, TarStart, TarStep, ratioStart, ratioStep, noTar, noNe);
+exit(2);
 */
