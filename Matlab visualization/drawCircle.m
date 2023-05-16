@@ -2,10 +2,6 @@ function drawCircle(wallHit, metric, xCenterHits, zCenterHits, noHitsHits, xCent
 
 xlabelString = '$x / \textrm{cm}$';
 ylabelString = '$z / \textrm{cm}$';
-figure
-plot(wallHit(1,:), wallHit(3,:), 'k.','MarkerSize', 5)
-hold on
-grid on
 th = linspace(0,2*pi,1000);
 if metric == "hits"
     xCircleHits = modRadius * cos(th) + xCenterHits;
@@ -56,7 +52,7 @@ else metric == "both"
         "$\textbf{)cm with }$" + string(noHitsHits) + "$\textbf{ hits}$",
         "$\textbf{Center of maximum score circle: (}$" + string(round(100*xCenterScore) / 100) + "$\textbf{,}$" + string(round(100*xCenterScore) / 100) + ...
         "$\textbf{)cm with }$" + string(noHitsScore) + "$\textbf{ hits}$",
-        "$\textbf{Score of max score circle: }$" + string(round(100*maxPointsScore)/100)
+        "$\textbf{Score of max score circle: }$" + string(round(100*scoreScore)/100)
         };
 
     title(titleHelp)

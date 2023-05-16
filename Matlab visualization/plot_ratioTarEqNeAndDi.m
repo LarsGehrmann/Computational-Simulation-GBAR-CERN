@@ -1,13 +1,13 @@
-function plot_ratioTarDi()
+function plot_ratioTarEqNeAndDi()
 set(0,'defaultTextInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
 set(0, 'defaultAxesTickLabelInterpreter','latex');
 
 
-dirStartWalls ="\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\hitsScalingTarDiRunWalls";
+dirStartWalls ="\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\hitsScalingTarEqNeAndDiRunWalls";
 dirMidWalls = "DiRun";
 dirEndWalls = "_nt_SampleWalls.csv";
-dirStartParameters = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\hitsScalingTarDiRunParameters";
+dirStartParameters = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\hitsScalingTarEqNeAndDiRunParameters";
 dirMidParameters = "DiRun";
 dirEndParameters =  "_nt_Parameters.csv";
 
@@ -23,7 +23,6 @@ circleHitsNo = zeros(noTar,noDi);
 modRadius = 2.5;
 metric = "hits";
 printBool = false;
-
 
 
 for TarRun=0:noTar-1

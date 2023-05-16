@@ -139,33 +139,12 @@ metric = "hits";
 metric = "score";
 [xCenterScore,zCenterScore,idxScore,maxPointsScore, noHitsScore, avgEScore] = findCircle(wallHit, modRadius, metric, printBool);
 
+metric = "both";
+scoreScore = maxPointsScore;
+drawCircle(wallHit, metric, xCenterHits, zCenterHits, noHitsHits, xCenterScore, zCenterScore, noHitsScore, scoreScore, offset, modRadius)
 
 
-figure
-plot(wallHit(1,:), wallHit(3,:), 'k.','MarkerSize', 5)
-hold on
-grid on
-th = linspace(0,2*pi,1000);
-xCircleHits = modRadius * cos(th) + xCenterHits;
-zCircleHits = modRadius * sin(th) + zCenterHits;
-xCircleScore = modRadius * cos(th) + xCenterScore;
-zCircleScore = modRadius * sin(th) + zCenterScore;
-plot(xCircleHits,zCircleHits,'r')
-plot(xCircleScore,zCircleScore,'b')
-legend("$\textrm{Hits}$", "$\textrm{Maximum hits}$", "$\textrm{Maximum score}$", 'Location', 'Northwest')
-xlim([-offset,offset])
-axis equal
-xlabel(xlabelString)
-ylabel(ylabelString)
-titleHelp = {"$\textbf{Hits on fourth sample wall with circle radius: } r = $" + string(modRadius) + "$\textbf{ cm}$",
-    "$\textbf{Center of maximum hits circle: (}$" + string(round(100*xCenterHits) / 100) + "$\textbf{,}$" + string(round(100*zCenterHits) / 100) + ...
-    "$\textbf{)cm with }$" + string(noHitsHits) + "$\textbf{ hits}$",
-    "$\textbf{Center of maximum score circle: (}$" + string(round(100*xCenterScore) / 100) + "$\textbf{,}$" + string(round(100*xCenterScore) / 100) + ...
-    "$\textbf{)cm with }$" + string(noHitsScore) + "$\textbf{ hits}$",
-    "$\textbf{Score of max score circle: }$" + string(round(100*maxPointsScore)/100)
-    };
-
-title(titleHelp)
+maxEnclosed = maxPointsHits;
 
 ECircleHits = zeros(noHitsHits,1);
 ECircleScore = zeros(noHitsScore,1);
@@ -194,13 +173,18 @@ histScore = histcounts(ECircleScore,edges);
 
 figure
 barWidth = 1.3;
-bar(log10(edges(1:end-1)),[histHits;histScore]','BarWidth', barWidth);
+%bar(log10(edges(1:end-1)),histHits'); % plot only optimal hits circle
+bar(log10(edges(1:end-1)),[histHits;histScore]','BarWidth', barWidth); %
+%plot optimal hits and optimal score circle
 set(gca,'Xtick',-2:1); %// adjust manually; values in log scale
 set(gca,'Xticklabel',10.^get(gca,'Xtick')); %// use labels with linear values
 grid on
 xlabel('$E / \textrm{MeV}$')
 ylabel('$\textrm{No}$')
 legend('$\textrm{Optimal circle hits}$','$\textrm{Optimal circle score}$','Location','Northwest')
+% titleHelp = {"$\textbf{Energy distribution}$", "$\textbf{inside optimal hits circle}$",...
+%     "$\textbf{Hits in max hits circle: }$" + string(sum(histHits)) + "$\textbf{ with } \bar{E} = $" + string(round(1000*avgEHits)/1000) + "$\textbf{ MeV}$", ...
+% };
 titleHelp = {"$\textbf{Comparison between energy distribution}$", "$\textbf{inside optimal hits and optimal score circle}$",...
     "$\textbf{Hits in max hits circle: }$" + string(sum(histHits)) + "$\textbf{ with } \bar{E} = $" + string(round(1000*avgEHits)/1000) + "$\textbf{ MeV}$", ...
     "$\textbf{Hits in max score circle: }$" + string(sum(histScore)) + "$\textbf{ with } \bar{E} = $" + string(round(1000*avgEScore)/1000) + "$\textbf{ MeV}$"
@@ -209,7 +193,7 @@ title(titleHelp)
 
 
 
-%
+
 % ECircleHits = zeros(maxEnclosed,1);
 % circleCount = 1;
 % for i=1:length(wallHit)
@@ -221,7 +205,7 @@ title(titleHelp)
 % ECircleAvgHits = round(1000*sum(ECircleHits) / maxEnclosed) / 1000;
 % fprintf("Average energy inside circle: " + string(ECircleAvgHits) + "MeV\n");
 % edges = logspace(-2,1,50);
-%
+% 
 % figure
 % hist(ECircleHits, edges)
 % set(gca,'xscale','log')
@@ -231,7 +215,7 @@ title(titleHelp)
 % title(titleHelp)
 % xlabel('$E / \textrm{MeV}$')
 % ylabel('$\textrm{No}$')
-%
+
 
 % %--------------------------------------------------------------------------------------------------------------------------------------%
 % figure

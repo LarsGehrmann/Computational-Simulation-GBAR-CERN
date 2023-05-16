@@ -5,7 +5,7 @@ clear all; close all; clc
 
 %plot_eDep_noElectrons();
 %visEDepSingle();
-%visEDepAll();
+visEDepAll();
 %plot_dModerator_P();
 %plot_avgE_P();
 %plot_distTarMod_P();
@@ -17,4 +17,4 @@ clear all; close all; clc
 
 %showHistos("log");
 
-eDepBar()
+%eDepBar()

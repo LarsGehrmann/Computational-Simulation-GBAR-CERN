@@ -27,6 +27,9 @@ for k = 1:noDist
     dirEnd = ".txt";
     dir = dirStart + distString + dirEnd;
     M = dlmread(dir, ',', 3, 0);
+    if k==1
+        maxE = max(M(:,4));
+    end
     for i = 1:n
         for j = 1:n
             E(i,j) = M(n * (i-1) + j,4);
@@ -34,6 +37,7 @@ for k = 1:noDist
     end
     imagesc(1:19,1:19,E);
     c = colorbar;
+    %caxis([0 maxE])
     xlabel('$x / \textrm{mm}$')
     ylabel('$y / \textrm{mm}$')
     c.Label.String = "[a.u.]";

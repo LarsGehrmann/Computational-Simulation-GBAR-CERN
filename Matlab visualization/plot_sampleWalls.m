@@ -6,7 +6,8 @@ set(0,'defaultTextInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
 set(0, 'defaultAxesTickLabelInterpreter','latex');
 saveDirStart = "C:\Users\Gehrm\OneDrive\Desktop\Master thesis\Presentations\safe 4\Heatmaps\test\";
-saveName = "test";
+saveDirStart = "C:\Users\Gehrm\OneDrive\Desktop\Master thesis\Presentations\safe 5\Analysis Good hits\";
+saveName = "goodHits";
 saveDirEnd = ".png";
 
 dir = "\\wsl.localhost\Ubuntu\home\lars\Geant4\Task3\build\Standard_nt_SampleWalls.csv";
@@ -42,20 +43,20 @@ wall4(1:3,:) = wall4(1:3,:)/10;
 
 
 
-% wallNo = linspace(0,4,5);
-% nBins = 20*ones(5,1);
-% offset = [25,25,25,25,10];
+wallNo = linspace(0,4,5);
+nBins = 20*ones(5,1);
+offset = [25,25,25,25,10];
 % for i=1:5
 %     if i==1
-%         plotWall(wallNo(i),wall0,nBins(i),offset(i), saveDirStart, saveName, saveDirEnd)
+%         plotWall(wallNo(i),wall0,nBins(i),offset(i), saveDirStart, saveName, saveDirEnd, modRadius, frontLength)
 %     elseif i == 2
-%         plotWall(wallNo(i),wall1,nBins(i),offset(i), saveDirStart, saveName, saveDirEnd)
+%         plotWall(wallNo(i),wall1,nBins(i),offset(i), saveDirStart, saveName, saveDirEnd, modRadius, frontLength)
 %     elseif i == 3
-%         plotWall(wallNo(i),wall2,nBins(i),offset(i), saveDirStart, saveName, saveDirEnd)
+%         plotWall(wallNo(i),wall2,nBins(i),offset(i), saveDirStart, saveName, saveDirEnd, modRadius, frontLength)
 %     elseif i == 4
-%         plotWall(wallNo(i),wall3,nBins(i),offset(i), saveDirStart, saveName, saveDirEnd)
+%         plotWall(wallNo(i),wall3,nBins(i),offset(i), saveDirStart, saveName, saveDirEnd, modRadius, frontLength)
 %     elseif i == 5
-%         plotWall(wallNo(i),wall4,nBins(i),offset(i), saveDirStart, saveName, saveDirEnd)
+%         plotWall(wallNo(i),wall4,nBins(i),offset(i), saveDirStart, saveName, saveDirEnd, modRadius, frontLength)
 %     end
 % end
 

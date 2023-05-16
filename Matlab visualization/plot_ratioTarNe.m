@@ -67,9 +67,9 @@ grid on
 legend(plotMatrix,legendHelp,'Location','eastoutside')
 xlabel('$\textrm{Ratio scaleNe / scaleTar}$')
 yyaxis left
-ylabel('$\textrm{Number of hits}$')
+ylabel('$\textrm{No. hits on fourth sample wall}$')
 yyaxis right
-ylabel('$\textrm{Score}$')
+ylabel('$\textrm{No. hits inside circle}$')
 titleHelp = {"$\textbf{Number of hits as a function of ratio of}$",
     "$\textbf{scaling of neon coil and target coil}$"
     };
