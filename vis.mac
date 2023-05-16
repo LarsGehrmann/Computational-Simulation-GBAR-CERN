@@ -1,4 +1,4 @@
-/vis/open OGL 600x600 -0+0
+/vis/open OGL 600x600-0+0
 #/vis/open RayTracerX
 /vis/drawVolume
 /vis/scene/add/axes 0 0 0 1000 mm black
@@ -63,4 +63,4 @@
 #/run/beamOn 50
 
 #/vis/scene/add/electricField 10
-/vis/scene/add/magneticField 10
+#/vis/scene/add/magneticField 10

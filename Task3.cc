@@ -43,16 +43,11 @@
 // 2 fast e- from COMSOL target 
 // 3 fast e+ from COMSOL target
 // 4 slow e+ from COMSOL moderator
-// 5 slow e+ from actual moderator 
 /*--------------------------------------------*/
-
-
-
-// shift positron smaple x coordinate based on distance target orign you doing good ;)
 
 int main(int argc, char** argv)
 {
-    bool showVis = false;
+    bool showVis = true;
 
     G4int choiceGeometry = 0;
     G4int choiceParticle = 1;
@@ -66,7 +61,7 @@ int main(int argc, char** argv)
     G4double widthModerator = 20 * cm;
     G4double moderatorHeight = 60 * cm;
 
-    G4double scaleBDipole = 1.;
+    G4double scaleBDipole = 1.0;
     G4double scaleBNeon = 1.0;
     G4double scaleBSolenoid = 1.;
     G4double scaleBTarget = 1.0;
@@ -100,16 +95,6 @@ int main(int argc, char** argv)
 //    G4String fileNameWalls;
  //   G4String fileNameParameters;
 
-    double TarStart = 1.;
-    double TarStep = 0.5;;
-    double ratioStart = 0.2;
-    double ratioStep = 0.1;
-
-    int noTar = 4;
-    int noDi = 15;
-
-    testRatioTarEqNeAndDi(&constructionParameters, &runParameters, runMan, TarStart, TarStep, ratioStart, ratioStep, noTar, noDi);
-    exit(2);
 
 
 
@@ -219,3 +204,16 @@ int noNe = 15;
 testRatioTarNe(&constructionParameters, &runParameters, runMan, TarStart, TarStep, ratioStart, ratioStep, noTar, noNe);
 exit(2);
 */
+
+/*
+    double TarStart = 1.;
+    double TarStep = 0.5;;
+    double ratioStart = 0.2;
+    double ratioStep = 0.1;
+
+    int noTar = 4;
+    int noDi = 15;
+
+    testRatioTarEqNeAndDi(&constructionParameters, &runParameters, runMan, TarStart, TarStep, ratioStart, ratioStep, noTar, noDi);
+    exit(2);
+    */
