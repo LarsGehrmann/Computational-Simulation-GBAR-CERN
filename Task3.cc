@@ -39,7 +39,7 @@
 /*--------------------------------------------*/
 // choiceParticle determines type of particles:
 // 0 fast e- from actual target
-// 1 fast e+ from sample 24380 particles (originate from 3 * 10^7 e-)
+// 1 fast e+ from sample 16514 particles (originate from 2*10^7 simulated e-)
 // 2 fast e- from COMSOL target 
 // 3 fast e+ from COMSOL target
 // 4 slow e+ from COMSOL moderator
@@ -49,7 +49,7 @@ int main(int argc, char** argv)
 {
     bool showVis = true;
 
-    G4int choiceGeometry = 0;
+    G4int choiceGeometry = 1;
     G4int choiceParticle = 1;
 
     G4double distTargetOrigin = 50.5 * cm;

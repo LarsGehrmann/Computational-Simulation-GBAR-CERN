@@ -109,8 +109,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
 
     sampleWallSolid = new G4Box("solidSampleWall", thicknessSampleWall / 2, widthSampleWall / 2, widthSampleWall / 2);
     logicSampleWall = new G4LogicalVolume(sampleWallSolid, worldMat, "logicVSampleWall");
-    physicalSampleWall = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2 * cm, 0, 0), logicSampleWall,
-        "physicalSampleWall", logicWorld, false, 10, testOverlap);
+
 
     sampleWallSolid4 = new G4Box("solidSampleWall4", thicknessSampleWall / 2, 20 / 2 * cm, 20 / 2 * cm);
 
@@ -129,18 +128,6 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
     RotationSampleWall3->rotateX(0 * deg);
     RotationSampleWall3->rotateY(0 * deg);
     RotationSampleWall3->rotateZ(90 * deg);
-
-    physicalSampleWall0 = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2.0001 * cm, 0, 0), logicSampleWall1,
-        "physicalSampleWall0", logicWorld, false, 11, testOverlap);
-    physicalSampleWall1 = new G4PVPlacement(0, G4ThreeVector(25 * cm, 0, 0), logicSampleWall1,
-        "physicalSampleWall1", logicWorld, false, 12, testOverlap);
-    physicalSampleWall2 = new G4PVPlacement(RotationSampleWall2, G4ThreeVector(0, 0, 0), logicSampleWall2,
-        "physicalSampleWall2", logicWorld, false, 13, testOverlap);
-    physicalSampleWall3 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, 30 * cm, 0), logicSampleWall3,
-        "physicalSampleWall3", logicWorld, false, 14, testOverlap);
-    physicalSampleWall4 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, constructionParameters->GetModeratorHeight()
-        - constructionParameters->GetDModeratorFront() / 2 - 0.00001 * cm, 0), logicSampleWall4,
-        "physicalSampleWall4", logicWorld, false, 15, testOverlap);
 
 
     switch (constructionParameters->GetChoiceGeometry()) {
@@ -186,6 +173,21 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
         physicalModeratorBack = new G4PVPlacement(0, G4ThreeVector(0, constructionParameters->GetModeratorHeight()
             + constructionParameters->GetDModeratorFront() + (constructionParameters->GetDModeratorTotal() - constructionParameters->GetDModeratorFront()) / 2, 0),
             logicModeratorBack, "physicalModeratorBack", logicWorld, false, 1, testOverlap);
+
+        physicalSampleWall = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2 * cm, 0, 0), logicSampleWall,
+            "physicalSampleWall", logicWorld, false, 10, testOverlap);
+
+        physicalSampleWall0 = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2.0001 * cm, 0, 0), logicSampleWall1,
+            "physicalSampleWall0", logicWorld, false, 11, testOverlap);
+        physicalSampleWall1 = new G4PVPlacement(0, G4ThreeVector(25 * cm, 0, 0), logicSampleWall1,
+            "physicalSampleWall1", logicWorld, false, 12, testOverlap);
+        physicalSampleWall2 = new G4PVPlacement(RotationSampleWall2, G4ThreeVector(0, 0, 0), logicSampleWall2,
+            "physicalSampleWall2", logicWorld, false, 13, testOverlap);
+        physicalSampleWall3 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, 30 * cm, 0), logicSampleWall3,
+            "physicalSampleWall3", logicWorld, false, 14, testOverlap);
+        physicalSampleWall4 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, constructionParameters->GetModeratorHeight()
+            - constructionParameters->GetDModeratorFront() / 2 - 0.00001 * cm, 0), logicSampleWall4,
+            "physicalSampleWall4", logicWorld, false, 15, testOverlap);
         break;
     }
     case 1: {
