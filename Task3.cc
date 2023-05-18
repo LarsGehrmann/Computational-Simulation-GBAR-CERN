@@ -3,9 +3,6 @@
 #include <string.h>
 #include <iomanip>
 #include <sstream>
-
-
-
 #include "G4RunManager.hh"
 #include "G4UImanager.hh"
 #include "G4VisManager.hh"
@@ -15,15 +12,12 @@
 #include "G4ScoringManager.hh"
 #include "G4LogicalVolume.hh"
 #include "G4SystemOfUnits.hh"
-
 #include "physics.hh"
 #include "action.hh"
-
 #include "RunParameters.hh"
 #include "ConstructionParameters.hh"
 #include "construction.hh"
 #include "createTuples.hh"
-
 #include "testRatioTarDi.hh"
 #include "testRatioTarNe.hh"
 #include "testRatioDiNe.hh"
@@ -34,7 +28,7 @@
 
 /*--------------------------------------------*/
 // choiceGeometry determines geometric setup:
-// 0 Sampling wall geometry
+// 0 LINAC geometry
 // 1 COMSOL geometry
 /*--------------------------------------------*/
 // choiceParticle determines type of particles:
@@ -47,9 +41,9 @@
 
 int main(int argc, char** argv)
 {
-    bool showVis = true;
+    bool showVis = false;
 
-    G4int choiceGeometry = 1;
+    G4int choiceGeometry = 0;
     G4int choiceParticle = 1;
 
     G4double distTargetOrigin = 50.5 * cm;
@@ -61,10 +55,10 @@ int main(int argc, char** argv)
     G4double widthModerator = 20 * cm;
     G4double moderatorHeight = 60 * cm;
 
-    G4double scaleBDipole = 1.0;
-    G4double scaleBNeon = 1.0;
+    G4double scaleBDipole = 0.7;
+    G4double scaleBNeon = 2.0;
     G4double scaleBSolenoid = 1.;
-    G4double scaleBTarget = 1.0;
+    G4double scaleBTarget = 2.0;
     G4double scaleE = 1.;
 
     G4String moderatorMaterial = "Neon";
@@ -99,14 +93,20 @@ int main(int argc, char** argv)
 
 
     if (!showVis) {
-        
+        G4cout << "HERE" << G4endl;
         runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
+        G4cout << "HERE" << G4endl;
         runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
             distTarMod, fileName));
+        G4cout << "HERE" << G4endl;
         runMan->InitializeGeometry();
+        G4cout << "HERE" << G4endl;
         runMan->GeometryHasBeenModified();
+        G4cout << "HERE" << G4endl;
         runMan->Initialize();
+        G4cout << "HERE" << G4endl;
         runMan->BeamOn(noEvents);
+        G4cout << "HERE" << G4endl;
     }
     else {
         G4VisManager* visManager = new G4VisExecutive();
