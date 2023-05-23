@@ -43,8 +43,8 @@ int main(int argc, char** argv)
 {
     bool showVis = false;
 
-    G4int choiceGeometry = 0;
-    G4int choiceParticle = 1;
+    G4int choiceGeometry = 1;
+    G4int choiceParticle = 3;
 
     G4double distTargetOrigin = 50.5 * cm;
     G4double avgE = 9 * MeV;
@@ -55,10 +55,10 @@ int main(int argc, char** argv)
     G4double widthModerator = 20 * cm;
     G4double moderatorHeight = 60 * cm;
 
-    G4double scaleBDipole = 0.7;
-    G4double scaleBNeon = 2.0;
+    G4double scaleBDipole = 1.0;
+    G4double scaleBNeon = 1.0;
     G4double scaleBSolenoid = 1.;
-    G4double scaleBTarget = 2.0;
+    G4double scaleBTarget = 1.0;
     G4double scaleE = 1.;
 
     G4String moderatorMaterial = "Neon";
@@ -93,20 +93,13 @@ int main(int argc, char** argv)
 
 
     if (!showVis) {
-        G4cout << "HERE" << G4endl;
         runMan->SetUserInitialization(new DetectorConstruction(&constructionParameters));
-        G4cout << "HERE" << G4endl;
         runMan->SetUserInitialization(new MyActionInitialization(curRun, choiceParticle, distTargetOrigin, avgE, choiceGeometry, dModeratorTotal,
             distTarMod, fileName));
-        G4cout << "HERE" << G4endl;
         runMan->InitializeGeometry();
-        G4cout << "HERE" << G4endl;
         runMan->GeometryHasBeenModified();
-        G4cout << "HERE" << G4endl;
         runMan->Initialize();
-        G4cout << "HERE" << G4endl;
         runMan->BeamOn(noEvents);
-        G4cout << "HERE" << G4endl;
     }
     else {
         G4VisManager* visManager = new G4VisExecutive();

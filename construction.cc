@@ -130,6 +130,24 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
     RotationSampleWall3->rotateZ(90 * deg);
 
 
+
+    physicalSampleWall = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2 * cm, 0, 0), logicSampleWall,
+        "physicalSampleWall", logicWorld, false, 10, testOverlap);
+
+    physicalSampleWall0 = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2.0001 * cm, 0, 0), logicSampleWall1,
+        "physicalSampleWall0", logicWorld, false, 11, testOverlap);
+    physicalSampleWall1 = new G4PVPlacement(0, G4ThreeVector(25 * cm, 0, 0), logicSampleWall1,
+        "physicalSampleWall1", logicWorld, false, 12, testOverlap);
+    physicalSampleWall2 = new G4PVPlacement(RotationSampleWall2, G4ThreeVector(0, 0, 0), logicSampleWall2,
+        "physicalSampleWall2", logicWorld, false, 13, testOverlap);
+    physicalSampleWall3 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, 30 * cm, 0), logicSampleWall3,
+        "physicalSampleWall3", logicWorld, false, 14, testOverlap);
+    physicalSampleWall4 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, constructionParameters->GetModeratorHeight()
+        - constructionParameters->GetDModeratorFront() / 2 - 0.00001 * cm, 0), logicSampleWall4,
+        "physicalSampleWall4", logicWorld, false, 15, testOverlap);
+
+
+
     switch (constructionParameters->GetChoiceGeometry()) {
     case 0: {
         // define two cylinders outer and inner and take boolean geometry, subtraction solid
@@ -174,23 +192,12 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
             + constructionParameters->GetDModeratorFront() + (constructionParameters->GetDModeratorTotal() - constructionParameters->GetDModeratorFront()) / 2, 0),
             logicModeratorBack, "physicalModeratorBack", logicWorld, false, 1, testOverlap);
 
-        physicalSampleWall = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2 * cm, 0, 0), logicSampleWall,
-            "physicalSampleWall", logicWorld, false, 10, testOverlap);
 
-        physicalSampleWall0 = new G4PVPlacement(0, G4ThreeVector(constructionParameters->GetDistTargetOrigin() - 2.0001 * cm, 0, 0), logicSampleWall1,
-            "physicalSampleWall0", logicWorld, false, 11, testOverlap);
-        physicalSampleWall1 = new G4PVPlacement(0, G4ThreeVector(25 * cm, 0, 0), logicSampleWall1,
-            "physicalSampleWall1", logicWorld, false, 12, testOverlap);
-        physicalSampleWall2 = new G4PVPlacement(RotationSampleWall2, G4ThreeVector(0, 0, 0), logicSampleWall2,
-            "physicalSampleWall2", logicWorld, false, 13, testOverlap);
-        physicalSampleWall3 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, 30 * cm, 0), logicSampleWall3,
-            "physicalSampleWall3", logicWorld, false, 14, testOverlap);
-        physicalSampleWall4 = new G4PVPlacement(RotationSampleWall3, G4ThreeVector(0, constructionParameters->GetModeratorHeight()
-            - constructionParameters->GetDModeratorFront() / 2 - 0.00001 * cm, 0), logicSampleWall4,
-            "physicalSampleWall4", logicWorld, false, 15, testOverlap);
         break;
     }
     case 1: {
+        /* Uncomment for visualization, but note that overlaps with fourth sampling wall*/
+        /*
         auto meshModCOMSOL = CADMesh::TessellatedMesh::FromSTL("mod.stl");
         meshModCOMSOL->SetScale(1000.0);
         modCOMSOLSolid = meshModCOMSOL->GetSolid();
@@ -202,7 +209,7 @@ G4VPhysicalVolume *DetectorConstruction::Construct()
         tarSolid = meshTar->GetSolid();
         logicTar = new G4LogicalVolume(tarSolid, coilsMaterial, "logicTar");
         physicalSolenoid = new G4PVPlacement(0, G4ThreeVector(0., 0., 0.), logicTar, "physicalTar", logicWorld, false, 8, testOverlap);
-
+        */
         break;
     }
     }       
