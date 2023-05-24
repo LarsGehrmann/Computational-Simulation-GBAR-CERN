@@ -1,5 +1,6 @@
 function plot_TarDiNeAllWalls()
-
+fontSizeLegend = 25;
+fontSizeAxes = 25;
 set(0,'defaultTextInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
 set(0, 'defaultAxesTickLabelInterpreter','latex');
@@ -47,7 +48,8 @@ fieldNamesTitle = ["target coil}$","dipole coils}$","neon coils}$"];
 colors = ["r", "b", "k", "m","c", "g", "y"];
 hold on
 for field=1:3
-    figure
+figure('Renderer', 'painters', 'Position', [10 10 900 900])
+
     for wall=1:4
         plot(scales,hits(field,:,wall),colors(wall))
         hold on
@@ -58,7 +60,12 @@ for field=1:3
             "$\textbf{scaling of magnetic field from " + fieldNamesTitle(field)
             };
         legend(legendHelp,'Location','southoutside')
-        title(titleHelp)
+        ylim([0 10^4])
+        hLegend = findobj(gcf, 'Type', 'Legend');
+        set(hLegend,'FontSize', fontSizeLegend)
+        hAxis = findobj(gcf,'Type','Axes')
+        set(hAxis,'FontSize', fontSizeAxes)
+        %title(titleHelp)
     end
     hold off
 end

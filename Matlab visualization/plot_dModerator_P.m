@@ -13,7 +13,7 @@ while true
     dir1 = dirStart1 + num2str(i-1) + dirEnd1;
     dir2 = dirStart2 + num2str(i-1) + dirEnd2;
     try
-        M = csvread(dir1, 6, 0);
+        M = csvread(dir1, 14, 0);
         eDepTot(i) = M(1,1) * 10^6;        % convert MeV -> eV
         M = csvread(dir2, 8, 0);
         dModerator(i) = M(1,2);
@@ -32,8 +32,8 @@ grid on
 titleHelp1 = '$\textbf{Required cooling power as a function of}$';
 titleHelp2 =  '$\textbf{moderator thickness}$';
 titleHelp = {titleHelp1,titleHelp2};
-title(titleHelp,'FontSize',12)
-xlabel('$d_{\textrm{Moderator}} / \textrm{mm}$','FontSize',12)
+%title(titleHelp,'FontSize',12)
+xlabel('$d_{\textrm{Copper}} / \textrm{mm}$','FontSize',12)
 ylabel('$P / \textrm{W}$','FontSize',12)
 %legendHelp = '$\textrm{Linear fit: }' + "r^2=$ "+ num2str(r2);
 %legend('$\textrm{Simulated values}$', legendHelp ,'Location','NorthWest')

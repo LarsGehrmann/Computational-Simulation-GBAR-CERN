@@ -16,13 +16,14 @@ for i = 1:n
     end
 end
 imagesc([0 19],[0 19],E);
-%axis manual
-c = colorbar;
-c.Label.String = "[a.u.]";
-set(c,'FontSize',14);
+axis manual
+set(gca,'YDir','normal')
+%c = colorbar;
+%c.Label.String = "[a.u.]";
+%set(c,'FontSize',14);
 xlabel('$x / \textrm{mm}$')
 ylabel('$y / \textrm{mm}$')
-titleHelp = "$\textbf{Total deposited energy in the copper foil }$";
-title(titleHelp,'Fontsize', 14)
-saveas(gcf,"C:\Users\Gehrm\OneDrive\Desktop\Master thesis\Presentations\Plots for presentation\eDep_ShowSingle.png")
+%titleHelp = "$\textbf{Total deposited energy in the copper foil }$";
+%title(titleHelp,'Fontsize', 14)
+%saveas(gcf,"C:\Users\Gehrm\OneDrive\Desktop\Master thesis\Presentations\Plots for presentation\eDep_ShowSingle.png")
 end

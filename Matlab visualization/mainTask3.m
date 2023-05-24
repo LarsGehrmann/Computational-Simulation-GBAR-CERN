@@ -2,15 +2,14 @@
 
 clear all, clc, close all;
 
-% plot_ratioTarDi()
-% plot_ratioTarNe()
-% plot_ratioDiNe()
-% plot_ratioTarEqNeAndDi()
+
+
 % E = 2;
 % frontLength = 500;
 % sc = scoreEnergy(E,frontLength)
 frontLength = 15; % micro meter
 modRadius = 2.5; % cm
+
 L_plus = 1*10^(-4); % cm diffusion length of solid neon
 %L_plus = 10^-2
 %L_plus = 130*10^(-7); % cm diffusion length of solid neon
@@ -18,12 +17,20 @@ L_plus = 1*10^(-4); % cm diffusion length of solid neon
 %plot_distTargetOrigin()
 %plot_barE_radii()
 
-% plot_sampleWalls(modRadius, frontLength)
-%plot_ratioScore(modRadius, frontLength)
+%plot_sampleWalls(modRadius, frontLength)
+plot_ratioScore(modRadius, frontLength)
+
+
+% plot_ratioTarDi(modRadius)
+% plot_ratioTarNe(modRadius)
+% plot_ratioDiNe(modRadius)
+% plot_ratioTarEqNeAndDi(modRadius)
+
 
 
 %plot_TarDiNeAllWalls()
 %sample();
+
 %plot_scaleB();
 %plot_distTargetOrigin();
 %plot_Annihis();

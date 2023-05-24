@@ -1,4 +1,6 @@
-function plot_ratioDiNe()
+function plot_ratioDiNe(modRadius)
+fontSizeLegend = 13;
+fontSizeAxes = 13;
 set(0,'defaultTextInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
 set(0, 'defaultAxesTickLabelInterpreter','latex');
@@ -20,7 +22,6 @@ ratio = zeros(1,noNe);
 
 wallHitsNo = zeros(noDi,noNe);
 circleHitsNo = zeros(noDi,noNe);
-modRadius = 2.5;
 metric = "hits";
 printBool = false;
 
@@ -73,6 +74,9 @@ ylabel('$\textrm{No. hits inside circle}$')
 titleHelp = {"$\textbf{Number of hits as a function of ratio of}$",
     "$\textbf{scaling of neon coil and dipole coil}$"
     };
-title(titleHelp)
-
+%title(titleHelp)
+hLegend = findobj(gcf, 'Type', 'Legend');
+set(hLegend,'FontSize', fontSizeLegend)
+hAxis = findobj(gcf,'Type','Axes')
+set(hAxis,'FontSize', fontSizeAxes)
 end

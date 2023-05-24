@@ -54,7 +54,7 @@ ylabel('$\textrm{No hits in optimal circle}$')
 legend('$\textrm{Hits on fourth sample wall}$', '$\textrm{Hits inside optimal circle}$', 'Location', 'northwest')
 titleHelp = {"$\textbf{Number of positron hits as a function}$", "$\textbf{of distance between target and origin}$"
     };
-title(titleHelp)
+%title(titleHelp)
 
 % f = fit(distTargetOrigin',noAnnihi','gauss2');
 % X = min(distTargetOrigin);

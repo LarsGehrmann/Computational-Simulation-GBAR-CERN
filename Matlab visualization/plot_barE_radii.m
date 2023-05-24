@@ -1,5 +1,6 @@
 function plot_barE_radii()
 
+fontSize = 16;
 set(0,'defaultTextInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
 set(0, 'defaultAxesTickLabelInterpreter','latex');
@@ -26,7 +27,7 @@ for i=1:3
     [xCenter,zCenter,idx,maxPoints,noHits, avgE] = findCircle(wallHit, modRadius(i), metric, printBool);
     xCenters(i) = xCenter;
     zCenters(i) = zCenter;
-    avgEVec(i) = avgE
+    avgEVec(i) = avgE;
 end
 
 ECircle = zeros(0,3);
@@ -39,12 +40,7 @@ for i=1:3
         end
     end
 end
-
-
 colors = ["r","k","b"];
-
-
-
 
 figure
 plot(wallHit(1,:), wallHit(3,:), 'k.','MarkerSize', 5)
@@ -65,9 +61,10 @@ ylabel(ylabelString)
 axis equal
 titleHelp = {"$\textbf{Comparison between circle placements for different radii}$"
     };
-title(titleHelp)
-
-
+%title(titleHelp)
+ax = gca;
+ax.FontSize = fontSize;
+%--------------------------------------------------------------------------------------------%
 clear legendHelp
 edges = logspace(-2,1,50);
 
@@ -98,7 +95,9 @@ ylabel('$\textrm{No}$')
 legend(legendHelp,'Location','Northeast')
 titleHelp = {"$\textbf{Comparison between energy distribution inside optimal circle for different circle radii}$"
     };
-title(titleHelp)
+%title(titleHelp)
+ax = gca;
+ax.FontSize = fontSize;
 fprintf("Distance between center of largest and smallest circle: " + string(sqrt((xCenters(end)-xCenters(1))^2 + ...
     (zCenters(end)-zCenters(1))^2 )) + "cm\n");
 fprintf("Number of hits in circles from smallest to largest circle: " + string(circleHitsPrint(3)) + ", " + string(circleHitsPrint(2)) + ", " +string(circleHitsPrint(1)) + "\n")

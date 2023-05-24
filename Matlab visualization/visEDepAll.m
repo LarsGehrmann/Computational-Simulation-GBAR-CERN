@@ -20,7 +20,7 @@ for k = 1:noDist
     subplot(2,2,k);
     dirStart = "\\wsl.localhost\ubuntu\home\lars\Geant4\Task1\build\eDep_ShowAll_";
     if rem(dist(k),10) == 0 % if avgEnergy is whole number
-       distString = num2str(round(dist(k))) + ".";
+        distString = num2str(round(dist(k))) + ".";
     else
         distString = num2str(dist(k));
     end
@@ -36,21 +36,26 @@ for k = 1:noDist
         end
     end
     imagesc(1:19,1:19,E);
-    c = colorbar;
+    set(gca,'xtick',[])
+    set(gca,'xticklabel',[])
+    set(gca,'ytick',[])
+    set(gca,'yticklabel',[])
+    %set(gca,'YDir','normal')
+    %c = colorbar;
     %caxis([0 maxE])
-    xlabel('$x / \textrm{mm}$')
-    ylabel('$y / \textrm{mm}$')
-    c.Label.String = "[a.u.]";
-    set(c,'FontSize',14);
-    titleHelp1 = "$\textrm{dist} = $";
-    titleHelp2 = num2str(dist(k));
-    titleHelp3 = "$\textrm{mm}$";
-    titleHelp = titleHelp1 + titleHelp2 + titleHelp3;
-    title(titleHelp,'Fontsize', 12)
+    %xlabel('$x / \textrm{mm}$')
+    %ylabel('$y / \textrm{mm}$')
+    %c.Label.String = "[a.u.]";
+    %set(c,'FontSize',14);
+    %titleHelp1 = "$\textrm{dist} = $";
+    %titleHelp2 = num2str(dist(k));
+    %titleHelp3 = "$\textrm{mm}$";
+    %titleHelp = titleHelp1 + titleHelp2 + titleHelp3;
+    %title(titleHelp,'Fontsize', 12)
 end
-titleHelp1 = "$\textbf{Total deposited energy in the copper foil }$";
-titleHelp2 = "$\textbf{for different distances between target and moderator}$";
-titleHelp = [titleHelp1 , titleHelp2];
-sgtitle(titleHelp,'FontSize',14);
-saveas(gcf,"C:\Users\Gehrm\OneDrive\Desktop\Master thesis\Presentations\Plots for presentation\eDep_ShowAll.png")
+%titleHelp1 = "$\textbf{Total deposited energy in the copper foil }$";
+%titleHelp2 = "$\textbf{for different distances between target and moderator}$";
+%titleHelp = [titleHelp1 , titleHelp2];
+%sgtitle(titleHelp,'FontSize',14);
+%saveas(gcf,"C:\Users\Gehrm\OneDrive\Desktop\Master thesis\Presentations\Plots for presentation\eDep_ShowAll.png")
 end

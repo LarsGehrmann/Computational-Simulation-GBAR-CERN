@@ -1,5 +1,6 @@
 function plot_ratioScore(modRadius, frontLength)
-
+fontSizeLegend = 12;
+fontSizeAxes = 12;
 set(0,'defaultTextInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
 set(0, 'defaultAxesTickLabelInterpreter','latex');
@@ -87,5 +88,9 @@ ylabel('$\textrm{Score}$')
 titleHelp = {"$\textbf{Optimization of dipole coil field scaling}$"
     ,
     };
-title(titleHelp)
+%title(titleHelp)
+hLegend = findobj(gcf, 'Type', 'Legend');
+set(hLegend,'FontSize', fontSizeLegend)
+hAxis = findobj(gcf,'Type','Axes')
+set(hAxis,'FontSize', fontSizeAxes)
 end

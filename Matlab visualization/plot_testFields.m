@@ -1,6 +1,8 @@
 %visualize the deposited energy in the moderator because Geant4 is not working properly with that
 
 function plot_testFields(modRadius)
+fontSizeLegend = 13;
+fontSizeAxes = 13;
 set(0,'defaultTextInterpreter','latex');
 set(0, 'defaultLegendInterpreter','latex');
 set(0, 'defaultAxesTickLabelInterpreter','latex');
@@ -68,5 +70,9 @@ legend(plotMatrix,legendHelp,'Location','eastoutside')
 %legendHelp = ["$B_{\textrm{Dipole}}$","$B_{\textrm{Neon}}$","$B_{\textrm{Solenoid}}$","$B_{\textrm{Target}}$","$E$"];
 titleHelp = {"$\textbf{Number of positron hits for different scalings}$", "$\textbf{of magnetic and electric fields with circle radius }r = $" + ...
     string(modRadius) + "$\textbf{cm}$"};
-title(titleHelp)
+%title(titleHelp)
+hLegend = findobj(gcf, 'Type', 'Legend');
+set(hLegend,'FontSize', fontSizeLegend)
+hAxis = findobj(gcf,'Type','Axes')
+set(hAxis,'FontSize', fontSizeAxes)
 end
